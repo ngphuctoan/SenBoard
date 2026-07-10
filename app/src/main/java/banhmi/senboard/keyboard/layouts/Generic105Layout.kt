@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import banhmi.senboard.keyboard.Key
 import banhmi.senboard.keyboard.KeyRow
+import banhmi.senboard.keyboard.SenBoardManager
 import banhmi.senboard.keyboard.SenBoardLayout
 import banhmi.senboard.keyboard.keys.KeyData
 import banhmi.senboard.keyboard.keys.KeyVariant
 
 @Composable
-fun Generic105Layout(slots: List<KeyData>) {
-    SenBoardLayout(
-        slots = slots,
-    ) {
+fun Generic105Layout(slots: List<KeyData>, manager: SenBoardManager) {
+    SenBoardLayout(slots = slots, manager = manager) {
         // First row
         KeyRow {
             repeat(10) { Key() }

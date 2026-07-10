@@ -1,7 +1,14 @@
 package banhmi.senboard.keyboard
 
+import android.view.ViewConfiguration
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -18,20 +25,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import banhmi.senboard.keyboard.keys.KeyData
 import banhmi.senboard.keyboard.keys.KeyDisplay
+import banhmi.senboard.keyboard.keys.KeyHighlightIndication
 import banhmi.senboard.keyboard.keys.KeyVariant
 import banhmi.senboard.keyboard.keys.provideKeyStyle
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 interface LayoutScope {
     val slots: List<KeyData>
+    val manager: SenBoardManager
 }
 
 class LayoutColumnScopeImpl(
     override val slots: List<KeyData>,
+    override val manager: SenBoardManager,
     private val scope: ColumnScope,
 ) : LayoutScope, ColumnScope by scope {
     private var i = 0
@@ -41,6 +61,7 @@ class LayoutColumnScopeImpl(
 
 class LayoutRowScopeImpl(
     private val row: LayoutColumnScopeImpl,
+    override val manager: SenBoardManager,
     private val scope: RowScope,
 ) : LayoutScope, RowScope by scope {
     override val slots get() = row.slots
@@ -57,19 +78,75 @@ fun LayoutRowScopeImpl.Key(
 ) {
     val slotIndex = remember { nextSlotIndex() }
     val slot = slots[slotIndex]
+
+    val interactionSource = remember { MutableInteractionSource() }
+
     val style = provideKeyStyle(variant)
+    val pressedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     Box(
         modifier = Modifier
             .weight(weight)
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .semantics {
+                role = Role.Button
+                onClick {
+                    manager.handle(slot.action)
+                    true
+                }
+            }
+            .pointerInput(slot.action, interactionSource) {
+                coroutineScope repeat@{
+                    awaitEachGesture {
+                        val down = awaitFirstDown()
+                        down.consume()
+
+                        val press = PressInteraction.Press(
+                            pressPosition = down.position,
+                        )
+
+                        interactionSource.tryEmit(press)
+
+                        var hasRepeated = false
+
+                        val repeatJob = this@repeat.launch {
+                            delay(ViewConfiguration.getLongPressTimeout().toLong().milliseconds)
+                            hasRepeated = true
+                            while (isActive) {
+                                manager.handle(slot.action)
+                                delay(50L.milliseconds)
+                            }
+                        }
+
+                        val up = try {
+                            waitForUpOrCancellation()
+                        } finally {
+                            repeatJob.cancel()
+                        }
+
+                        if (up != null) {
+                            interactionSource.tryEmit(PressInteraction.Release(press))
+                            if (!hasRepeated) manager.handle(slot.action)
+                        } else {
+                            interactionSource.tryEmit(PressInteraction.Cancel(press))
+                        }
+                    }
+                }
+            },
         contentAlignment = keyAlignment,
     ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth(keyWeight / weight)
                 .fillMaxHeight()
-                .padding(8.dp),
+                .padding(8.dp)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = KeyHighlightIndication(
+                        color = pressedColor.copy(alpha = 0.2f),
+                        shape = style.shape,
+                    ),
+                ),
             color = style.color,
             contentColor = style.contentColor,
             shape = style.shape,
@@ -80,7 +157,11 @@ fun LayoutRowScopeImpl.Key(
                     .padding(8.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                Box(modifier = Modifier.align(Alignment.TopEnd)) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .alpha(0.75f)
+                ) {
                     when (slot.supportDisplay) {
                         is KeyDisplay.Text -> Text(
                             text = slot.supportDisplay.label,
@@ -124,6 +205,7 @@ fun LayoutColumnScopeImpl.KeyRow(content: @Composable LayoutRowScopeImpl.() -> U
     ) {
         LayoutRowScopeImpl(
             row = this@KeyRow,
+            manager = this@KeyRow.manager,
             scope = this,
         ).content()
     }
@@ -132,11 +214,13 @@ fun LayoutColumnScopeImpl.KeyRow(content: @Composable LayoutRowScopeImpl.() -> U
 @Composable
 fun SenBoardLayout(
     slots: List<KeyData>,
+    manager: SenBoardManager,
     content: @Composable LayoutColumnScopeImpl.() -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LayoutColumnScopeImpl(
             slots = slots,
+            manager = manager,
             scope = this,
         ).content()
     }

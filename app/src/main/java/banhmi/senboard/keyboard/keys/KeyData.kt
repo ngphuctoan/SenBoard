@@ -11,4 +11,5 @@ sealed interface KeyDisplay {
 data class KeyData(
     val display: KeyDisplay = KeyDisplay.None,
     val supportDisplay: KeyDisplay = KeyDisplay.None,
+    val action: KeyAction = KeyAction.None,
 )
