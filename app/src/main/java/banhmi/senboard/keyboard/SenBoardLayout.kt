@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.Role
@@ -33,6 +34,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.keyboard.keys.KeyAction
 import banhmi.senboard.keyboard.keys.KeyData
 import banhmi.senboard.keyboard.keys.KeyDisplay
 import banhmi.senboard.keyboard.keys.KeyHighlightIndication
@@ -96,25 +98,30 @@ fun LayoutRowScopeImpl.Key(
                 }
             }
             .pointerInput(slot.action, interactionSource) {
+                var lastTapUpTime = 0L
+                val doubleTapTimeout = ViewConfiguration.getDoubleTapTimeout().toLong()
+
                 coroutineScope repeat@{
                     awaitEachGesture {
                         val down = awaitFirstDown()
                         down.consume()
 
-                        val press = PressInteraction.Press(
-                            pressPosition = down.position,
-                        )
-
+                        val press = PressInteraction.Press(down.position)
                         interactionSource.tryEmit(press)
 
                         var hasRepeated = false
 
                         val repeatJob = this@repeat.launch {
-                            delay(ViewConfiguration.getLongPressTimeout().toLong().milliseconds)
+                            delay(
+                                ViewConfiguration.getLongPressTimeout().toLong().milliseconds
+                            )
+
                             hasRepeated = true
+                            lastTapUpTime = 0L
+
                             while (isActive) {
                                 manager.handle(slot.action)
-                                delay(50L.milliseconds)
+                                delay(50.milliseconds)
                             }
                         }
 
@@ -125,10 +132,30 @@ fun LayoutRowScopeImpl.Key(
                         }
 
                         if (up != null) {
-                            interactionSource.tryEmit(PressInteraction.Release(press))
-                            if (!hasRepeated) manager.handle(slot.action)
+                            interactionSource.tryEmit(
+                                PressInteraction.Release(press)
+                            )
+
+                            if (!hasRepeated) {
+                                val now = up.uptimeMillis
+
+                                val isDoubleTap =
+                                    lastTapUpTime != 0L && now - lastTapUpTime <= doubleTapTimeout
+
+                                if (isDoubleTap) {
+                                    manager.handleDoubleTap(slot.action)
+                                    lastTapUpTime = 0L
+                                } else {
+                                    manager.handle(slot.action)
+                                    lastTapUpTime = now
+                                }
+                            }
                         } else {
-                            interactionSource.tryEmit(PressInteraction.Cancel(press))
+                            interactionSource.tryEmit(
+                                PressInteraction.Cancel(press)
+                            )
+
+                            lastTapUpTime = 0L
                         }
                     }
                 }
@@ -145,6 +172,7 @@ fun LayoutRowScopeImpl.Key(
                     indication = KeyHighlightIndication(
                         color = pressedColor.copy(alpha = 0.2f),
                         shape = style.shape,
+                        forceVisible = slot.action == KeyAction.Shift && this@Key.manager.context.state.shiftMode == ShiftMode.CapsLocked,
                     ),
                 ),
             color = style.color,
@@ -174,12 +202,15 @@ fun LayoutRowScopeImpl.Key(
                             modifier = Modifier.size(style.iconSizes.support),
                         )
 
+                        is KeyDisplay.Shift -> {}
+
                         is KeyDisplay.None -> {}
                     }
                 }
                 when (slot.display) {
                     is KeyDisplay.Text -> Text(
-                        text = slot.display.label,
+                        text = if (this@Key.manager.context.state.isShifted) slot.display.label.uppercase()
+                        else slot.display.label.lowercase(),
                         style = style.typography.label,
                     )
 
@@ -188,6 +219,20 @@ fun LayoutRowScopeImpl.Key(
                         contentDescription = null,
                         modifier = Modifier.size(style.iconSizes.main),
                     )
+
+                    is KeyDisplay.Shift -> {
+                        val iconDisplay =
+                            slot.display.getIcon(this@Key.manager.context.state.shiftMode)!!
+                        val description =
+                            slot.display.getDescription(this@Key.manager.context.state.shiftMode)!!
+                        Icon(
+                            iconDisplay.icon,
+                            contentDescription = description,
+                            modifier = Modifier
+                                .size(style.iconSizes.main)
+                                .rotate(iconDisplay.rotation),
+                        )
+                    }
 
                     is KeyDisplay.None -> {}
                 }

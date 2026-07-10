@@ -5,9 +5,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
+import androidx.compose.material.icons.automirrored.outlined.Forward
 import androidx.compose.material.icons.automirrored.outlined.KeyboardReturn
 import androidx.compose.material.icons.outlined.InsertEmoticon
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.ComposeView
@@ -15,7 +17,9 @@ import banhmi.senboard.keyboard.SenBoard
 import banhmi.senboard.keyboard.SenBoardContext
 import banhmi.senboard.keyboard.SenBoardManager
 import banhmi.senboard.keyboard.SenBoardState
+import banhmi.senboard.keyboard.ShiftMode
 import banhmi.senboard.keyboard.Toolbar
+import banhmi.senboard.keyboard.keys.IconDisplay
 import banhmi.senboard.keyboard.keys.KeyAction
 import banhmi.senboard.keyboard.keys.KeyData
 import banhmi.senboard.keyboard.keys.KeyDisplay
@@ -53,8 +57,7 @@ class SenImService : LifecycleImService() {
                         Column {
                             Toolbar { }
                             Generic105Layout(
-                                manager = manager,
-                                slots = listOf(
+                                manager = manager, slots = listOf(
                                     // Row 1
                                     KeyData(
                                         display = KeyDisplay.Text("q"),
@@ -168,9 +171,7 @@ class SenImService : LifecycleImService() {
 
                                     // Row 3
                                     KeyData(
-                                        display = KeyDisplay.Icon(
-                                            Icons.Outlined.KeyboardArrowUp,
-                                        ),
+                                        display = KeyDisplay.Shift(),
                                         action = KeyAction.Shift,
                                     ),
                                     KeyData(
@@ -217,9 +218,7 @@ class SenImService : LifecycleImService() {
                                         action = KeyAction.Character("?"),
                                     ),
                                     KeyData(
-                                        display = KeyDisplay.Icon(
-                                            Icons.Outlined.KeyboardArrowUp,
-                                        ),
+                                        display = KeyDisplay.Shift(),
                                         action = KeyAction.Shift,
                                     ),
 

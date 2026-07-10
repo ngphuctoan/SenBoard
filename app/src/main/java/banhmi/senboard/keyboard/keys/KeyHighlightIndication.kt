@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 data class KeyHighlightIndication(
     private val color: Color,
     private val shape: Shape,
+    private val forceVisible: Boolean = false,
 ) : IndicationNodeFactory {
-
     override fun create(
         interactionSource: InteractionSource,
     ): DelegatableNode {
@@ -26,6 +26,7 @@ data class KeyHighlightIndication(
             interactionSource = interactionSource,
             color = color,
             shape = shape,
+            forceVisible = forceVisible,
         )
     }
 }
@@ -34,6 +35,7 @@ private class KeyHighlightNode(
     private val interactionSource: InteractionSource,
     private val color: Color,
     private val shape: Shape,
+    private val forceVisible: Boolean = false,
 ) : Modifier.Node(), DrawModifierNode {
     private val alpha = Animatable(0f)
 
@@ -60,7 +62,7 @@ private class KeyHighlightNode(
         drawOutline(
             outline = outline,
             color = color,
-            alpha = alpha.value,
+            alpha = if (forceVisible) 1f else alpha.value,
         )
     }
 }

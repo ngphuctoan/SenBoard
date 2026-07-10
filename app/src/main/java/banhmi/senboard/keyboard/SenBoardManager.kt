@@ -47,6 +47,16 @@ class SenBoardManager(val context: SenBoardContext) {
         }
     }
 
+    fun handleDoubleTap(action: KeyAction) {
+        when (action) {
+            KeyAction.Shift -> {
+                context.state.shiftMode = ShiftMode.CapsLocked
+            }
+
+            else -> handle(action)
+        }
+    }
+
     private fun commitCharacter(raw: String) {
         val text = if (context.state.isShifted) raw.uppercase() else raw.lowercase()
         context.im.currentInputConnection?.commitText(text, 1)

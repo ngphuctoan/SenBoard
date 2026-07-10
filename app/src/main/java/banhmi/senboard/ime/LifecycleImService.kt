@@ -26,6 +26,26 @@ open class LifecycleImService: InputMethodService(), LifecycleOwner, SavedStateR
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
 
+    private fun moveToResumed() {
+        if (lifecycleRegistry.currentState == Lifecycle.State.CREATED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+        }
+
+        if (lifecycleRegistry.currentState == Lifecycle.State.STARTED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        }
+    }
+
+    private fun moveToCreated() {
+        if (lifecycleRegistry.currentState == Lifecycle.State.RESUMED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        }
+
+        if (lifecycleRegistry.currentState == Lifecycle.State.STARTED) {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         savedStateRegistryController.performRestore(null)
@@ -39,9 +59,20 @@ open class LifecycleImService: InputMethodService(), LifecycleOwner, SavedStateR
         }
     }
 
+    override fun onWindowShown() {
+        super.onWindowShown()
+        moveToResumed()
+    }
+
+    override fun onWindowHidden() {
+        moveToCreated()
+        super.onWindowHidden()
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
+        moveToCreated()
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        super.onDestroy()
     }
 }
 
