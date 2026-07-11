@@ -1,4 +1,4 @@
-package banhmi.senboard.keyboard.keys
+package banhmi.senboard.ime.keyboard.ui.indications
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.IndicationNodeFactory

@@ -1,4 +1,4 @@
-package banhmi.senboard.ime
+package banhmi.senboard.ime.lifecycle
 
 import android.inputmethodservice.InputMethodService
 import androidx.lifecycle.Lifecycle
@@ -9,10 +9,6 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import android.os.Build
-import android.view.View
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 
 // Reference: https://github.com/florisboard/florisboard/blob/main/app/src/main/kotlin/dev/patrickgold/florisboard/ime/lifecycle/LifecycleInputMethodService.kt
 // Also thanks ChatGPT for assisting me with this as well!
@@ -26,30 +22,12 @@ open class LifecycleImService: InputMethodService(), LifecycleOwner, SavedStateR
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry
 
-    private fun moveToResumed() {
-        if (lifecycleRegistry.currentState == Lifecycle.State.CREATED) {
-            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
-        }
-
-        if (lifecycleRegistry.currentState == Lifecycle.State.STARTED) {
-            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
-        }
-    }
-
-    private fun moveToCreated() {
-        if (lifecycleRegistry.currentState == Lifecycle.State.RESUMED) {
-            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        }
-
-        if (lifecycleRegistry.currentState == Lifecycle.State.STARTED) {
-            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
         savedStateRegistryController.performRestore(null)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        // Set lifecycle state to STARTED for reactive states to work
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
     }
 
     protected fun setViewTreeOwners() {
@@ -61,31 +39,17 @@ open class LifecycleImService: InputMethodService(), LifecycleOwner, SavedStateR
 
     override fun onWindowShown() {
         super.onWindowShown()
-        moveToResumed()
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
 
     override fun onWindowHidden() {
-        moveToCreated()
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
         super.onWindowHidden()
     }
 
     override fun onDestroy() {
-        moveToCreated()
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         super.onDestroy()
-    }
-}
-
-fun LifecycleImService.setNavBarColor(color: Color, lightIcons: Boolean) {
-    val window = window?.window ?: return
-
-    window.navigationBarColor = color.toArgb()
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        window.isNavigationBarContrastEnforced = false
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        window.decorView.systemUiVisibility = if (lightIcons) 0 else View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
     }
 }

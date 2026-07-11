@@ -1,4 +1,4 @@
-package banhmi.senboard
+package banhmi.senboard.app
 
 import android.content.Intent
 import android.provider.Settings
