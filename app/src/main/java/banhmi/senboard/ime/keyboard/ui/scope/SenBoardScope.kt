@@ -1,14 +1,14 @@
 package banhmi.senboard.ime.keyboard.ui.scope
 
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.unit.Dp
 import banhmi.senboard.ime.keyboard.core.SenBoardController
 
 interface SenBoardScope {
     val controller: SenBoardController
-    val widthSizeClass: WindowWidthSizeClass
+    val screenWidth: Dp
 }
 
 class SenBoardScopeImpl(
     override val controller: SenBoardController,
-    override val widthSizeClass: WindowWidthSizeClass,
+    override val screenWidth: Dp,
 ) : SenBoardScope
