@@ -13,6 +13,7 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
@@ -117,6 +119,7 @@ fun SenBoardKeyScope.SenBoardKeyContent(
 
 @Composable
 fun SenBoardKeyScope.SenBoardKeyShape(
+    margin: PaddingValues = PaddingValues(8.dp),
     forceHighlight: Boolean = false,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
@@ -127,7 +130,7 @@ fun SenBoardKeyScope.SenBoardKeyShape(
         modifier = Modifier
             .fillMaxWidth(key.shapeWeight / key.areaWeight)
             .fillMaxHeight()
-            .padding(8.dp)
+            .padding(margin)
             .indication(
                 interactionSource = source,
                 indication = KeyHighlightIndication(

@@ -2,6 +2,7 @@ package banhmi.senboard.ime.keyboard.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import banhmi.senboard.ime.keyboard.core.handlers.ShiftKeyHandler
 import banhmi.senboard.ime.keyboard.models.KeyDisplay
 import banhmi.senboard.ime.keyboard.models.KeyHandler
@@ -28,10 +32,13 @@ private fun SenBoardColumn(content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-private fun ColumnScope.SenBoardRow(content: @Composable RowScope.() -> Unit) {
+private fun ColumnScope.SenBoardRow(
+    heightWeight: Float = 1f,
+    content: @Composable RowScope.() -> Unit,
+) {
     Row(
         modifier = Modifier
-            .weight(1f)
+            .weight(heightWeight)
             .fillMaxWidth()
     ) {
         content()
@@ -53,18 +60,18 @@ fun SenBoardScope.SenBoardLayout(
     SenBoardColumn {
         var rowOffset = 0
 
-        for (keyRow in layout.keyRows) {
+        for ((rowIndex, keyRow) in layout.keyRows.withIndex()) {
             val currentRowOffset = rowOffset
             rowOffset += keyRow.keys.size
 
-            SenBoardRow {
+            SenBoardRow(heightWeight = keyRow.heightWeight) {
                 for ((keyIndex, key) in keyRow.keys.withIndex()) {
                     val slot = slots[currentRowOffset + keyIndex]
                     val handler = slot.handler
 
                     val display = when (val value = slot.display) {
-                        is KeyDisplay.Shift -> value(controller.state.shiftMode)
-                        else -> value
+                        is KeyDisplay.Dynamic -> value(controller.state)
+                        is KeyDisplay.Static -> value
                     }
 
                     SenBoardKeyArea(
@@ -74,6 +81,10 @@ fun SenBoardScope.SenBoardLayout(
                         onDoubleTap = { onKeyDoubleTap(handler) },
                     ) {
                         SenBoardKeyShape(
+                            margin = PaddingValues(
+                                layout.horizontalPadding,
+                                layout.verticalPadding,
+                            ),
                             forceHighlight = slot.handler is ShiftKeyHandler && isCapsLocked,
                         ) {
                             SenBoardKeyContent {

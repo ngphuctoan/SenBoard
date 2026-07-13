@@ -19,44 +19,114 @@ val CharactersMode = Mode(
     layout = StandardLayout,
     slots = listOf(
         KeyData(
-            display = KeyDisplay.Text("q"),
+            display = KeyDisplay.Char("q"),
             handler = CharKeyHandler("q"),
         ),
         KeyData(
-            display = KeyDisplay.Text("w"),
+            display = KeyDisplay.Char("w"),
             handler = CharKeyHandler("w"),
         ),
         KeyData(
-            display = KeyDisplay.Text("e"),
+            display = KeyDisplay.Char("e"),
             handler = CharKeyHandler("e"),
         ),
         KeyData(
-            display = KeyDisplay.Text("r"),
+            display = KeyDisplay.Char("r"),
             handler = CharKeyHandler("r"),
         ),
         KeyData(
-            display = KeyDisplay.Text("t"),
+            display = KeyDisplay.Char("t"),
             handler = CharKeyHandler("t"),
         ),
         KeyData(
-            display = KeyDisplay.Text("y"),
+            display = KeyDisplay.Char("y"),
             handler = CharKeyHandler("y"),
         ),
         KeyData(
-            display = KeyDisplay.Text("u"),
+            display = KeyDisplay.Char("u"),
             handler = CharKeyHandler("u"),
         ),
         KeyData(
-            display = KeyDisplay.Text("i"),
+            display = KeyDisplay.Char("i"),
             handler = CharKeyHandler("i"),
         ),
         KeyData(
-            display = KeyDisplay.Text("o"),
+            display = KeyDisplay.Char("o"),
             handler = CharKeyHandler("o"),
         ),
         KeyData(
-            display = KeyDisplay.Text("p"),
+            display = KeyDisplay.Char("p"),
             handler = CharKeyHandler("p"),
+        ),
+
+        KeyData(
+            display = KeyDisplay.Char("a"),
+            handler = CharKeyHandler("a"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("s"),
+            handler = CharKeyHandler("s"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("d"),
+            handler = CharKeyHandler("d"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("f"),
+            handler = CharKeyHandler("f"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("g"),
+            handler = CharKeyHandler("g"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("h"),
+            handler = CharKeyHandler("h"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("j"),
+            handler = CharKeyHandler("j"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("k"),
+            handler = CharKeyHandler("k"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("l"),
+            handler = CharKeyHandler("l"),
+        ),
+
+        KeyData(
+            display = KeyDisplay.Shift,
+            handler = ShiftKeyHandler,
+        ),
+        KeyData(
+            display = KeyDisplay.Char("z"),
+            handler = CharKeyHandler("z"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("x"),
+            handler = CharKeyHandler("x"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("c"),
+            handler = CharKeyHandler("c"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("v"),
+            handler = CharKeyHandler("v"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("b"),
+            handler = CharKeyHandler("b"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("n"),
+            handler = CharKeyHandler("n"),
+        ),
+        KeyData(
+            display = KeyDisplay.Char("m"),
+            handler = CharKeyHandler("m"),
         ),
         KeyData(
             display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
@@ -64,98 +134,15 @@ val CharactersMode = Mode(
         ),
 
         KeyData(
-            display = KeyDisplay.Text("a"),
-            handler = CharKeyHandler("a"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("s"),
-            handler = CharKeyHandler("s"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("d"),
-            handler = CharKeyHandler("d"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("f"),
-            handler = CharKeyHandler("f"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("g"),
-            handler = CharKeyHandler("g"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("h"),
-            handler = CharKeyHandler("h"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("j"),
-            handler = CharKeyHandler("j"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("k"),
-            handler = CharKeyHandler("k"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("l"),
-            handler = CharKeyHandler("l"),
-        ),
-        KeyData(
-            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
-            handler = ReturnKeyHandler,
-        ),
-
-        KeyData(
-            display = KeyDisplay.Shift,
-            handler = ShiftKeyHandler,
-        ),
-        KeyData(
-            display = KeyDisplay.Text("z"),
-            handler = CharKeyHandler("z"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("x"),
-            handler = CharKeyHandler("x"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("c"),
-            handler = CharKeyHandler("c"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("v"),
-            handler = CharKeyHandler("v"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("b"),
-            handler = CharKeyHandler("b"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("n"),
-            handler = CharKeyHandler("n"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("m"),
-            handler = CharKeyHandler("m"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("!"),
-            handler = CharKeyHandler("!"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("?"),
-            handler = CharKeyHandler("?"),
-        ),
-        KeyData(
-            display = KeyDisplay.Shift,
-            handler = ShiftKeyHandler,
-        ),
-
-        KeyData(
             display = KeyDisplay.Text("?123"),
-            handler = SwitchModeHandler(ModeId.Numerics),
+            handler = SwitchModeHandler(ModeRegistry.Numerics),
         ),
         KeyData(
             display = KeyDisplay.Text(","),
             handler = CharKeyHandler(","),
+        ),
+        KeyData(
+            display = KeyDisplay.Icon(Icons.Outlined.InsertEmoticon),
         ),
         KeyData(
             handler = CharKeyHandler(" "),
@@ -165,7 +152,8 @@ val CharactersMode = Mode(
             handler = CharKeyHandler("."),
         ),
         KeyData(
-            display = KeyDisplay.Icon(Icons.Outlined.InsertEmoticon),
+            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
+            handler = ReturnKeyHandler,
         ),
     ),
 )

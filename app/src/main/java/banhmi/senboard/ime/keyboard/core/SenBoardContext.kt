@@ -9,11 +9,11 @@ import androidx.compose.runtime.setValue
 
 @Stable
 class SenBoardContext(
-    private val im: InputMethodService,
+    private val im: InputMethodService?,
     initialState: SenBoardState = SenBoardState(),
 ) {
     var state by mutableStateOf(initialState)
         internal set
 
-    fun getEditor(): InputConnection? = im.currentInputConnection
+    fun getEditor(): InputConnection? = im?.currentInputConnection
 }

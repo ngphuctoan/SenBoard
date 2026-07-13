@@ -57,74 +57,14 @@ val NumericsMode = Mode(
             display = KeyDisplay.Text("0"),
             handler = CharKeyHandler("0"),
         ),
-        KeyData(
-            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
-            handler = BackSpaceKeyHandler,
-        ),
 
-        KeyData(
-            display = KeyDisplay.Text("@"),
-            handler = CharKeyHandler("@"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("#"),
-            handler = CharKeyHandler("#"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("$"),
-            handler = CharKeyHandler("$"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("%"),
-            handler = CharKeyHandler("%"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("&"),
-            handler = CharKeyHandler("&"),
-        ),
         KeyData(
             display = KeyDisplay.Text("-"),
             handler = CharKeyHandler("-"),
         ),
         KeyData(
-            display = KeyDisplay.Text("+"),
-            handler = CharKeyHandler("+"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("("),
-            handler = CharKeyHandler("("),
-        ),
-        KeyData(
-            display = KeyDisplay.Text(")"),
-            handler = CharKeyHandler(")"),
-        ),
-        KeyData(
-            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
-            handler = ReturnKeyHandler,
-        ),
-
-        KeyData(
-            display = KeyDisplay.Text("~[<"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("\\"),
-            handler = CharKeyHandler("\\"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("="),
-            handler = CharKeyHandler("="),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("*"),
-            handler = CharKeyHandler("*"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("\""),
-            handler = CharKeyHandler("\""),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("'"),
-            handler = CharKeyHandler("'"),
+            display = KeyDisplay.Text("/"),
+            handler = CharKeyHandler("/"),
         ),
         KeyData(
             display = KeyDisplay.Text(":"),
@@ -135,34 +75,83 @@ val NumericsMode = Mode(
             handler = CharKeyHandler(";"),
         ),
         KeyData(
-            display = KeyDisplay.Text("!"),
-            handler = CharKeyHandler("!"),
+            display = KeyDisplay.Text("("),
+            handler = CharKeyHandler("("),
         ),
         KeyData(
-            display = KeyDisplay.Text("?"),
-            handler = CharKeyHandler("?"),
+            display = KeyDisplay.Text(")"),
+            handler = CharKeyHandler(")"),
         ),
         KeyData(
-            display = KeyDisplay.Text("~[<"),
+            display = KeyDisplay.Text("$"),
+            handler = CharKeyHandler("$"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("&"),
+            handler = CharKeyHandler("&"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("@"),
+            handler = CharKeyHandler("@"),
         ),
 
         KeyData(
-            display = KeyDisplay.Text("ABC"),
-            handler = SwitchModeHandler(ModeId.Characters),
-        ),
-        KeyData(
-            display = KeyDisplay.Text(","),
-            handler = CharKeyHandler(","),
-        ),
-        KeyData(
-            handler = CharKeyHandler(" "),
+            display = KeyDisplay.Text("#+="),
         ),
         KeyData(
             display = KeyDisplay.Text("."),
             handler = CharKeyHandler("."),
         ),
         KeyData(
+            display = KeyDisplay.Text(","),
+            handler = CharKeyHandler(","),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("?"),
+            handler = CharKeyHandler("?"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("!"),
+            handler = CharKeyHandler("!"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("'"),
+            handler = CharKeyHandler("'"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("\""),
+            handler = CharKeyHandler("\""),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("^"),
+            handler = CharKeyHandler("^"),
+        ),
+        KeyData(
+            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
+            handler = BackSpaceKeyHandler,
+        ),
+
+        KeyData(
+            display = KeyDisplay.Text("ABC"),
+            handler = SwitchModeHandler(ModeRegistry.Characters),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("~"),
+            handler = CharKeyHandler("~"),
+        ),
+        KeyData(
             display = KeyDisplay.Icon(Icons.Outlined.InsertEmoticon),
+        ),
+        KeyData(
+            handler = CharKeyHandler(" "),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("\\"),
+            handler = CharKeyHandler("\\"),
+        ),
+        KeyData(
+            display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
+            handler = ReturnKeyHandler,
         ),
     ),
 )

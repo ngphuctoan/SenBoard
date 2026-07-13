@@ -18,16 +18,18 @@ data class KeyStyle(
     val contentColor: Color,
     val shape: Shape = RoundedCornerShape(8.dp),
     val typography: TextStyle = TextStyle(
-        fontFamily = FontFamily.Monospace,
+        fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
-        fontSize = 40.sp,
+        fontSize = 32.sp,
     ),
     val iconSize: Dp = 32.dp,
 )
 
 enum class KeyVariant {
     Neutral,
-    NeutralRaised,
+    Ghost,
+    Tertiary,
+    Secondary,
     Primary,
 }
 
@@ -35,23 +37,39 @@ enum class KeyVariant {
 operator fun KeyVariant.invoke(): KeyStyle =
     when (this) {
         KeyVariant.Neutral -> KeyStyle(
-            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+            color = MaterialTheme.colorScheme.surfaceBright,
             contentColor = MaterialTheme.colorScheme.onSurface,
         )
 
-        KeyVariant.NeutralRaised -> KeyStyle(
-            color = MaterialTheme.colorScheme.outlineVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        KeyVariant.Ghost -> KeyStyle(
+            color = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        )
+
+        KeyVariant.Tertiary -> KeyStyle(
+            color = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            shape = CircleShape,
             typography = TextStyle(
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Normal,
-                fontSize = 32.sp,
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
             ),
         )
 
+        KeyVariant.Secondary -> KeyStyle(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        )
+
         KeyVariant.Primary -> KeyStyle(
-            color = MaterialTheme.colorScheme.inversePrimary,
-            contentColor = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             shape = CircleShape,
+            typography = TextStyle(
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+            ),
         )
     }

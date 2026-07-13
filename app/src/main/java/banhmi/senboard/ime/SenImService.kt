@@ -2,6 +2,10 @@ package banhmi.senboard.ime
 
 import android.view.View
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowDpSize
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.ui.platform.ComposeView
 import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
@@ -16,12 +20,21 @@ class SenImService : LifecycleImService() {
 
     val controller by lazy { SenBoardController(context) }
 
+    @OptIn(
+        ExperimentalMaterial3AdaptiveApi::class,
+        ExperimentalMaterial3WindowSizeClassApi::class,
+    )
     override fun onCreateInputView(): View {
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
+                val windowSizeClass = WindowSizeClass.calculateFromSize(currentWindowDpSize())
+
                 SenBoardTheme {
-                    SenBoardRoot(controller = controller) {
+                    SenBoardRoot(
+                        controller = controller,
+                        widthSizeClass = windowSizeClass.widthSizeClass,
+                    ) {
                         val state = controller.state
 
                         Column {

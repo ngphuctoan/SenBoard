@@ -2,13 +2,13 @@ package banhmi.senboard.ime.keyboard.data.modes
 
 import banhmi.senboard.ime.keyboard.models.Mode
 
-enum class ModeId {
+enum class ModeRegistry {
     Characters,
     Numerics,
 }
 
-val ModeId.value: Mode
+val ModeRegistry.value: Mode
     get() = when (this) {
-        ModeId.Characters -> CharactersMode
-        ModeId.Numerics -> NumericsMode
+        ModeRegistry.Characters -> CharactersMode
+        ModeRegistry.Numerics -> NumericsMode
     }
