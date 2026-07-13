@@ -35,54 +35,71 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.ui.theme.SenBoardTheme
+import banhmi.senboard.app.settings.SettingsHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SenAppView() {
     var preview by remember { mutableStateOf("") }
+    var showSettings by remember { mutableStateOf(false) }
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        SenBoardTheme {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.TopCenter,
-            ) {
-                Column(
+    if (showSettings) {
+        SettingsHost(onNavigateBack = { showSettings = false })
+    } else {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            SenBoardTheme {
+                Box(
                     modifier = Modifier
-                        .widthIn(max = 600.dp)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.TopCenter,
                 ) {
-                    Text("Installation instructions:")
-
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .widthIn(max = 600.dp)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
-                        Instruction(1) { Text("Open Keyboard Settings and enable SenBoard using the button below.") }
-                        Instruction(2) { Text("Switch your current keyboard to SenBoard.") }
-                    }
+                        Text("Installation instructions:")
 
-                    KeyboardSettingsButton {
-                        Text("Enable the keyboard")
-                        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-                        Icon(
-                            Icons.AutoMirrored.Outlined.OpenInNew,
-                            contentDescription = "Open the keyboard settings page"
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Instruction(1) { Text("Open Keyboard Settings and enable SenBoard using the button below.") }
+                            Instruction(2) { Text("Switch your current keyboard to SenBoard.") }
+                        }
+
+                        KeyboardSettingsButton {
+                            Text("Enable the keyboard")
+                            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                            Icon(
+                                Icons.AutoMirrored.Outlined.OpenInNew,
+                                contentDescription = "Open the keyboard settings page"
+                            )
+                        }
+
+                        Button(
+                            onClick = { showSettings = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        ) {
+                            Text("Cài đặt bàn phím")
+                        }
+
+                        Text("Enjoy the new keyboard \uD83C\uDF89")
+
+                        KeyboardPreviewTextField(
+                            label = { Text("Test keyboard here") },
+                            tooltipLabel = "Change keyboard layout",
+                            value = preview,
+                            onValueChange = { preview = it },
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
-
-                    Text("Enjoy the new keyboard \uD83C\uDF89")
-
-                    KeyboardPreviewTextField(
-                        label = { Text("Test keyboard here") },
-                        tooltipLabel = "Change keyboard layout",
-                        value = preview,
-                        onValueChange = { preview = it },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
                 }
             }
         }
