@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -131,7 +132,7 @@ fun FeedbackSettingsScreen(
                                     Box(
                                         modifier = Modifier
                                             .size(32.dp)
-                                            .background(Color(0xFFFF9500).copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)),
+                                            .background(Color(0xFFFF9500).copy(alpha = 0.1f), shape = CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
@@ -220,7 +221,7 @@ fun FeedbackSettingsScreen(
                                     Box(
                                         modifier = Modifier
                                             .size(32.dp)
-                                            .background(Color(0xFF007AFF).copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)),
+                                            .background(Color(0xFF007AFF).copy(alpha = 0.1f), shape = CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
@@ -283,7 +284,7 @@ private fun FeedbackSwitchRow(
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)),
+                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -306,9 +307,11 @@ private fun FeedbackSwitchRow(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
             )
         }
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         Switch(
             checked = checked,

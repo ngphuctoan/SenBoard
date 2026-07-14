@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -235,7 +236,7 @@ private fun InputSwitchRow(
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)),
+                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -258,9 +259,11 @@ private fun InputSwitchRow(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
             )
         }
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         Switch(
             checked = checked,

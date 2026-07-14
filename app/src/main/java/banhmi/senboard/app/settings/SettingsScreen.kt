@@ -1,5 +1,7 @@
 package banhmi.senboard.app.settings
 
+import androidx.activity.compose.BackHandler
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Palette
@@ -36,20 +39,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import banhmi.senboard.app.InstructionsScreen
+import kotlinx.coroutines.delay
 
 enum class SettingsDestination {
     Main,
@@ -57,6 +62,7 @@ enum class SettingsDestination {
     Appearance,
     Feedback,
     About,
+    Instructions,
 }
 
 @Composable
@@ -65,26 +71,91 @@ fun SettingsHost(onNavigateBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = remember { SenBoardPreferences(context) }
 
-    when (currentScreen) {
-        SettingsDestination.Main -> SettingsScreen(
-            onNavigateTo = { currentScreen = it },
-            onNavigateBack = onNavigateBack,
-        )
-        SettingsDestination.Input -> InputSettingsScreen(
-            prefs = prefs,
-            onNavigateBack = { currentScreen = SettingsDestination.Main },
-        )
-        SettingsDestination.Appearance -> AppearanceSettingsScreen(
-            prefs = prefs,
-            onNavigateBack = { currentScreen = SettingsDestination.Main },
-        )
-        SettingsDestination.Feedback -> FeedbackSettingsScreen(
-            prefs = prefs,
-            onNavigateBack = { currentScreen = SettingsDestination.Main },
-        )
-        SettingsDestination.About -> AboutScreen(
-            onNavigateBack = { currentScreen = SettingsDestination.Main },
-        )
+    // State to track last back press timestamp for double-tap-to-exit
+    var lastBackTime by remember { mutableLongStateOf(0L) }
+
+    // Custom logo-free Toast state
+    var toastMessage by remember { mutableStateOf<String?>(null) }
+
+    // Auto-dismiss custom toast
+    LaunchedEffect(toastMessage) {
+        if (toastMessage != null) {
+            delay(2000)
+            toastMessage = null
+        }
+    }
+
+    val showToast = { msg: String -> toastMessage = msg }
+
+    // Intercept back gesture
+    if (currentScreen != SettingsDestination.Main) {
+        BackHandler {
+            currentScreen = SettingsDestination.Main
+        }
+    } else {
+        BackHandler {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastBackTime < 2000) {
+                (context as? Activity)?.finish()
+            } else {
+                lastBackTime = currentTime
+                showToast("Nhấn back lần nữa để thoát")
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (currentScreen) {
+            SettingsDestination.Main -> SettingsScreen(
+                onNavigateTo = { currentScreen = it }
+            )
+            SettingsDestination.Input -> InputSettingsScreen(
+                prefs = prefs,
+                onNavigateBack = { currentScreen = SettingsDestination.Main },
+            )
+            SettingsDestination.Appearance -> AppearanceSettingsScreen(
+                prefs = prefs,
+                onNavigateBack = { currentScreen = SettingsDestination.Main },
+            )
+            SettingsDestination.Feedback -> FeedbackSettingsScreen(
+                prefs = prefs,
+                onNavigateBack = { currentScreen = SettingsDestination.Main },
+            )
+            SettingsDestination.About -> AboutScreen(
+                onNavigateBack = { currentScreen = SettingsDestination.Main },
+                showToast = showToast
+            )
+            SettingsDestination.Instructions -> InstructionsScreen(
+                onNavigateBack = { currentScreen = SettingsDestination.Main },
+            )
+        }
+
+        // Render custom logo-free Toast
+        toastMessage?.let { message ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 96.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.9f)
+                    ),
+                    shape = RoundedCornerShape(24.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                ) {
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -92,7 +163,6 @@ fun SettingsHost(onNavigateBack: () -> Unit) {
 @Composable
 fun SettingsScreen(
     onNavigateTo: (SettingsDestination) -> Unit,
-    onNavigateBack: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -103,11 +173,6 @@ fun SettingsScreen(
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleLarge
                     ) 
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Quay lại")
-                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -124,61 +189,7 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Brand Welcome Card (Premium Header Banner)
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // App Logo Icon Container
-                    Box(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.tertiary
-                                    )
-                                ),
-                                shape = RoundedCornerShape(18.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "S",
-                            color = Color.White,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Black
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "SenBoard 🌿",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Text(
-                            text = "Bàn phím Tốc ký & Telex Tiếng Việt thông minh và hiện đại.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                        )
-                    }
-                }
-            }
-
-            // iOS-style Settings Group Card
+            // Grouped Card list (iOS-style with fully circular icons)
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -188,6 +199,17 @@ fun SettingsScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
+                    SettingsCategoryRow(
+                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                        iconBackground = Color(0xFF5AC8FA), // iOS Teal/Cyan
+                        title = "Hướng dẫn cài đặt",
+                        subtitle = "Từng bước kích hoạt và sử dụng bàn phím",
+                        onClick = { onNavigateTo(SettingsDestination.Instructions) }
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.padding(start = 64.dp),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+                    )
                     SettingsCategoryRow(
                         icon = Icons.Outlined.Keyboard,
                         iconBackground = Color(0xFF4CD964), // iOS Green
@@ -249,11 +271,11 @@ private fun SettingsCategoryRow(
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Colored Box Icon Container
+        // Colored Circular Icon Container (CircleShape)
         Box(
             modifier = Modifier
                 .size(38.dp)
-                .background(iconBackground, shape = RoundedCornerShape(10.dp)),
+                .background(iconBackground, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -276,9 +298,11 @@ private fun SettingsCategoryRow(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
             )
         }
+
+        Spacer(modifier = Modifier.width(16.dp))
 
         Icon(
             imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
