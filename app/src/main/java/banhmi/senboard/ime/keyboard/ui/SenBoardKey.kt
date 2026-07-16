@@ -28,7 +28,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
@@ -42,9 +41,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private fun Modifier.keyInteraction(
     source: MutableInteractionSource,
-    key: Any?,
     onTap: () -> Unit,
     onDoubleTap: () -> Unit,
+    key: Any?,
 ): Modifier = pointerInput(key, source, onTap, onDoubleTap) {
     val doubleTapTimeout = ViewConfiguration.getDoubleTapTimeout().toLong()
     val longPressTimeout = ViewConfiguration.getLongPressTimeout().toLong()
@@ -156,15 +155,7 @@ fun RowScope.SenBoardKeyArea(
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
-
-    val scope = remember {
-        SenBoardKeyScopeImpl(
-            key = key,
-            onTap = onTap,
-            onDoubleTap = onDoubleTap,
-            source = source,
-        )
-    }
+    val scope = remember { SenBoardKeyScopeImpl(key, onTap, onDoubleTap, source) }
 
     Box(
         modifier = Modifier
@@ -175,12 +166,7 @@ fun RowScope.SenBoardKeyArea(
                 if (!desc.isNullOrEmpty()) contentDescription = desc
                 onClick { onTap().let { true } }
             }
-            .keyInteraction(
-                source = source,
-                key = null,
-                onTap = onTap,
-                onDoubleTap = onDoubleTap,
-            ),
+            .keyInteraction(source, onTap, onDoubleTap, key = null),
         contentAlignment = key.shapeAlignment,
     ) {
         scope.content()

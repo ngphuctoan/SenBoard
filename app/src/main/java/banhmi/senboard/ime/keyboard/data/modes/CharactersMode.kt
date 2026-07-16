@@ -3,7 +3,7 @@ package banhmi.senboard.ime.keyboard.data.modes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
 import androidx.compose.material.icons.automirrored.outlined.KeyboardReturn
-import androidx.compose.material.icons.outlined.InsertEmoticon
+import androidx.compose.material.icons.outlined.KeyboardAlt
 import banhmi.senboard.ime.keyboard.core.handlers.BackSpaceKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.ReturnKeyHandler
@@ -138,11 +138,11 @@ val CharactersMode = Mode(
             handler = SwitchModeHandler(ModeRegistry.Numerics),
         ),
         KeyData(
-            display = KeyDisplay.Text(","),
-            handler = CharKeyHandler(","),
+            display = KeyDisplay.Icon(Icons.Outlined.KeyboardAlt),
         ),
         KeyData(
-            display = KeyDisplay.Icon(Icons.Outlined.InsertEmoticon),
+            display = KeyDisplay.Text(","),
+            handler = CharKeyHandler(","),
         ),
         KeyData(
             handler = CharKeyHandler(" "),

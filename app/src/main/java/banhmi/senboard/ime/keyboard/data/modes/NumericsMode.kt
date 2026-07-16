@@ -3,7 +3,6 @@ package banhmi.senboard.ime.keyboard.data.modes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
 import androidx.compose.material.icons.automirrored.outlined.KeyboardReturn
-import androidx.compose.material.icons.outlined.InsertEmoticon
 import banhmi.senboard.ime.keyboard.core.handlers.BackSpaceKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.ReturnKeyHandler
@@ -59,12 +58,56 @@ val NumericsMode = Mode(
         ),
 
         KeyData(
+            display = KeyDisplay.Text("@"),
+            handler = CharKeyHandler("@"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("#"),
+            handler = CharKeyHandler("#"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("$"),
+            handler = CharKeyHandler("$"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("%"),
+            handler = CharKeyHandler("%"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("&"),
+            handler = CharKeyHandler("&"),
+        ),
+        KeyData(
             display = KeyDisplay.Text("-"),
             handler = CharKeyHandler("-"),
         ),
         KeyData(
+            display = KeyDisplay.Text("+"),
+            handler = CharKeyHandler("+"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("("),
+            handler = CharKeyHandler("("),
+        ),
+        KeyData(
+            display = KeyDisplay.Text(")"),
+            handler = CharKeyHandler(")"),
+        ),
+
+        KeyData(
+            display = KeyDisplay.Text("~]<"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("*"),
+            handler = CharKeyHandler("*"),
+        ),
+        KeyData(
             display = KeyDisplay.Text("/"),
             handler = CharKeyHandler("/"),
+        ),
+        KeyData(
+            display = KeyDisplay.Text("_"),
+            handler = CharKeyHandler("_"),
         ),
         KeyData(
             display = KeyDisplay.Text(":"),
@@ -75,56 +118,12 @@ val NumericsMode = Mode(
             handler = CharKeyHandler(";"),
         ),
         KeyData(
-            display = KeyDisplay.Text("("),
-            handler = CharKeyHandler("("),
-        ),
-        KeyData(
-            display = KeyDisplay.Text(")"),
-            handler = CharKeyHandler(")"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("$"),
-            handler = CharKeyHandler("$"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("&"),
-            handler = CharKeyHandler("&"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("@"),
-            handler = CharKeyHandler("@"),
-        ),
-
-        KeyData(
-            display = KeyDisplay.Text("#+="),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("."),
-            handler = CharKeyHandler("."),
-        ),
-        KeyData(
-            display = KeyDisplay.Text(","),
-            handler = CharKeyHandler(","),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("?"),
-            handler = CharKeyHandler("?"),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("!"),
-            handler = CharKeyHandler("!"),
-        ),
-        KeyData(
             display = KeyDisplay.Text("'"),
             handler = CharKeyHandler("'"),
         ),
         KeyData(
             display = KeyDisplay.Text("\""),
             handler = CharKeyHandler("\""),
-        ),
-        KeyData(
-            display = KeyDisplay.Text("^"),
-            handler = CharKeyHandler("^"),
         ),
         KeyData(
             display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
@@ -136,18 +135,19 @@ val NumericsMode = Mode(
             handler = SwitchModeHandler(ModeRegistry.Characters),
         ),
         KeyData(
-            display = KeyDisplay.Text("~"),
-            handler = CharKeyHandler("~"),
+            display = KeyDisplay.Text("\\"),
+            handler = CharKeyHandler("\\"),
         ),
         KeyData(
-            display = KeyDisplay.Icon(Icons.Outlined.InsertEmoticon),
+            display = KeyDisplay.Text("!"),
+            handler = CharKeyHandler("!"),
         ),
         KeyData(
             handler = CharKeyHandler(" "),
         ),
         KeyData(
-            display = KeyDisplay.Text("\\"),
-            handler = CharKeyHandler("\\"),
+            display = KeyDisplay.Text("?"),
+            handler = CharKeyHandler("?"),
         ),
         KeyData(
             display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
