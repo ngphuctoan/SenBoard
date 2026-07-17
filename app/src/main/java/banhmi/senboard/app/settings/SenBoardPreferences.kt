@@ -43,58 +43,58 @@ class SenBoardPreferences(context: Context) {
 
     var typingMode: String
         get() = prefs.getString(KEY_TYPING_MODE, DEFAULT_TYPING_MODE) ?: DEFAULT_TYPING_MODE
-        set(value) = prefs.edit { putString(KEY_TYPING_MODE, value) }
+        set(value) = prefs.edit(commit = true) { putString(KEY_TYPING_MODE, value) }
 
     var autoCapitalize: Boolean
         get() = prefs.getBoolean(KEY_AUTO_CAPITALIZE, true)
-        set(value) = prefs.edit { putBoolean(KEY_AUTO_CAPITALIZE, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_AUTO_CAPITALIZE, value) }
 
     var doubleSpacePeriod: Boolean
         get() = prefs.getBoolean(KEY_DOUBLE_SPACE_PERIOD, true)
-        set(value) = prefs.edit { putBoolean(KEY_DOUBLE_SPACE_PERIOD, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_DOUBLE_SPACE_PERIOD, value) }
 
     var showSuggestions: Boolean
         get() = prefs.getBoolean(KEY_SHOW_SUGGESTIONS, true)
-        set(value) = prefs.edit { putBoolean(KEY_SHOW_SUGGESTIONS, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_SHOW_SUGGESTIONS, value) }
 
     var themeMode: String
         get() = prefs.getString(KEY_THEME_MODE, DEFAULT_THEME_MODE) ?: DEFAULT_THEME_MODE
-        set(value) = prefs.edit { putString(KEY_THEME_MODE, value) }
+        set(value) = prefs.edit(commit = true) { putString(KEY_THEME_MODE, value) }
 
     var keyboardHeight: Int
         get() = prefs.getInt(KEY_KEYBOARD_HEIGHT, DEFAULT_KEYBOARD_HEIGHT)
-        set(value) = prefs.edit { putInt(KEY_KEYBOARD_HEIGHT, value) }
+        set(value) = prefs.edit(commit = true) { putInt(KEY_KEYBOARD_HEIGHT, value) }
 
     var showNumberRow: Boolean
         get() = prefs.getBoolean(KEY_SHOW_NUMBER_ROW, false)
-        set(value) = prefs.edit { putBoolean(KEY_SHOW_NUMBER_ROW, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_SHOW_NUMBER_ROW, value) }
 
     var showKeyBorders: Boolean
         get() = prefs.getBoolean(KEY_SHOW_KEY_BORDERS, true)
-        set(value) = prefs.edit { putBoolean(KEY_SHOW_KEY_BORDERS, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_SHOW_KEY_BORDERS, value) }
 
     var hapticEnabled: Boolean
         get() = prefs.getBoolean(KEY_HAPTIC_ENABLED, true)
-        set(value) = prefs.edit { putBoolean(KEY_HAPTIC_ENABLED, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_HAPTIC_ENABLED, value) }
 
     var hapticIntensity: Int
         get() = prefs.getInt(KEY_HAPTIC_INTENSITY, DEFAULT_HAPTIC_INTENSITY)
-        set(value) = prefs.edit { putInt(KEY_HAPTIC_INTENSITY, value) }
+        set(value) = prefs.edit(commit = true) { putInt(KEY_HAPTIC_INTENSITY, value) }
 
     var soundEnabled: Boolean
         get() = prefs.getBoolean(KEY_SOUND_ENABLED, false)
-        set(value) = prefs.edit { putBoolean(KEY_SOUND_ENABLED, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_SOUND_ENABLED, value) }
 
     var soundVolume: Int
         get() = prefs.getInt(KEY_SOUND_VOLUME, DEFAULT_SOUND_VOLUME)
-        set(value) = prefs.edit { putInt(KEY_SOUND_VOLUME, value) }
+        set(value) = prefs.edit(commit = true) { putInt(KEY_SOUND_VOLUME, value) }
 
     var isDeveloperMode: Boolean
         get() = prefs.getBoolean(KEY_DEVELOPER_MODE, false)
-        set(value) = prefs.edit { putBoolean(KEY_DEVELOPER_MODE, value) }
+        set(value) = prefs.edit(commit = true) { putBoolean(KEY_DEVELOPER_MODE, value) }
 
     fun resetAll() {
-        prefs.edit { clear() }
+        prefs.edit(commit = true) { clear() }
     }
 }
 

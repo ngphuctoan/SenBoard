@@ -15,5 +15,7 @@ class SenBoardContext(
     var state by mutableStateOf(initialState)
         internal set
 
+    val service: InputMethodService? get() = im
+
     fun getEditor(): InputConnection? = im?.currentInputConnection
 }
