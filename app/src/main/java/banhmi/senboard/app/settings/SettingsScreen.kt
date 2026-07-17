@@ -189,7 +189,25 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Grouped Card list (iOS-style with fully circular icons)
+            // Card 1: Hướng dẫn cài đặt
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                SettingsCategoryRow(
+                    icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                    iconBackground = Color(0xFF5AC8FA), // iOS Teal/Cyan
+                    title = "Hướng dẫn cài đặt",
+                    subtitle = "Từng bước kích hoạt và sử dụng bàn phím",
+                    onClick = { onNavigateTo(SettingsDestination.Instructions) }
+                )
+            }
+
+            // Card 2: Phương thức gõ, Giao diện, Phản hồi
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -199,17 +217,6 @@ fun SettingsScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    SettingsCategoryRow(
-                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                        iconBackground = Color(0xFF5AC8FA), // iOS Teal/Cyan
-                        title = "Hướng dẫn cài đặt",
-                        subtitle = "Từng bước kích hoạt và sử dụng bàn phím",
-                        onClick = { onNavigateTo(SettingsDestination.Instructions) }
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(start = 64.dp),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-                    )
                     SettingsCategoryRow(
                         icon = Icons.Outlined.Keyboard,
                         iconBackground = Color(0xFF4CD964), // iOS Green
@@ -239,18 +246,25 @@ fun SettingsScreen(
                         subtitle = "Rung và âm thanh khi nhấn phím",
                         onClick = { onNavigateTo(SettingsDestination.Feedback) }
                     )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(start = 64.dp),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-                    )
-                    SettingsCategoryRow(
-                        icon = Icons.Outlined.Info,
-                        iconBackground = Color(0xFF8E8E93), // iOS Slate Gray
-                        title = "Giới thiệu",
-                        subtitle = "Phiên bản bàn phím, thông tin phát triển",
-                        onClick = { onNavigateTo(SettingsDestination.About) }
-                    )
                 }
+            }
+
+            // Card 3: Giới thiệu
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                SettingsCategoryRow(
+                    icon = Icons.Outlined.Info,
+                    iconBackground = Color(0xFF8E8E93), // iOS Slate Gray
+                    title = "Giới thiệu",
+                    subtitle = "Phiên bản bàn phím, thông tin phát triển",
+                    onClick = { onNavigateTo(SettingsDestination.About) }
+                )
             }
         }
     }

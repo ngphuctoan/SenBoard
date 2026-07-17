@@ -97,7 +97,7 @@ fun AboutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("", fontWeight = FontWeight.Bold) }, // Samsung style clean top bar without text
+                title = { Text("Giới thiệu", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Quay lại")
@@ -119,79 +119,7 @@ fun AboutScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // Samsung style large top branding layout
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Elegant Leaf Logo in a shadow-drop round circle
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .shadow(16.dp, shape = CircleShape, ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                Color(0xFF4CD964), // Emerald
-                                Color(0xFF34A853)  // Forest Green
-                            )
-                        ),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "🌿",
-                    fontSize = 52.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Text(
-                    text = "SenBoard",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp,
-                        letterSpacing = (-0.5).sp
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Text(
-                    text = "Phiên bản $versionName",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            // Samsung style system update status message
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = if (prefs.isDeveloperMode) Icons.Outlined.CheckCircle else Icons.Outlined.Info,
-                        contentDescription = null,
-                        tint = if (prefs.isDeveloperMode) Color(0xFF34A853) else MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (prefs.isDeveloperMode) "Phiên bản mới nhất đã được cài đặt" else "Cập nhật phiên bản",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Grouped Specifications and Links Card
             Card(
