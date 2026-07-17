@@ -20,10 +20,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.BorderOuter
 import androidx.compose.material.icons.outlined.ColorLens
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.DesktopWindows
 import androidx.compose.material.icons.outlined.Height
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.LooksOne
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +34,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -51,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +96,7 @@ fun AppearanceSettingsScreen(
         ) {
             // Category 1: Theme Selection Group
             Column {
+                val isDark = isAppInDarkTheme()
                 Text(
                     text = "Chủ đề",
                     style = MaterialTheme.typography.titleMedium,
@@ -99,9 +106,9 @@ fun AppearanceSettingsScreen(
                 )
 
                 val themes = listOf(
-                    "system" to "Mặc định hệ thống",
-                    "light" to "Chủ đề Sáng",
-                    "dark" to "Chủ đề Tối"
+                    Triple("system", "Hệ thống", Icons.Outlined.DesktopWindows),
+                    Triple("light", "Sáng", Icons.Outlined.LightMode),
+                    Triple("dark", "Tối", Icons.Outlined.DarkMode)
                 )
 
                 Card(
@@ -112,37 +119,70 @@ fun AppearanceSettingsScreen(
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    Column {
-                        themes.forEachIndexed { index, (key, label) ->
-                            Row(
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                    ) {
+                        // Header with Icon, Title and Value
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .selectable(
-                                        selected = (themeMode == key),
-                                        onClick = {
-                                            themeMode = key
-                                            prefs.themeMode = key
-                                        },
-                                        role = Role.RadioButton
-                                    )
-                                    .padding(horizontal = 16.dp, vertical = 14.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                    .size(38.dp)
+                                    .background(if (isDark) Color(0xFF00497D) else Color(0xFFD1E4FF), shape = CircleShape),
+                                contentAlignment = Alignment.Center
                             ) {
-                                RadioButton(
-                                    selected = (themeMode == key),
-                                    onClick = null
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = label,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                Icon(
+                                    imageVector = Icons.Outlined.ColorLens,
+                                    contentDescription = null,
+                                    tint = if (isDark) Color(0xFFAAC7FF) else Color(0xFF001D36),
+                                    modifier = Modifier.size(22.dp)
                                 )
                             }
-                            if (index < themes.size - 1) {
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(start = 56.dp),
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = "Chế độ hiển thị",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Text(
+                                text = themes.find { it.first == themeMode }?.second ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        SingleChoiceSegmentedButtonRow(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            themes.forEachIndexed { index, (key, label, icon) ->
+                                SegmentedButton(
+                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = themes.size),
+                                    onClick = {
+                                        themeMode = key
+                                        prefs.themeMode = key
+                                    },
+                                    selected = (themeMode == key),
+                                    icon = {
+                                        SegmentedButtonDefaults.Icon(active = (themeMode == key)) {
+                                            Icon(
+                                                imageVector = icon,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(SegmentedButtonDefaults.IconSize)
+                                            )
+                                        }
+                                    },
+                                    label = {
+                                        Text(
+                                            text = label,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
                                 )
                             }
                         }
@@ -151,7 +191,8 @@ fun AppearanceSettingsScreen(
             }
 
             // Category 2: Layout & Size Settings Group
-            Column {
+            /* Column {
+                val isDark = isAppInDarkTheme()
                 Text(
                     text = "Bố cục & Kích thước",
                     style = MaterialTheme.typography.titleMedium,
@@ -178,15 +219,15 @@ fun AppearanceSettingsScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Box(
                                     modifier = Modifier
-                                        .size(32.dp)
-                                        .background(Color(0xFF5AC8FA).copy(alpha = 0.1f), shape = CircleShape),
+                                        .size(38.dp)
+                                        .background(if (isDark) Color(0xFF004E58) else Color(0xFFD2F1FF), shape = CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Height,
                                         contentDescription = null,
-                                        tint = Color(0xFF5AC8FA),
-                                        modifier = Modifier.size(18.dp)
+                                        tint = if (isDark) Color(0xFFA6EEFF) else Color(0xFF00363D),
+                                        modifier = Modifier.size(22.dp)
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
@@ -224,7 +265,8 @@ fun AppearanceSettingsScreen(
                         // Switch: Show Number Row
                         AppearanceSwitchRow(
                             icon = Icons.Outlined.LooksOne,
-                            iconColor = Color(0xFF5856D6), // Purple
+                            containerColor = if (isDark) Color(0xFF43368E) else Color(0xFFE5DEFF),
+                            contentColor = if (isDark) Color(0xFFE5DEFF) else Color(0xFF170067),
                             title = "Hiển thị hàng phím số",
                             subtitle = "Hiển thị hàng phím số riêng ở trên cùng",
                             checked = showNumberRow,
@@ -242,7 +284,8 @@ fun AppearanceSettingsScreen(
                         // Switch: Show Key Borders
                         AppearanceSwitchRow(
                             icon = Icons.Outlined.BorderOuter,
-                            iconColor = Color(0xFFFF2D55), // Pink
+                            containerColor = if (isDark) Color(0xFF5E1133) else Color(0xFFFFD9E2),
+                            contentColor = if (isDark) Color(0xFFFFD9E2) else Color(0xFF3E001D),
                             title = "Hiển thị viền các phím",
                             subtitle = "Hiển thị đường viền phân tách các phím",
                             checked = showKeyBorders,
@@ -253,7 +296,7 @@ fun AppearanceSettingsScreen(
                         )
                     }
                 }
-            }
+            } */
         }
     }
 }
@@ -261,7 +304,8 @@ fun AppearanceSettingsScreen(
 @Composable
 private fun AppearanceSwitchRow(
     icon: ImageVector,
-    iconColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     checked: Boolean,
@@ -276,15 +320,15 @@ private fun AppearanceSwitchRow(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp)
             )
         }
 

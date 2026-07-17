@@ -22,10 +22,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.DeveloperMode
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.Smartphone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,22 +38,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,11 +61,6 @@ fun AboutScreen(
 ) {
     val context = LocalContext.current
     val prefs = remember { SenBoardPreferences(context) }
-
-    // Reset developer mode when entering this screen to facilitate testing
-    LaunchedEffect(Unit) {
-        prefs.isDeveloperMode = false
-    }
 
     // Read version name dynamically using package info
     val packageInfo = remember(context) {
@@ -89,7 +82,7 @@ fun AboutScreen(
     } ?: "1"
 
     // Developer mode click easter egg state
-    var versionClickCount by remember { mutableIntStateOf(0) }
+    var versionClickCount by rememberSaveable { mutableIntStateOf(0) }
 
     // GitHub Link URL
     val githubUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1"
@@ -133,22 +126,23 @@ fun AboutScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     // Item 1: App Version Info (Clickable for easter egg)
                     SamsungAboutRow(
-                        icon = Icons.Outlined.Info,
-                        iconBgColor = Color(0xFF007AFF),
+                        icon = Icons.Outlined.Smartphone,
+                        containerColor = if (isAppInDarkTheme()) Color(0xFF00497D) else Color(0xFFD1E4FF),
+                        contentColor = if (isAppInDarkTheme()) Color(0xFFAAC7FF) else Color(0xFF001D36),
                         title = "Thông tin phiên bản",
                         subtitle = "",
                         trailingText = "$versionName (Build $versionCode)",
                         onClick = {
-                            if (prefs.isDeveloperMode) {
-                                showToast("Bạn đã cập nhật phiên bản mới nhất!")
+                            if (prefs.easterEggEnabled) {
+                                showToast("Easter egg đã được kích hoạt!")
                             } else {
                                 versionClickCount++
                                 if (versionClickCount in 3..6) {
                                     val remaining = 7 - versionClickCount
-                                    showToast("Bạn còn $remaining lần bấm để xem phiên bản mới nhất.")
+                                    showToast("Ấn thêm $versionClickCount/7 lượt để bật Easter egg")
                                 } else if (versionClickCount >= 7) {
-                                    prefs.isDeveloperMode = true
-                                    showToast("Bạn đã cập nhật phiên bản mới nhất!")
+                                    prefs.easterEggEnabled = true
+                                    showToast("Easter egg đã được kích hoạt!")
                                 }
                             }
                         }
@@ -159,11 +153,12 @@ fun AboutScreen(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
                     )
 
-                    // Item 2: GitHub Repository Link
+                    // Item 2: GitLab Link
                     SamsungAboutRow(
-                        icon = Icons.Outlined.Link,
-                        iconBgColor = Color(0xFF5856D6),
-                        title = "GitHub",
+                        icon = Icons.Outlined.Code,
+                        containerColor = if (isAppInDarkTheme()) Color(0xFF43368E) else Color(0xFFE5DEFF),
+                        contentColor = if (isAppInDarkTheme()) Color(0xFFE5DEFF) else Color(0xFF170067),
+                        title = "Mã nguồn",
                         subtitle = "",
                         onClick = {
                             try {
@@ -185,7 +180,8 @@ fun AboutScreen(
 @Composable
 private fun SamsungAboutRow(
     icon: ImageVector,
-    iconBgColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     trailingText: String? = null,
@@ -201,15 +197,15 @@ private fun SamsungAboutRow(
         // Circular icon container
         Box(
             modifier = Modifier
-                .size(34.dp)
-                .background(iconBgColor.copy(alpha = 0.12f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconBgColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp)
             )
         }
 

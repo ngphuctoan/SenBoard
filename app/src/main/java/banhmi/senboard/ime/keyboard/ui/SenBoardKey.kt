@@ -1,5 +1,9 @@
 package banhmi.senboard.ime.keyboard.ui
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.ViewConfiguration
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -34,6 +38,7 @@ import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScope
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScopeImpl
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -121,11 +126,11 @@ fun SenBoardKeyScope.SenBoardKeyContent(
 @Composable
 fun SenBoardKeyScope.SenBoardKeyShape(
     margin: PaddingValues = PaddingValues(8.dp),
-    forceHighlight: Boolean = false,
+    forceHighlightState: Boolean? = null,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     val style = key.variant()
-    val pressedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+    val pressedColor = if (isAppInDarkTheme()) Color.White else Color.Black
 
     Surface(
         modifier = Modifier
@@ -137,7 +142,7 @@ fun SenBoardKeyScope.SenBoardKeyShape(
                 indication = KeyHighlightIndication(
                     color = pressedColor.copy(alpha = 0.2f),
                     shape = style.shape,
-                    forceVisible = forceHighlight,
+                    forceState = forceHighlightState,
                 ),
             ),
         color = style.color,

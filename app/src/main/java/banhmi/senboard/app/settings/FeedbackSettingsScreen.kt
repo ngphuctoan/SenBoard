@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
+import androidx.compose.material.icons.outlined.SignalCellularAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -47,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +62,6 @@ fun FeedbackSettingsScreen(
 ) {
     var hapticEnabled by remember { mutableStateOf(prefs.hapticEnabled) }
     var hapticIntensity by remember { mutableFloatStateOf(prefs.hapticIntensity.toFloat()) }
-    var soundEnabled by remember { mutableStateOf(prefs.soundEnabled) }
     var soundVolume by remember { mutableFloatStateOf(prefs.soundVolume.toFloat()) }
 
     Scaffold(
@@ -84,6 +88,7 @@ fun FeedbackSettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val isDark = isAppInDarkTheme()
             // Category 1: Haptic Vibration Settings Card
             Column {
                 Text(
@@ -106,7 +111,8 @@ fun FeedbackSettingsScreen(
                         // Switch: Haptic Enabled
                         FeedbackSwitchRow(
                             icon = Icons.Outlined.Vibration,
-                            iconColor = Color(0xFFFF9500), // Orange
+                            containerColor = if (isDark) Color(0xFF563E00) else Color(0xFFFFDDB3),
+                            contentColor = if (isDark) Color(0xFFFFDDB3) else Color(0xFF291800),
                             title = "Rung khi nhấn phím",
                             subtitle = "Rung phản hồi nhẹ khi chạm phím gõ",
                             checked = hapticEnabled,
@@ -131,15 +137,15 @@ fun FeedbackSettingsScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .size(32.dp)
-                                            .background(Color(0xFFFF9500).copy(alpha = 0.1f), shape = CircleShape),
+                                            .size(38.dp)
+                                            .background(if (isDark) Color(0xFF563E00) else Color(0xFFFFDDB3), shape = CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.Tune,
+                                            imageVector = Icons.Outlined.SignalCellularAlt,
                                             contentDescription = null,
-                                            tint = Color(0xFFFF9500),
-                                            modifier = Modifier.size(18.dp)
+                                            tint = if (isDark) Color(0xFFFFDDB3) else Color(0xFF291800),
+                                            modifier = Modifier.size(22.dp)
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(16.dp))
@@ -151,22 +157,38 @@ fun FeedbackSettingsScreen(
                                         modifier = Modifier.weight(1f)
                                     )
                                     Text(
-                                        text = "${hapticIntensity.roundToInt()}%",
+                                        text = when (hapticIntensity.roundToInt()) {
+                                            in 0..45 -> "Nhẹ"
+                                            in 46..75 -> "Vừa"
+                                            else -> "Mạnh"
+                                        },
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                 }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Slider(
-                                    value = hapticIntensity,
-                                    onValueChange = {
-                                        hapticIntensity = it
-                                        prefs.hapticIntensity = it.roundToInt()
-                                    },
-                                    valueRange = 10f..100f,
-                                    steps = 8
-                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                
+                                val options = listOf("Nhẹ", "Vừa", "Mạnh")
+                                val values = listOf(30, 60, 100)
+                                val selectedIndex = values.indexOf(hapticIntensity.roundToInt()).coerceAtLeast(0)
+
+                                SingleChoiceSegmentedButtonRow(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    options.forEachIndexed { index, label ->
+                                        SegmentedButton(
+                                            shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
+                                            onClick = {
+                                                val newValue = values[index]
+                                                hapticIntensity = newValue.toFloat()
+                                                prefs.hapticIntensity = newValue
+                                            },
+                                            selected = index == selectedIndex,
+                                            label = { Text(label) }
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -191,73 +213,55 @@ fun FeedbackSettingsScreen(
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    Column {
-                        // Switch: Sound Enabled
-                        FeedbackSwitchRow(
-                            icon = Icons.AutoMirrored.Outlined.VolumeUp,
-                            iconColor = Color(0xFF007AFF), // Blue
-                            title = "Phát âm thanh nhấn phím",
-                            subtitle = "Phát tiếng click nhẹ khi nhấn các phím",
-                            checked = soundEnabled,
-                            onCheckedChange = {
-                                soundEnabled = it
-                                prefs.soundEnabled = it
-                            }
-                        )
-
-                        if (soundEnabled) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(start = 56.dp),
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-                            )
-
-                            // Slider: Sound Volume
-                            Column(
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 14.dp)
+                                    .size(38.dp)
+                                    .background(if (isDark) Color(0xFF00497D) else Color(0xFFD1E4FF), shape = CircleShape),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .background(Color(0xFF007AFF).copy(alpha = 0.1f), shape = CircleShape),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Tune,
-                                            contentDescription = null,
-                                            tint = Color(0xFF007AFF),
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(16.dp))
-                                    Text(
-                                        text = "Âm lượng phím click",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Text(
-                                        text = "${soundVolume.roundToInt()}%",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Slider(
-                                    value = soundVolume,
-                                    onValueChange = {
-                                        soundVolume = it
-                                        prefs.soundVolume = it.roundToInt()
-                                    },
-                                    valueRange = 10f..100f,
-                                    steps = 8
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
+                                    contentDescription = null,
+                                    tint = if (isDark) Color(0xFFAAC7FF) else Color(0xFF001D36),
+                                    modifier = Modifier.size(22.dp)
                                 )
                             }
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "Âm lượng phím click",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Âm lượng của âm thanh khi nhấn phím",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
+                                )
+                            }
+                            Text(
+                                text = "${soundVolume.roundToInt()}%",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Slider(
+                            value = soundVolume,
+                            onValueChange = {
+                                soundVolume = it
+                                prefs.soundVolume = it.roundToInt()
+                            },
+                            valueRange = 0f..100f
+                        )
                     }
                 }
             }
@@ -268,7 +272,8 @@ fun FeedbackSettingsScreen(
 @Composable
 private fun FeedbackSwitchRow(
     icon: ImageVector,
-    iconColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     checked: Boolean,
@@ -283,15 +288,15 @@ private fun FeedbackSwitchRow(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp)
             )
         }
 
