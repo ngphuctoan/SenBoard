@@ -52,117 +52,109 @@ class SenImService : LifecycleImService() {
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
-                val prefs = banhmi.senboard.app.settings.rememberPreferences()
-                val darkTheme = when (prefs.themeMode) {
-                    "light" -> false
-                    "dark" -> true
-                    else -> androidx.compose.foundation.isSystemInDarkTheme()
-                }
-                SenBoardTheme(darkTheme = darkTheme) {
+                SenBoardTheme {
                     SenBoardRoot {
                         SenBoardContent(controller) {
                             val state = controller.state
                             Column {
-                                if (prefs.showSuggestions) {
-                                    Toolbar {
-                                        // TODO: move these buttons somewhere else
-                                        val isAaaaaMode = state.mode == AaaaaMode
+                                Toolbar {
+                                    // TODO: move these buttons somewhere else
+                                    val isAaaaaMode = state.mode == AaaaaMode
 
-                                        TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Switch Vietnamese engine"
-                                                        }
-                                                ) {
-                                                    Text("Switch Vietnamese engine")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
-                                        ) {
-                                            IconButton(onClick = {}) {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .size(24.dp)
-                                                        .border(
-                                                            width = 2.dp,
-                                                            color = LocalContentColor.current,
-                                                            shape = RoundedCornerShape(4.dp),
-                                                        ),
-                                                    contentAlignment = Alignment.Center,
-                                                ) {
-                                                    Text(
-                                                        "V",
-                                                        color = LocalContentColor.current,
-                                                        fontWeight = FontWeight.Bold,
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                        TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Toggle aaaaa"
-                                                        }
-                                                ) {
-                                                    Text("Mystery mode")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
-                                        ) {
-                                            FilledIconToggleButton(
-                                                checked = isAaaaaMode,
-                                                onCheckedChange = {
-                                                    context.state = state.copy(
-                                                        mode = if (isAaaaaMode) CharactersMode else AaaaaMode
-                                                    )
-                                                },
+                                    TooltipBox(
+                                        positionProvider =
+                                            TooltipDefaults.rememberTooltipPositionProvider(
+                                                TooltipAnchorPosition.Above),
+                                        tooltip = {
+                                            PlainTooltip(
+                                                modifier =
+                                                    Modifier.semantics {
+                                                        liveRegion = LiveRegionMode.Assertive
+                                                        paneTitle = "Switch Vietnamese engine"
+                                                    }
                                             ) {
-                                                if (isAaaaaMode) Icon(
-                                                    Icons.Filled.AutoFixHigh,
-                                                    contentDescription = "Turn off aaaaa",
-                                                ) else Icon(
-                                                    Icons.Outlined.AutoFixHigh,
-                                                    contentDescription = "Turn on aaaaa",
+                                                Text("Switch Vietnamese engine")
+                                            }
+                                        },
+                                        state = rememberTooltipState(),
+                                    ) {
+                                        IconButton(onClick = {}) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(24.dp)
+                                                    .border(
+                                                        width = 2.dp,
+                                                        color = LocalContentColor.current,
+                                                        shape = RoundedCornerShape(4.dp),
+                                                    ),
+                                                contentAlignment = Alignment.Center,
+                                            ) {
+                                                Text(
+                                                    "V",
+                                                    color = LocalContentColor.current,
+                                                    fontWeight = FontWeight.Bold,
                                                 )
                                             }
                                         }
+                                    }
 
-                                        TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Open settings"
-                                                        }
-                                                ) {
-                                                    Text("Open settings")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
-                                        ) {
-                                            IconButton(onClick = {}) {
-                                                Icon(
-                                                    Icons.Outlined.Settings,
-                                                    contentDescription = "Open settings",
-                                                )
+                                    TooltipBox(
+                                        positionProvider =
+                                            TooltipDefaults.rememberTooltipPositionProvider(
+                                                TooltipAnchorPosition.Above),
+                                        tooltip = {
+                                            PlainTooltip(
+                                                modifier =
+                                                    Modifier.semantics {
+                                                        liveRegion = LiveRegionMode.Assertive
+                                                        paneTitle = "Toggle aaaaa"
+                                                    }
+                                            ) {
+                                                Text("Mystery mode")
                                             }
+                                        },
+                                        state = rememberTooltipState(),
+                                    ) {
+                                        FilledIconToggleButton(
+                                            checked = isAaaaaMode,
+                                            onCheckedChange = {
+                                                context.state = state.copy(
+                                                    mode = if (isAaaaaMode) CharactersMode else AaaaaMode
+                                                )
+                                            },
+                                        ) {
+                                            if (isAaaaaMode) Icon(
+                                                Icons.Filled.AutoFixHigh,
+                                                contentDescription = "Turn off aaaaa",
+                                            ) else Icon(
+                                                Icons.Outlined.AutoFixHigh,
+                                                contentDescription = "Turn on aaaaa",
+                                            )
+                                        }
+                                    }
+
+                                    TooltipBox(
+                                        positionProvider =
+                                            TooltipDefaults.rememberTooltipPositionProvider(
+                                                TooltipAnchorPosition.Above),
+                                        tooltip = {
+                                            PlainTooltip(
+                                                modifier =
+                                                    Modifier.semantics {
+                                                        liveRegion = LiveRegionMode.Assertive
+                                                        paneTitle = "Open settings"
+                                                    }
+                                            ) {
+                                                Text("Open settings")
+                                            }
+                                        },
+                                        state = rememberTooltipState(),
+                                    ) {
+                                        IconButton(onClick = {}) {
+                                            Icon(
+                                                Icons.Outlined.Settings,
+                                                contentDescription = "Open settings",
+                                            )
                                         }
                                     }
                                 }

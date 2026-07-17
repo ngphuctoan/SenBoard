@@ -32,13 +32,11 @@ import banhmi.senboard.ui.theme.SenBoardTheme
 fun SenBoardRoot(
     content: @Composable () -> Unit,
 ) {
-    val prefs = banhmi.senboard.app.settings.rememberPreferences()
-    val keyboardHeight = prefs.keyboardHeight
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(keyboardHeight.dp + navBarHeight)
+            .height(360.dp + navBarHeight)
             .navigationBarsPadding(),
         color = MaterialTheme.colorScheme.surfaceContainer,
     ) {

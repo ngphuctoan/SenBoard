@@ -120,21 +120,10 @@ fun SenBoardKeyScope.SenBoardKeyContent(
 fun SenBoardKeyScope.SenBoardKeyShape(
     margin: PaddingValues = PaddingValues(8.dp),
     forceHighlight: Boolean = false,
-    isSpacer: Boolean = false,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     val style = key.variant()
     val pressedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val prefs = banhmi.senboard.app.settings.rememberPreferences()
-    val showKeyBorders = prefs.showKeyBorders
-
-    val keyColor = if (isSpacer) {
-        Color.Transparent
-    } else if (!showKeyBorders && key.variant == banhmi.senboard.ime.keyboard.models.KeyVariant.Neutral) {
-        Color.Transparent
-    } else {
-        style.color
-    }
 
     Surface(
         modifier = Modifier
@@ -149,7 +138,7 @@ fun SenBoardKeyScope.SenBoardKeyShape(
                     forceVisible = forceHighlight,
                 ),
             ),
-        color = keyColor,
+        color = style.color,
         contentColor = style.contentColor,
         shape = style.shape,
     ) {

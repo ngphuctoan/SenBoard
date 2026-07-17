@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.runtime.remember
-import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.ShiftKeyHandler
 import banhmi.senboard.ime.keyboard.models.KeyDisplay
 import banhmi.senboard.ime.keyboard.models.KeyHandler
@@ -74,70 +72,44 @@ fun SenBoardScope.SenBoardLayout(
     onKeyTap: (KeyHandler) -> Unit,
     onKeyDoubleTap: (KeyHandler) -> Unit,
 ) {
-    val prefs = banhmi.senboard.app.settings.rememberPreferences()
-    val showNumberRow = prefs.showNumberRow && mode.name == "characters"
-
-    val dynamicKeyRows = remember(mode, showNumberRow) {
-        if (showNumberRow) {
-            val numberRow = banhmi.senboard.ime.keyboard.models.KeyRow(
-                keys = List(10) { banhmi.senboard.ime.keyboard.models.Key(variant = banhmi.senboard.ime.keyboard.models.KeyVariant.Secondary) },
-                heightWeight = 0.8f
-            )
-            listOf(numberRow) + mode.layout.keyRows
-        } else {
-            mode.layout.keyRows
-        }
-    }
-
-    val dynamicSlots = remember(mode, showNumberRow) {
-        if (showNumberRow) {
-            val numberSlots = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0").map { num ->
-                banhmi.senboard.ime.keyboard.models.KeyData(
-                    display = KeyDisplay.Text(num),
-                    handler = CharKeyHandler(num)
-                )
-            }
-            numberSlots + mode.slots
-        } else {
-            mode.slots
-        }
-    }
+    val layout = mode.layout
+    val slots = mode.slots
 
     val isCapsLocked = controller.state.shiftMode == ShiftMode.CapsLocked
 
-    // Set key to layout name & showNumberRow to force layout subtree to be recreated when preferences change
-    key("${mode.layout.name}_$showNumberRow") {
+    // Thanks to ChatGPT for all of this, and the indexing bugfix!
+    // Set key to layout name to force layout subtree to be recreated
+    key(layout.name) {
         SenBoardColumn {
-            var slotIndex = 0
+            var rowOffset = 0
 
-            for (keyRow in dynamicKeyRows) {
+            for (keyRow in layout.keyRows) {
+                val currentRowOffset = rowOffset
+                rowOffset += keyRow.keys.size
+
                 SenBoardRow(heightWeight = keyRow.heightWeight) {
-                    for (key in keyRow.keys) {
-                        val slot = dynamicSlots.getOrNull(slotIndex)
-                        slotIndex++
+                    for ((keyIndex, key) in keyRow.keys.withIndex()) {
+                        val slot = slots[currentRowOffset + keyIndex]
+                        val handler = slot.handler
 
-                        if (slot != null) {
-                            val handler = slot.handler
-                            val display = when (val value = slot.display) {
-                                is KeyDisplay.Dynamic -> value(controller.state)
-                                is KeyDisplay.Static -> value
-                            }
+                        val display = when (val value = slot.display) {
+                            is KeyDisplay.Dynamic -> value(controller.state)
+                            is KeyDisplay.Static -> value
+                        }
 
-                            SenBoardKeyArea(
-                                key = key,
-                                desc = if (display is KeyDisplay.Icon) display.description else null,
-                                onTap = { onKeyTap(handler) },
-                                onDoubleTap = { onKeyDoubleTap(handler) },
+                        SenBoardKeyArea(
+                            key = key,
+                            desc = if (display is KeyDisplay.Icon) display.description else null,
+                            onTap = { onKeyTap(handler) },
+                            onDoubleTap = { onKeyDoubleTap(handler) },
+                        ) {
+                            SenBoardKeyShape(
+                                margin = layout.keyMargins(screenWidth).getPaddingValues(),
+                                forceHighlight = slot.handler is ShiftKeyHandler && isCapsLocked,
                             ) {
-                                SenBoardKeyShape(
-                                    margin = mode.layout.keyMargins(screenWidth).getPaddingValues(),
-                                    forceHighlight = slot.handler is ShiftKeyHandler && isCapsLocked,
-                                    isSpacer = display is KeyDisplay.None,
-                                ) {
-                                    SenBoardKeyContent {
-                                        val style = key.variant()
-                                        SenBoardKeyDisplay(display, style)
-                                    }
+                                SenBoardKeyContent {
+                                    val style = key.variant()
+                                    SenBoardKeyDisplay(display, style)
                                 }
                             }
                         }
