@@ -54,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.app.InstructionsScreen
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlinx.coroutines.delay
 
 enum class SettingsDestination {
@@ -164,6 +165,7 @@ fun SettingsHost(onNavigateBack: () -> Unit) {
 fun SettingsScreen(
     onNavigateTo: (SettingsDestination) -> Unit,
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -198,9 +200,11 @@ fun SettingsScreen(
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
+                val isDark = isAppInDarkTheme()
                 SettingsCategoryRow(
                     icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                    iconBackground = Color(0xFF5AC8FA), // iOS Teal/Cyan
+                    iconBackground = if (isDark) Color(0xFF4FD8EB) else Color(0xFF006874),
+                    iconTint = if (isDark) Color(0xFF00363D) else Color.White,
                     title = "Hướng dẫn cài đặt",
                     subtitle = "Từng bước kích hoạt và sử dụng bàn phím",
                     onClick = { onNavigateTo(SettingsDestination.Instructions) }
@@ -216,10 +220,12 @@ fun SettingsScreen(
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
+                val isDark = isAppInDarkTheme()
                 Column(modifier = Modifier.fillMaxWidth()) {
                     SettingsCategoryRow(
                         icon = Icons.Outlined.Keyboard,
-                        iconBackground = Color(0xFF4CD964), // iOS Green
+                        iconBackground = if (isDark) Color(0xFF8FFB91) else Color(0xFF006D14),
+                        iconTint = if (isDark) Color(0xFF00390A) else Color.White,
                         title = "Phương thức gõ",
                         subtitle = "Chế độ gõ, tự động sửa, gợi ý từ",
                         onClick = { onNavigateTo(SettingsDestination.Input) }
@@ -230,7 +236,8 @@ fun SettingsScreen(
                     )
                     SettingsCategoryRow(
                         icon = Icons.Outlined.Palette,
-                        iconBackground = Color(0xFF007AFF), // iOS Blue
+                        iconBackground = if (isDark) Color(0xFFAAC7FF) else Color(0xFF005FAF),
+                        iconTint = if (isDark) Color(0xFF003061) else Color.White,
                         title = "Giao diện",
                         subtitle = "Chủ đề, chiều cao bàn phím, viền phím",
                         onClick = { onNavigateTo(SettingsDestination.Appearance) }
@@ -241,7 +248,8 @@ fun SettingsScreen(
                     )
                     SettingsCategoryRow(
                         icon = Icons.Outlined.Vibration,
-                        iconBackground = Color(0xFFFF9500), // iOS Orange
+                        iconBackground = if (isDark) Color(0xFFFFB862) else Color(0xFF8B5000),
+                        iconTint = if (isDark) Color(0xFF4A2800) else Color.White,
                         title = "Phản hồi",
                         subtitle = "Rung và âm thanh khi nhấn phím",
                         onClick = { onNavigateTo(SettingsDestination.Feedback) }
@@ -258,9 +266,11 @@ fun SettingsScreen(
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
+                val isDark = isAppInDarkTheme()
                 SettingsCategoryRow(
                     icon = Icons.Outlined.Info,
-                    iconBackground = Color(0xFF8E8E93), // iOS Slate Gray
+                    iconBackground = if (isDark) Color(0xFFC6C6CA) else Color(0xFF5E5E62),
+                    iconTint = if (isDark) Color(0xFF2E3134) else Color.White,
                     title = "Giới thiệu",
                     subtitle = "Phiên bản bàn phím, thông tin phát triển",
                     onClick = { onNavigateTo(SettingsDestination.About) }
@@ -274,6 +284,7 @@ fun SettingsScreen(
 private fun SettingsCategoryRow(
     icon: ImageVector,
     iconBackground: Color,
+    iconTint: Color,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
@@ -295,7 +306,7 @@ private fun SettingsCategoryRow(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.White,
+                tint = iconTint,
                 modifier = Modifier.size(22.dp)
             )
         }

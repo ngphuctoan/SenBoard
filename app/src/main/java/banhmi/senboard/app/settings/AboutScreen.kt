@@ -22,8 +22,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.DeveloperMode
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material3.Card
@@ -38,22 +36,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,11 +58,6 @@ fun AboutScreen(
 ) {
     val context = LocalContext.current
     val prefs = remember { SenBoardPreferences(context) }
-
-    // Reset developer mode when entering this screen to facilitate testing
-    LaunchedEffect(Unit) {
-        prefs.isDeveloperMode = false
-    }
 
     // Read version name dynamically using package info
     val packageInfo = remember(context) {
@@ -89,7 +79,7 @@ fun AboutScreen(
     } ?: "1"
 
     // Developer mode click easter egg state
-    var versionClickCount by remember { mutableIntStateOf(0) }
+    var versionClickCount by rememberSaveable { mutableIntStateOf(0) }
 
     // GitHub Link URL
     val githubUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1"
@@ -140,15 +130,15 @@ fun AboutScreen(
                         trailingText = "$versionName (Build $versionCode)",
                         onClick = {
                             if (prefs.isDeveloperMode) {
-                                showToast("Bạn đã cập nhật phiên bản mới nhất!")
+                                showToast("Easter egg enabled!")
                             } else {
                                 versionClickCount++
                                 if (versionClickCount in 3..6) {
                                     val remaining = 7 - versionClickCount
-                                    showToast("Bạn còn $remaining lần bấm để xem phiên bản mới nhất.")
+                                    showToast("Easter egg - $versionClickCount/7")
                                 } else if (versionClickCount >= 7) {
                                     prefs.isDeveloperMode = true
-                                    showToast("Bạn đã cập nhật phiên bản mới nhất!")
+                                    showToast("Easter egg enabled!")
                                 }
                             }
                         }

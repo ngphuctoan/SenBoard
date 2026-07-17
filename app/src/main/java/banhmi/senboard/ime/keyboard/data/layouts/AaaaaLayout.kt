@@ -12,15 +12,15 @@ val AaaaaLayout = Layout(
     keyRows = listOf(
         KeyRow(
             listOf(
-                Key(variant = KeyVariant.Ghost),
+                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
             ),
             heightWeight = 3f,
         ),
         KeyRow(
             listOf(
-                Key(variant = KeyVariant.Ghost),
-                Key(4f, variant = KeyVariant.Ghost),
-                Key(variant = KeyVariant.Ghost),
+                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
+                Key(4f, variant = KeyVariant.Ghost, forceHighlightState = false),
+                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
             ),
         ),
     ),

@@ -159,6 +159,8 @@ fun SenBoardScope.SenBoardLayout(
                             is KeyDisplay.Static -> value
                         }
 
+                        val forceCapsLockHighlight = slot.handler is ShiftKeyHandler && isCapsLocked
+
                         SenBoardKeyArea(
                             key = key,
                             desc = if (display is KeyDisplay.Icon) display.description else null,
@@ -167,19 +169,19 @@ fun SenBoardScope.SenBoardLayout(
                         ) {
                             SenBoardKeyShape(
                                 margin = layout.keyMargins(screenWidth).getPaddingValues(),
-                                forceHighlight = slot.handler is ShiftKeyHandler && isCapsLocked,
+                                forceHighlightState =
+                                    // Prioritise forceCapsLockHighlight then nullable forceHighlightState
+                                    if (forceCapsLockHighlight) forceCapsLockHighlight
+                                    else key.forceHighlightState,
                             ) {
                                 val style = key.variant()
                                 SenBoardKeyContent(contentPadding = style.contentPadding) {
-                                    val overrideFontSize = if (
-                                        style.useReferenceFontSize &&
-                                        display is KeyDisplay.Text &&
-                                        display.label.length == 1
-                                    ) {
-                                        referenceFontSize
-                                    } else {
-                                        null
-                                    }
+                                    val overrideFontSize =
+                                        if (style.useReferenceFontSize && display is KeyDisplay.Text && display.label.length == 1) {
+                                            referenceFontSize
+                                        } else {
+                                            null
+                                        }
                                     SenBoardKeyDisplay(display, style, overrideFontSize)
                                 }
                             }
