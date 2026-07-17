@@ -8,8 +8,8 @@ data class Layout(
     val keyRows: List<KeyRow>,
     val keyMargins: (screenWidth: Dp) -> KeyMargins = { screenWidth ->
         when {
-            screenWidth > 600.dp -> KeyMargins(4.dp)
-            else -> KeyMargins(4.dp, 8.dp)
+            screenWidth >= 600.dp -> KeyMargins(4.dp)
+            else -> KeyMargins(2.dp, 8.dp)
         }
     },
 )
