@@ -17,9 +17,8 @@ fun Toolbar(content: @Composable RowScope.() -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(2.dp)
+            .height(48.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         content()

@@ -1,18 +1,18 @@
 package banhmi.senboard.ime.keyboard.ui
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.ViewConfiguration
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import banhmi.senboard.ime.keyboard.models.Key
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,19 +20,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.ime.keyboard.models.Key
 import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScope
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScopeImpl
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -104,12 +110,13 @@ private fun Modifier.keyInteraction(
 
 @Composable
 fun SenBoardKeyScope.SenBoardKeyContent(
+    contentPadding: Dp = 8.dp,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp),
+            .padding(contentPadding),
         contentAlignment = Alignment.Center,
     ) {
         content()
@@ -119,22 +126,11 @@ fun SenBoardKeyScope.SenBoardKeyContent(
 @Composable
 fun SenBoardKeyScope.SenBoardKeyShape(
     margin: PaddingValues = PaddingValues(8.dp),
-    forceHighlight: Boolean = false,
-    isSpacer: Boolean = false,
+    forceHighlightState: Boolean? = null,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     val style = key.variant()
-    val pressedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-    val prefs = banhmi.senboard.app.settings.rememberPreferences()
-    val showKeyBorders = prefs.showKeyBorders
-
-    val keyColor = if (isSpacer) {
-        Color.Transparent
-    } else if (!showKeyBorders && key.variant == banhmi.senboard.ime.keyboard.models.KeyVariant.Neutral) {
-        Color.Transparent
-    } else {
-        style.color
-    }
+    val pressedColor = if (isAppInDarkTheme()) Color.White else Color.Black
 
     Surface(
         modifier = Modifier
@@ -146,10 +142,10 @@ fun SenBoardKeyScope.SenBoardKeyShape(
                 indication = KeyHighlightIndication(
                     color = pressedColor.copy(alpha = 0.2f),
                     shape = style.shape,
-                    forceVisible = forceHighlight,
+                    forceState = forceHighlightState,
                 ),
             ),
-        color = keyColor,
+        color = style.color,
         contentColor = style.contentColor,
         shape = style.shape,
     ) {

@@ -27,14 +27,13 @@ class SenBoardPreferences(context: Context) {
 
         const val KEY_HAPTIC_ENABLED = "haptic_enabled"
         const val KEY_HAPTIC_INTENSITY = "haptic_intensity"
-        const val KEY_SOUND_ENABLED = "sound_enabled"
         const val KEY_SOUND_VOLUME = "sound_volume"
         const val KEY_DEVELOPER_MODE = "developer_mode"
 
         const val DEFAULT_TYPING_MODE = "telex"
         const val DEFAULT_THEME_MODE = "system"
         const val DEFAULT_KEYBOARD_HEIGHT = 400
-        const val DEFAULT_HAPTIC_INTENSITY = 50
+        const val DEFAULT_HAPTIC_INTENSITY = 60
         const val DEFAULT_SOUND_VOLUME = 50
     }
 
@@ -80,10 +79,6 @@ class SenBoardPreferences(context: Context) {
     var hapticIntensity: Int
         get() = prefs.getInt(KEY_HAPTIC_INTENSITY, DEFAULT_HAPTIC_INTENSITY)
         set(value) = prefs.edit(commit = true) { putInt(KEY_HAPTIC_INTENSITY, value) }
-
-    var soundEnabled: Boolean
-        get() = prefs.getBoolean(KEY_SOUND_ENABLED, false)
-        set(value) = prefs.edit(commit = true) { putBoolean(KEY_SOUND_ENABLED, value) }
 
     var soundVolume: Int
         get() = prefs.getInt(KEY_SOUND_VOLUME, DEFAULT_SOUND_VOLUME)

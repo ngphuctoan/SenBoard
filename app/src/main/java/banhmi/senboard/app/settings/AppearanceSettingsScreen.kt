@@ -151,7 +151,7 @@ fun AppearanceSettingsScreen(
             }
 
             // Category 2: Layout & Size Settings Group
-            Column {
+            /* Column {
                 Text(
                     text = "Bố cục & Kích thước",
                     style = MaterialTheme.typography.titleMedium,
@@ -253,7 +253,7 @@ fun AppearanceSettingsScreen(
                         )
                     }
                 }
-            }
+            } */
         }
     }
 }

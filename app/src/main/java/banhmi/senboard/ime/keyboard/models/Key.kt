@@ -7,4 +7,5 @@ data class Key(
     val shapeWeight: Float = areaWeight,
     val shapeAlignment: Alignment = Alignment.CenterStart,
     val variant: KeyVariant = KeyVariant.Neutral,
+    val forceHighlightState: Boolean? = null,
 )

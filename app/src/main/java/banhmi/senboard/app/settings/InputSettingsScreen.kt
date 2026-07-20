@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,8 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.material.icons.outlined.SpaceBar
 import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.Card
@@ -60,6 +59,10 @@ fun InputSettingsScreen(
     var autoCapitalize by remember { mutableStateOf(prefs.autoCapitalize) }
     var doubleSpacePeriod by remember { mutableStateOf(prefs.doubleSpacePeriod) }
     var showSuggestions by remember { mutableStateOf(prefs.showSuggestions) }
+    
+    // Capture initial state to keep the toggle visible until navigation
+    val initialDeveloperMode = remember { prefs.isDeveloperMode }
+    var isDeveloperMode by remember { mutableStateOf(prefs.isDeveloperMode) }
 
     Scaffold(
         topBar = {
@@ -210,6 +213,24 @@ fun InputSettingsScreen(
                                 prefs.showSuggestions = it
                             }
                         )
+
+                        if (initialDeveloperMode) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(start = 56.dp),
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+                            )
+                            InputSwitchRow(
+                                icon = Icons.Outlined.Redeem,
+                                iconColor = Color(0xFF007AFF), // Orange
+                                title = "Easter egg",
+                                subtitle = "Turn off easter egg",
+                                checked = isDeveloperMode,
+                                onCheckedChange = {
+                                    isDeveloperMode = it
+                                    prefs.isDeveloperMode = it
+                                }
+                            )
+                        }
                     }
                 }
             }
