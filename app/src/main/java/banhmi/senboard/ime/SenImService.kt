@@ -33,7 +33,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.MainActivity
-import banhmi.senboard.app.settings.rememberPreferences
 import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import banhmi.senboard.ime.keyboard.core.SenBoardController
@@ -59,8 +58,6 @@ class SenImService : LifecycleImService() {
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
-                val preferences = rememberPreferences()
-
                 SenBoardTheme(darkTheme = isAppInDarkTheme()) {
                     SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
                         SenBoardSurface {
@@ -106,7 +103,7 @@ class SenImService : LifecycleImService() {
                                             }
                                         }
 
-                                        if (preferences.easterEggEnabled) {
+                                        if (true) {
                                             TooltipBox(
                                                 positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                                                     TooltipAnchorPosition.Above

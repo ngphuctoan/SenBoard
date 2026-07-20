@@ -22,12 +22,9 @@ class SenBoardController(private val context: SenBoardContext) {
     }
 
     private fun performHaptic() {
-        val preferences = context.getPreferences() ?: return
         val haptic = context.getHaptic() ?: return
 
-        if (!preferences.hapticEnabled) return
-
-        val intensity = preferences.hapticIntensity
+        val intensity = 60
         val duration = (intensity / 2).toLong().coerceIn(10, 50)
         val amplitude = (intensity * 2.55).toInt().coerceIn(1, 255)
 
@@ -39,11 +36,10 @@ class SenBoardController(private val context: SenBoardContext) {
     }
 
     private fun performSoundEffect() {
-        val preferences = context.getPreferences() ?: return
         val audioManager = context.getAudioManager() ?: return
 
-        val volume = preferences.soundVolume / 100f
-        if (volume <= 0f) return
+        val volume = 50 / 100f
+//        if (volume <= 0f) return
 
         audioManager.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, volume)
     }

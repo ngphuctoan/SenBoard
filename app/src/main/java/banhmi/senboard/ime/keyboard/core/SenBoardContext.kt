@@ -11,7 +11,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import banhmi.senboard.app.settings.SenBoardPreferences
 
 @Stable
 class SenBoardContext(
@@ -22,8 +21,6 @@ class SenBoardContext(
         internal set
 
     fun getEditor(): InputConnection? = im?.currentInputConnection
-
-    fun getPreferences(): SenBoardPreferences? = im?.let { SenBoardPreferences(it) }
 
     fun getHaptic(): Vibrator? = im?.let {
         // Looks so bad because VIBRATOR_MANAGER_SERVICE is only available on Android 12
