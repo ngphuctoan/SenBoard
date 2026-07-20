@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 data class KeyHighlightIndication(
     private val color: Color,
     private val shape: Shape,
-    private val forceVisible: Boolean = false,
+    private val forceState: Boolean? = null,
 ) : IndicationNodeFactory {
     override fun create(
         interactionSource: InteractionSource,
@@ -26,7 +26,7 @@ data class KeyHighlightIndication(
             interactionSource = interactionSource,
             color = color,
             shape = shape,
-            forceVisible = forceVisible,
+            forceState = forceState,
         )
     }
 }
@@ -35,7 +35,7 @@ private class KeyHighlightNode(
     private val interactionSource: InteractionSource,
     private val color: Color,
     private val shape: Shape,
-    private val forceVisible: Boolean = false,
+    private val forceState: Boolean? = null,
 ) : Modifier.Node(), DrawModifierNode {
     private val alpha = Animatable(0f)
 
@@ -44,7 +44,7 @@ private class KeyHighlightNode(
             interactionSource.interactions.collectLatest { interaction ->
                 when (interaction) {
                     is PressInteraction.Press -> alpha.snapTo(1f)
-                    is PressInteraction.Release, is PressInteraction.Cancel -> alpha.snapTo(0f)
+                    is PressInteraction.Release, is PressInteraction.Cancel -> alpha.animateTo(0f)
                 }
             }
         }
@@ -62,7 +62,11 @@ private class KeyHighlightNode(
         drawOutline(
             outline = outline,
             color = color,
-            alpha = if (forceVisible) 1f else alpha.value,
+            alpha = when (forceState) {
+                true -> 1f
+                false -> 0f
+                else -> alpha.value
+            },
         )
     }
 }

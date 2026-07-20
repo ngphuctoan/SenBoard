@@ -1,19 +1,21 @@
 package banhmi.senboard.ime
 
+import android.content.Intent
 import android.view.View
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoFixHigh
-import androidx.compose.material.icons.outlined.AutoFixHigh
+import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
@@ -30,6 +32,8 @@ import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.MainActivity
+import banhmi.senboard.app.settings.rememberPreferences
 import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import banhmi.senboard.ime.keyboard.core.SenBoardController
@@ -40,6 +44,7 @@ import banhmi.senboard.ime.keyboard.ui.SenBoardLayout
 import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
 import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
 import banhmi.senboard.ime.lifecycle.LifecycleImService
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import banhmi.senboard.ui.theme.SenBoardTheme
 
 class SenImService : LifecycleImService() {
@@ -50,10 +55,13 @@ class SenImService : LifecycleImService() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateInputView(): View {
         val context = this.context
+
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
-                SenBoardTheme {
+                val preferences = rememberPreferences()
+
+                SenBoardTheme(darkTheme = isAppInDarkTheme()) {
                     SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
                         SenBoardSurface {
                             SenBoardContent(controller) {
@@ -64,18 +72,15 @@ class SenImService : LifecycleImService() {
                                         val isAaaaaMode = state.mode == AaaaaMode
 
                                         TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above
-                                                ),
+                                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                                TooltipAnchorPosition.Above
+                                            ),
                                             tooltip = {
                                                 PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Switch Vietnamese engine"
-                                                        }
-                                                ) {
+                                                    modifier = Modifier.semantics {
+                                                        liveRegion = LiveRegionMode.Assertive
+                                                        paneTitle = "Switch Vietnamese engine"
+                                                    }) {
                                                     Text("Switch Vietnamese engine")
                                                 }
                                             },
@@ -101,61 +106,66 @@ class SenImService : LifecycleImService() {
                                             }
                                         }
 
-                                        TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
+                                        if (preferences.easterEggEnabled) {
+                                            TooltipBox(
+                                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                                                     TooltipAnchorPosition.Above
                                                 ),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
+                                                tooltip = {
+                                                    PlainTooltip(
+                                                        modifier = Modifier.semantics {
                                                             liveRegion = LiveRegionMode.Assertive
                                                             paneTitle = "Toggle aaaaa"
-                                                        }
-                                                ) {
-                                                    Text("Mystery mode")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
-                                        ) {
-                                            FilledIconToggleButton(
-                                                checked = isAaaaaMode,
-                                                onCheckedChange = {
-                                                    context.state = state.copy(
-                                                        mode = if (isAaaaaMode) CharactersMode else AaaaaMode
-                                                    )
+                                                        }) {
+                                                        Text("Mystery mode")
+                                                    }
                                                 },
+                                                state = rememberTooltipState(),
                                             ) {
-                                                if (isAaaaaMode) Icon(
-                                                    Icons.Filled.AutoFixHigh,
-                                                    contentDescription = "Turn off aaaaa",
-                                                ) else Icon(
-                                                    Icons.Outlined.AutoFixHigh,
-                                                    contentDescription = "Turn on aaaaa",
-                                                )
+                                                IconToggleButton(
+                                                    checked = isAaaaaMode,
+                                                    onCheckedChange = {
+                                                        context.state = state.copy(
+                                                            mode = if (isAaaaaMode) CharactersMode else AaaaaMode
+                                                        )
+                                                    },
+                                                ) {
+                                                    if (isAaaaaMode) Icon(
+                                                        Icons.Filled.Redeem,
+                                                        contentDescription = "Turn off aaaaa",
+                                                    ) else Icon(
+                                                        Icons.Outlined.Redeem,
+                                                        contentDescription = "Turn on aaaaa",
+                                                    )
+                                                }
                                             }
                                         }
 
                                         TooltipBox(
-                                            positionProvider =
-                                                TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above
-                                                ),
+                                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                                TooltipAnchorPosition.Above
+                                            ),
                                             tooltip = {
                                                 PlainTooltip(
-                                                    modifier =
-                                                        Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Open settings"
-                                                        }
-                                                ) {
+                                                    modifier = Modifier.semantics {
+                                                        liveRegion = LiveRegionMode.Assertive
+                                                        paneTitle = "Open settings"
+                                                    }) {
                                                     Text("Open settings")
                                                 }
                                             },
                                             state = rememberTooltipState(),
                                         ) {
-                                            IconButton(onClick = {}) {
+                                            IconButton(onClick = {
+                                                val intent = Intent(
+                                                    this@SenImService,
+                                                    MainActivity::class.java,
+                                                ).apply {
+                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                }
+                                                startActivity(intent)
+                                                requestHideSelf(0)
+                                            }) {
                                                 Icon(
                                                     Icons.Outlined.Settings,
                                                     contentDescription = "Open settings",
