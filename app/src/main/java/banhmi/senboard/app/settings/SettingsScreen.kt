@@ -189,7 +189,7 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Card 1: Hướng dẫn cài đặt
+            // Card 1: Thiết lập
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
@@ -201,7 +201,7 @@ fun SettingsScreen(
                 SettingsCategoryRow(
                     icon = Icons.AutoMirrored.Outlined.HelpOutline,
                     iconBackground = Color(0xFF5AC8FA), // iOS Teal/Cyan
-                    title = "Hướng dẫn cài đặt",
+                    title = "Thiết lập",
                     subtitle = "Từng bước kích hoạt và sử dụng bàn phím",
                     onClick = { onNavigateTo(SettingsDestination.Instructions) }
                 )
