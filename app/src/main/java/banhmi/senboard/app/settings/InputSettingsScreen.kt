@@ -19,9 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Forward
 import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.material.icons.outlined.SpaceBar
+import androidx.compose.material.icons.outlined.TipsAndUpdates
 import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -43,11 +46,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,8 +67,8 @@ fun InputSettingsScreen(
     var showSuggestions by remember { mutableStateOf(prefs.showSuggestions) }
     
     // Capture initial state to keep the toggle visible until navigation
-    val initialDeveloperMode = remember { prefs.isDeveloperMode }
-    var isDeveloperMode by remember { mutableStateOf(prefs.isDeveloperMode) }
+    val initialEasterEggState = remember { prefs.easterEggEnabled }
+    var easterEggEnabled by remember { mutableStateOf(prefs.easterEggEnabled) }
 
     Scaffold(
         topBar = {
@@ -152,6 +158,7 @@ fun InputSettingsScreen(
 
             // Category 2: Text Correction Cards (Switches)
             Column {
+                val isDark = isAppInDarkTheme()
                 Text(
                     text = "Sửa văn bản",
                     style = MaterialTheme.typography.titleMedium,
@@ -171,8 +178,10 @@ fun InputSettingsScreen(
                     Column {
                         // Switch 1: Auto Capitalization
                         InputSwitchRow(
-                            icon = Icons.Outlined.Title,
-                            iconColor = Color(0xFF007AFF), // Blue
+                            icon = Icons.AutoMirrored.Outlined.Forward,
+                            iconRotation = -90f,
+                            containerColor = if (isDark) Color(0xFF00497D) else Color(0xFFD1E4FF),
+                            contentColor = if (isDark) Color(0xFFAAC7FF) else Color(0xFF001D36),
                             title = "Tự động viết hoa đầu câu",
                             subtitle = "Tự động viết hoa chữ cái đầu tiên của câu mới",
                             checked = autoCapitalize,
@@ -187,8 +196,9 @@ fun InputSettingsScreen(
                         )
                         // Switch 2: Double Space Period
                         InputSwitchRow(
-                            icon = Icons.Outlined.SpaceBar,
-                            iconColor = Color(0xFF4CD964), // Green
+                            icon = Icons.Outlined.MoreHoriz,
+                            containerColor = if (isDark) Color(0xFF00390A) else Color(0xFFC0F0C0),
+                            contentColor = if (isDark) Color(0xFF8FFB91) else Color(0xFF002105),
                             title = "Dấu chấm bằng phím cách",
                             subtitle = "Nhấn đúp phím cách để chèn dấu chấm câu nhanh",
                             checked = doubleSpacePeriod,
@@ -204,7 +214,8 @@ fun InputSettingsScreen(
                         // Switch 3: Show Suggestions
                         InputSwitchRow(
                             icon = Icons.Outlined.Lightbulb,
-                            iconColor = Color(0xFFFF9500), // Orange
+                            containerColor = if (isDark) Color(0xFF563E00) else Color(0xFFFFDDB3),
+                            contentColor = if (isDark) Color(0xFFFFDDB3) else Color(0xFF291800),
                             title = "Hiện thanh gợi ý từ",
                             subtitle = "Hiển thị các từ gợi ý và tốc ký khi gõ",
                             checked = showSuggestions,
@@ -214,20 +225,21 @@ fun InputSettingsScreen(
                             }
                         )
 
-                        if (initialDeveloperMode) {
+                        if (initialEasterEggState) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(start = 56.dp),
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
                             )
                             InputSwitchRow(
                                 icon = Icons.Outlined.Redeem,
-                                iconColor = Color(0xFF007AFF), // Orange
-                                title = "Easter egg",
-                                subtitle = "Turn off easter egg",
-                                checked = isDeveloperMode,
+                                containerColor = if (isDark) Color(0xFF5E1133) else Color(0xFFFFD9E2),
+                                contentColor = if (isDark) Color(0xFFFFD9E2) else Color(0xFF3E001D),
+                                title = "Tắt Easter egg",
+                                subtitle = "Để bật lại vui lòng truy cập mục Giới thiệu",
+                                checked = easterEggEnabled,
                                 onCheckedChange = {
-                                    isDeveloperMode = it
-                                    prefs.isDeveloperMode = it
+                                    easterEggEnabled = it
+                                    prefs.easterEggEnabled = it
                                 }
                             )
                         }
@@ -241,11 +253,13 @@ fun InputSettingsScreen(
 @Composable
 private fun InputSwitchRow(
     icon: ImageVector,
-    iconColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    iconRotation: Float = 0f,
 ) {
     Row(
         modifier = Modifier
@@ -256,15 +270,15 @@ private fun InputSwitchRow(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp).rotate(iconRotation)
             )
         }
 

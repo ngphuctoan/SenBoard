@@ -22,8 +22,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.Smartphone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,22 +126,23 @@ fun AboutScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     // Item 1: App Version Info (Clickable for easter egg)
                     SamsungAboutRow(
-                        icon = Icons.Outlined.Info,
-                        iconBgColor = Color(0xFF007AFF),
+                        icon = Icons.Outlined.Smartphone,
+                        containerColor = if (isAppInDarkTheme()) Color(0xFF00497D) else Color(0xFFD1E4FF),
+                        contentColor = if (isAppInDarkTheme()) Color(0xFFAAC7FF) else Color(0xFF001D36),
                         title = "Thông tin phiên bản",
                         subtitle = "",
                         trailingText = "$versionName (Build $versionCode)",
                         onClick = {
-                            if (prefs.isDeveloperMode) {
-                                showToast("Easter egg enabled!")
+                            if (prefs.easterEggEnabled) {
+                                showToast("Easter egg đã được kích hoạt!")
                             } else {
                                 versionClickCount++
                                 if (versionClickCount in 3..6) {
                                     val remaining = 7 - versionClickCount
-                                    showToast("Easter egg - $versionClickCount/7")
+                                    showToast("Ấn thêm $versionClickCount/7 lượt để bật Easter egg")
                                 } else if (versionClickCount >= 7) {
-                                    prefs.isDeveloperMode = true
-                                    showToast("Easter egg enabled!")
+                                    prefs.easterEggEnabled = true
+                                    showToast("Easter egg đã được kích hoạt!")
                                 }
                             }
                         }
@@ -149,11 +153,12 @@ fun AboutScreen(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
                     )
 
-                    // Item 2: GitHub Repository Link
+                    // Item 2: GitLab Link
                     SamsungAboutRow(
-                        icon = Icons.Outlined.Link,
-                        iconBgColor = Color(0xFF5856D6),
-                        title = "GitHub",
+                        icon = Icons.Outlined.Code,
+                        containerColor = if (isAppInDarkTheme()) Color(0xFF43368E) else Color(0xFFE5DEFF),
+                        contentColor = if (isAppInDarkTheme()) Color(0xFFE5DEFF) else Color(0xFF170067),
+                        title = "Mã nguồn",
                         subtitle = "",
                         onClick = {
                             try {
@@ -175,7 +180,8 @@ fun AboutScreen(
 @Composable
 private fun SamsungAboutRow(
     icon: ImageVector,
-    iconBgColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     trailingText: String? = null,
@@ -191,15 +197,15 @@ private fun SamsungAboutRow(
         // Circular icon container
         Box(
             modifier = Modifier
-                .size(34.dp)
-                .background(iconBgColor.copy(alpha = 0.12f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconBgColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp)
             )
         }
 

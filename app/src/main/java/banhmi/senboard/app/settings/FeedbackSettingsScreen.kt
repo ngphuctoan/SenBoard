@@ -22,6 +22,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
+import androidx.compose.material.icons.outlined.SignalCellularAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +88,7 @@ fun FeedbackSettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            val isDark = isAppInDarkTheme()
             // Category 1: Haptic Vibration Settings Card
             Column {
                 Text(
@@ -108,7 +111,8 @@ fun FeedbackSettingsScreen(
                         // Switch: Haptic Enabled
                         FeedbackSwitchRow(
                             icon = Icons.Outlined.Vibration,
-                            iconColor = Color(0xFFFF9500), // Orange
+                            containerColor = if (isDark) Color(0xFF563E00) else Color(0xFFFFDDB3),
+                            contentColor = if (isDark) Color(0xFFFFDDB3) else Color(0xFF291800),
                             title = "Rung khi nhấn phím",
                             subtitle = "Rung phản hồi nhẹ khi chạm phím gõ",
                             checked = hapticEnabled,
@@ -133,15 +137,15 @@ fun FeedbackSettingsScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Box(
                                         modifier = Modifier
-                                            .size(32.dp)
-                                            .background(Color(0xFFFF9500).copy(alpha = 0.1f), shape = CircleShape),
+                                            .size(38.dp)
+                                            .background(if (isDark) Color(0xFF563E00) else Color(0xFFFFDDB3), shape = CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.Tune,
+                                            imageVector = Icons.Outlined.SignalCellularAlt,
                                             contentDescription = null,
-                                            tint = Color(0xFFFF9500),
-                                            modifier = Modifier.size(18.dp)
+                                            tint = if (isDark) Color(0xFFFFDDB3) else Color(0xFF291800),
+                                            modifier = Modifier.size(22.dp)
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(16.dp))
@@ -217,15 +221,15 @@ fun FeedbackSettingsScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
-                                    .size(32.dp)
-                                    .background(Color(0xFF007AFF).copy(alpha = 0.1f), shape = CircleShape),
+                                    .size(38.dp)
+                                    .background(if (isDark) Color(0xFF00497D) else Color(0xFFD1E4FF), shape = CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
                                     contentDescription = null,
-                                    tint = Color(0xFF007AFF),
-                                    modifier = Modifier.size(18.dp)
+                                    tint = if (isDark) Color(0xFFAAC7FF) else Color(0xFF001D36),
+                                    modifier = Modifier.size(22.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(16.dp))
@@ -268,7 +272,8 @@ fun FeedbackSettingsScreen(
 @Composable
 private fun FeedbackSwitchRow(
     icon: ImageVector,
-    iconColor: Color,
+    containerColor: Color,
+    contentColor: Color,
     title: String,
     subtitle: String,
     checked: Boolean,
@@ -283,15 +288,15 @@ private fun FeedbackSwitchRow(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(iconColor.copy(alpha = 0.1f), shape = CircleShape),
+                .size(38.dp)
+                .background(containerColor, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(18.dp)
+                tint = contentColor,
+                modifier = Modifier.size(22.dp)
             )
         }
 

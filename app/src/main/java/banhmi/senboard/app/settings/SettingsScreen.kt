@@ -21,11 +21,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.HelpCenter
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.AccessibilityNew
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
+import androidx.compose.material.icons.outlined.KeyboardAlt
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.QuestionMark
+import androidx.compose.material.icons.outlined.SettingsAccessibility
 import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -202,7 +207,7 @@ fun SettingsScreen(
             ) {
                 val isDark = isAppInDarkTheme()
                 SettingsCategoryRow(
-                    icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                    icon = Icons.Outlined.QuestionMark,
                     iconBackground = if (isDark) Color(0xFF4FD8EB) else Color(0xFF006874),
                     iconTint = if (isDark) Color(0xFF00363D) else Color.White,
                     title = "Hướng dẫn cài đặt",
@@ -223,7 +228,7 @@ fun SettingsScreen(
                 val isDark = isAppInDarkTheme()
                 Column(modifier = Modifier.fillMaxWidth()) {
                     SettingsCategoryRow(
-                        icon = Icons.Outlined.Keyboard,
+                        icon = Icons.Outlined.KeyboardAlt,
                         iconBackground = if (isDark) Color(0xFF8FFB91) else Color(0xFF006D14),
                         iconTint = if (isDark) Color(0xFF00390A) else Color.White,
                         title = "Phương thức gõ",
@@ -247,7 +252,7 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
                     )
                     SettingsCategoryRow(
-                        icon = Icons.Outlined.Vibration,
+                        icon = Icons.Outlined.AccessibilityNew,
                         iconBackground = if (isDark) Color(0xFFFFB862) else Color(0xFF8B5000),
                         iconTint = if (isDark) Color(0xFF4A2800) else Color.White,
                         title = "Phản hồi",
