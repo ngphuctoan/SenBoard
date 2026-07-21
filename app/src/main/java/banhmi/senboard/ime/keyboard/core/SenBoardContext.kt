@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 
 @Stable
 class SenBoardContext(
-    private val im: InputMethodService?,
+    val im: InputMethodService?,
     initialState: SenBoardState = SenBoardState(),
 ) {
     var state by mutableStateOf(initialState)

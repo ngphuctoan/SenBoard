@@ -23,6 +23,10 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -63,9 +67,11 @@ class SenImService : LifecycleImService() {
                         SenBoardSurface {
                             SenBoardContent(controller) {
                                 val state = controller.state
+                                val prefs = remember { banhmi.senboard.app.settings.SenBoardPreferences(this@SenImService) }
+                                var typingMode by remember { mutableStateOf(prefs.typingMode) }
+
                                 Column {
                                     Toolbar {
-                                        // TODO: move these buttons somewhere else
                                         val isAaaaaMode = state.mode == AaaaaMode
 
                                         TooltipBox(
@@ -76,17 +82,21 @@ class SenImService : LifecycleImService() {
                                                 PlainTooltip(
                                                     modifier = Modifier.semantics {
                                                         liveRegion = LiveRegionMode.Assertive
-                                                        paneTitle = "Switch Vietnamese engine"
+                                                        paneTitle = "Chuyển phương thức gõ"
                                                     }) {
-                                                    Text("Switch Vietnamese engine")
+                                                    Text(if (typingMode == "cvnss") "Bộ gõ: CVNSS 4.0" else "Bộ gõ: Telex")
                                                 }
                                             },
                                             state = rememberTooltipState(),
                                         ) {
-                                            IconButton(onClick = {}) {
+                                            IconButton(onClick = {
+                                                val nextMode = if (typingMode == "cvnss") "telex" else "cvnss"
+                                                prefs.typingMode = nextMode
+                                                typingMode = nextMode
+                                            }) {
                                                 Box(
                                                     modifier = Modifier
-                                                        .size(24.dp)
+                                                        .size(28.dp)
                                                         .border(
                                                             width = 2.dp,
                                                             color = LocalContentColor.current,
@@ -95,9 +105,10 @@ class SenImService : LifecycleImService() {
                                                     contentAlignment = Alignment.Center,
                                                 ) {
                                                     Text(
-                                                        "V",
+                                                        text = if (typingMode == "cvnss") "CV" else "V",
                                                         color = LocalContentColor.current,
                                                         fontWeight = FontWeight.Bold,
+                                                        fontSize = androidx.compose.ui.unit.TextUnit.Unspecified
                                                     )
                                                 }
                                             }
