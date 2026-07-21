@@ -11,12 +11,14 @@ import banhmi.senboard.app.settings.ui.scope.SenSettingsListGroupScopeImpl
 
 @Composable
 fun ColumnScope.SenSettingsListGroup(
+    isSubMenu: Boolean = false,
     showIcons: Boolean = true,
     content: @Composable SenSettingsListGroupScope.() -> Unit,
 ) {
     val scope = remember {
         SenSettingsListGroupScopeImpl(
             scope = this,
+            isSubMenu = isSubMenu,
             showIcons = showIcons,
         )
     }

@@ -136,7 +136,7 @@ fun SenBoardScope.SenBoardLayout(
         screenWidth = screenWidth,
         screenHeight = screenHeight,
         layout = layout,
-        style = KeyVariant.Neutral(),
+        style = KeyVariant.Neutral(controller.context),
     )
 
     // Thanks to ChatGPT for all of this, and the indexing bugfix!
@@ -168,13 +168,14 @@ fun SenBoardScope.SenBoardLayout(
                             onDoubleTap = { onKeyDoubleTap(handler) },
                         ) {
                             SenBoardKeyShape(
+                                context = controller.context,
                                 margin = layout.keyMargins(screenWidth).getPaddingValues(),
                                 forceHighlightState =
                                     // Prioritise forceCapsLockHighlight then nullable forceHighlightState
-                                    if (forceCapsLockHighlight) forceCapsLockHighlight
+                                    if (forceCapsLockHighlight) true
                                     else key.forceHighlightState,
                             ) {
-                                val style = key.variant()
+                                val style = key.variant(controller.context)
                                 SenBoardKeyContent(contentPadding = style.contentPadding) {
                                     val overrideFontSize =
                                         if (style.useReferenceFontSize && display is KeyDisplay.Text && display.label.length == 1) {

@@ -43,7 +43,7 @@ sealed interface KeyDisplay {
                     description = "Shift",
                 )
 
-                ShiftMode.Shifted -> Icon(
+                ShiftMode.Automatic, ShiftMode.Manual -> Icon(
                     icon = Icons.Outlined.Upload,
                     description = "Shift enabled",
                 )

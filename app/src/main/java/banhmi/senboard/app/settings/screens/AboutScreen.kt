@@ -5,18 +5,36 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import banhmi.senboard.shared.settings.SenSettingsViewModel
 import banhmi.senboard.app.settings.ui.SenSettingsDivider
 import banhmi.senboard.app.settings.ui.SenSettingsItem
 import banhmi.senboard.app.settings.ui.SenSettingsList
 import banhmi.senboard.app.settings.ui.SenSettingsListContent
 import banhmi.senboard.app.settings.ui.SenSettingsListGroup
-import androidx.core.net.toUri
+import banhmi.senboard.app.settings.ui.SenScreenScaffold
+import banhmi.senboard.app.settings.ui.SenScreenTopAppBar
+import banhmi.senboard.shared.utils.ToastManager
+
+const val EASTER_EGG_MAX_COUNT = 6
+const val EASTER_EGG_REVEAL_COUNT = 3
 
 @Composable
-fun AboutScreen() {
+fun AboutScreen(
+    onBackClick: () -> Unit,
+    onLicenseClick: () -> Unit,
+    viewModel: SenSettingsViewModel = viewModel(factory = SenSettingsViewModel.Factory),
+) {
     val context = LocalContext.current
 
     val packageInfo = remember(context) {
@@ -35,285 +53,73 @@ fun AboutScreen() {
     // We won't ever give you up, but I want to give up mobile development :(
     val remoteRepositoryUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ".toUri()
 
-    SenSettingsList {
-        SenSettingsListGroup(showIcons = false) {
-            SenSettingsListContent {
-                SenSettingsItem(
-                    label = "Phiên bản ứng dụng",
-                    supportingLabels = listOf(packageInfo?.versionName ?: "dev"),
-                    onClick = { },
-                )
-                SenSettingsDivider()
-                SenSettingsItem(
-                    label = "Giấy phép",
-                    supportingLabels = listOf("Chưa quyết định :b"),
-                )
-                SenSettingsDivider()
-                SenSettingsItem(
-                    label = "Xem mã nguồn",
-                    supportingLabels = listOf("Lưu ý: Yêu cầu tài khoản sinh viên"),
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, remoteRepositoryUrl)
-                        runCatching { context.startActivity(intent) }.onFailure { exception ->
-                            val message = when (exception) {
-                                is ActivityNotFoundException -> "Không tìm thấy trình duyệt hoặc ứng dụng phù hợp"
-                                else -> exception.localizedMessage
+    val state by viewModel.inputMethodState.collectAsStateWithLifecycle()
+
+    var easterEggCounter by remember { mutableIntStateOf(0) }
+
+    SenScreenScaffold(topBar = { SenScreenTopAppBar("Giới thiệu", onBackClick) }) { innerPadding ->
+        SenSettingsList(modifier = Modifier.padding(innerPadding)) {
+            SenSettingsListGroup(showIcons = false) {
+                SenSettingsListContent {
+                    SenSettingsItem(
+                        label = "Phiên bản ứng dụng",
+                        supportingLabels = listOf(packageInfo?.versionName ?: "dev"),
+                        onClick = {
+                            when {
+                                state.easterEggEnabled -> {
+                                    easterEggCounter = EASTER_EGG_MAX_COUNT
+                                }
+
+                                easterEggCounter >= EASTER_EGG_MAX_COUNT -> {
+                                    viewModel.updateEasterEggEnabled(true)
+                                }
+
+                                else -> easterEggCounter++
                             }
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                )
+
+                            val message = when {
+                                easterEggCounter >= EASTER_EGG_MAX_COUNT -> "Easter egg đã được kích hoạt!"
+
+                                easterEggCounter >= EASTER_EGG_REVEAL_COUNT -> {
+                                    val remainingCounter = EASTER_EGG_MAX_COUNT - easterEggCounter
+                                    "Ấn thêm $remainingCounter lượt để bật Easter egg"
+                                }
+
+                                else -> null
+                            }
+
+                            message?.let { message ->
+                                ToastManager.show(context) {
+                                    Toast.makeText(it, message, Toast.LENGTH_SHORT)
+                                }
+                            }
+                        },
+                    )
+                    SenSettingsDivider()
+                    SenSettingsItem(
+                        label = "Giấy phép",
+                        supportingLabels = listOf("Apache License 2.0"),
+                        onClick = onLicenseClick,
+                    )
+                    SenSettingsDivider()
+                    SenSettingsItem(
+                        label = "Xem mã nguồn",
+                        supportingLabels = listOf("Lưu ý: Yêu cầu tài khoản trường"),
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, remoteRepositoryUrl)
+                            runCatching { context.startActivity(intent) }.onFailure { exception ->
+                                val message = when (exception) {
+                                    is ActivityNotFoundException -> "Không tìm thấy trình duyệt hoặc ứng dụng phù hợp"
+                                    else -> exception.localizedMessage
+                                }
+                                ToastManager.show(context) {
+                                    Toast.makeText(it, message, Toast.LENGTH_SHORT)
+                                }
+                            }
+                        },
+                    )
+                }
             }
         }
     }
 }
-
-//package banhmi.senboard.app.settings
-//
-//import android.content.Intent
-//import android.net.Uri
-//import androidx.compose.foundation.background
-//import androidx.compose.foundation.clickable
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Box
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.Row
-//import androidx.compose.foundation.layout.Spacer
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.fillMaxWidth
-//import androidx.compose.foundation.layout.height
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.foundation.layout.size
-//import androidx.compose.foundation.layout.width
-//import androidx.compose.foundation.rememberScrollState
-//import androidx.compose.foundation.shape.CircleShape
-//import androidx.compose.foundation.shape.RoundedCornerShape
-//import androidx.compose.foundation.verticalScroll
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-//import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-//import androidx.compose.material.icons.outlined.Code
-//import androidx.compose.material.icons.outlined.Info
-//import androidx.compose.material.icons.outlined.Link
-//import androidx.compose.material.icons.outlined.Smartphone
-//import androidx.compose.material3.Card
-//import androidx.compose.material3.CardDefaults
-//import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material3.HorizontalDivider
-//import androidx.compose.material3.Icon
-//import androidx.compose.material3.IconButton
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.material3.Scaffold
-//import androidx.compose.material3.Text
-//import androidx.compose.material3.TopAppBar
-//import androidx.compose.material3.TopAppBarDefaults
-//import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.getValue
-//import androidx.compose.runtime.mutableIntStateOf
-//import androidx.compose.runtime.remember
-//import androidx.compose.runtime.saveable.rememberSaveable
-//import androidx.compose.runtime.setValue
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.graphics.vector.ImageVector
-//import androidx.compose.ui.platform.LocalContext
-//import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.text.style.TextAlign
-//import androidx.compose.ui.unit.dp
-//import banhmi.senboard.shared.utils.isAppInDarkTheme
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun AboutScreen(
-//    onNavigateBack: () -> Unit,
-//    showToast: (String) -> Unit,
-//) {
-//    val context = LocalContext.current
-//    val prefs = remember { SenBoardPreferences(context) }
-//
-//    // Read version name dynamically using package info
-//    val packageInfo = remember(context) {
-//        try {
-//            context.packageManager.getPackageInfo(context.packageName, 0)
-//        } catch (e: Exception) {
-//            null
-//        }
-//    }
-//
-//    val versionName = packageInfo?.versionName ?: "1.0"
-//    val versionCode = packageInfo?.let {
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-//            it.longVersionCode.toString()
-//        } else {
-//            @Suppress("DEPRECATION")
-//            it.versionCode.toString()
-//        }
-//    } ?: "1"
-//
-//    // Developer mode click easter egg state
-//    var versionClickCount by rememberSaveable { mutableIntStateOf(0) }
-//
-//    // GitHub Link URL
-//    val githubUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1"
-//
-//    Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                title = { Text("Giới thiệu", fontWeight = FontWeight.Bold) },
-//                navigationIcon = {
-//                    IconButton(onClick = onNavigateBack) {
-//                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "Quay lại")
-//                    }
-//                },
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = MaterialTheme.colorScheme.background,
-//                ),
-//            )
-//        },
-//    ) { innerPadding ->
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(MaterialTheme.colorScheme.background)
-//                .padding(innerPadding)
-//                .verticalScroll(rememberScrollState())
-//                .padding(horizontal = 24.dp), // More horizontal spacing for Samsung feel
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.spacedBy(24.dp)
-//        ) {
-//            Spacer(modifier = Modifier.height(8.dp))
-//
-//            // Grouped Specifications and Links Card
-//            Card(
-//                modifier = Modifier.fillMaxWidth(),
-//                shape = RoundedCornerShape(26.dp), // Large rounded corner like Samsung One UI 6
-//                colors = CardDefaults.cardColors(
-//                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f)
-//                ),
-//                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-//            ) {
-//                Column(modifier = Modifier.fillMaxWidth()) {
-//                    // Item 1: App Version Info (Clickable for easter egg)
-//                    SamsungAboutRow(
-//                        icon = Icons.Outlined.Smartphone,
-//                        containerColor = if (isAppInDarkTheme()) Color(0xFF00497D) else Color(0xFFD1E4FF),
-//                        contentColor = if (isAppInDarkTheme()) Color(0xFFAAC7FF) else Color(0xFF001D36),
-//                        title = "Thông tin phiên bản",
-//                        subtitle = "",
-//                        trailingText = "$versionName (Build $versionCode)",
-//                        onClick = {
-//                            if (prefs.easterEggEnabled) {
-//                                showToast("Easter egg đã được kích hoạt!")
-//                            } else {
-//                                versionClickCount++
-//                                if (versionClickCount in 3..6) {
-//                                    val remaining = 7 - versionClickCount
-//                                    showToast("Ấn thêm $versionClickCount/7 lượt để bật Easter egg")
-//                                } else if (versionClickCount >= 7) {
-//                                    prefs.easterEggEnabled = true
-//                                    showToast("Easter egg đã được kích hoạt!")
-//                                }
-//                            }
-//                        }
-//                    )
-//
-//                    HorizontalDivider(
-//                        modifier = Modifier.padding(start = 64.dp),
-//                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
-//                    )
-//
-//                    // Item 2: GitLab Link
-//                    SamsungAboutRow(
-//                        icon = Icons.Outlined.Code,
-//                        containerColor = if (isAppInDarkTheme()) Color(0xFF43368E) else Color(0xFFE5DEFF),
-//                        contentColor = if (isAppInDarkTheme()) Color(0xFFE5DEFF) else Color(0xFF170067),
-//                        title = "Mã nguồn",
-//                        subtitle = "",
-//                        onClick = {
-//                            try {
-//                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubUrl))
-//                                context.startActivity(intent)
-//                            } catch (e: Exception) {
-//                                showToast("Không thể mở liên kết")
-//                            }
-//                        }
-//                    )
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.height(20.dp))
-//        }
-//    }
-//}
-//
-//@Composable
-//private fun SamsungAboutRow(
-//    icon: ImageVector,
-//    containerColor: Color,
-//    contentColor: Color,
-//    title: String,
-//    subtitle: String,
-//    trailingText: String? = null,
-//    onClick: () -> Unit
-//) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable(onClick = onClick)
-//            .padding(horizontal = 16.dp, vertical = 16.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        // Circular icon container
-//        Box(
-//            modifier = Modifier
-//                .size(38.dp)
-//                .background(containerColor, shape = CircleShape),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Icon(
-//                imageVector = icon,
-//                contentDescription = null,
-//                tint = contentColor,
-//                modifier = Modifier.size(22.dp)
-//            )
-//        }
-//
-//        Spacer(modifier = Modifier.width(14.dp))
-//
-//        Column(modifier = Modifier.weight(1f)) {
-//            Text(
-//                text = title,
-//                style = MaterialTheme.typography.bodyLarge,
-//                fontWeight = FontWeight.Bold,
-//                color = MaterialTheme.colorScheme.onSurface
-//            )
-//            if (subtitle.isNotEmpty()) {
-//                Text(
-//                    text = subtitle,
-//                    style = MaterialTheme.typography.bodySmall,
-//                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
-//                )
-//            }
-//        }
-//
-//        Spacer(modifier = Modifier.width(14.dp))
-//
-//        if (trailingText != null) {
-//            Text(
-//                text = trailingText,
-//                style = MaterialTheme.typography.bodyMedium,
-//                fontWeight = FontWeight.Bold,
-//                color = MaterialTheme.colorScheme.primary,
-//                textAlign = TextAlign.End
-//            )
-//        } else {
-//            Icon(
-//                imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-//                contentDescription = null,
-//                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-//                modifier = Modifier.size(20.dp)
-//            )
-//        }
-//    }
-//}

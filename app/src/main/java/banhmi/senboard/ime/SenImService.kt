@@ -2,14 +2,16 @@ package banhmi.senboard.ime
 
 import android.content.Intent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.outlined.KeyboardHide
 import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
@@ -32,6 +35,9 @@ import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import banhmi.senboard.MainActivity
 import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
@@ -41,133 +47,112 @@ import banhmi.senboard.ime.keyboard.data.modes.CharactersMode
 import banhmi.senboard.ime.keyboard.ui.SenBoardContent
 import banhmi.senboard.ime.keyboard.ui.SenBoardLayout
 import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
-import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbar
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarButton
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarSwitchEngineIcon
 import banhmi.senboard.ime.lifecycle.LifecycleImService
-import banhmi.senboard.shared.utils.isAppInDarkTheme
+import banhmi.senboard.shared.settings.InputMethodSettings
+import banhmi.senboard.shared.settings.SenSettingsRepository
+import banhmi.senboard.shared.settings.SenSettingsViewModel
 import banhmi.senboard.ui.theme.SenBoardTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class SenImService : LifecycleImService() {
-    private val context by lazy { SenBoardContext(im = this) }
+    private val settingsViewModel by lazy {
+        ViewModelProvider(this, SenSettingsViewModel.Factory)[SenSettingsViewModel::class.java]
+    }
+
+    private val context by lazy {
+        SenBoardContext(
+            im = this,
+            inputMethodStateFlow = settingsViewModel.inputMethodState,
+            appearanceStateFlow = settingsViewModel.appearanceState,
+            soundsAndHapticsStateFlow = settingsViewModel.soundsAndHapticsState,
+        )
+    }
 
     val controller by lazy { SenBoardController(context) }
 
+    override fun onStartInput(
+        attribute: EditorInfo?,
+        restarting: Boolean,
+    ) {
+        super.onStartInput(attribute, restarting)
+        controller.updateShiftModeByContext()
+    }
+
+    override fun onUpdateSelection(
+        oldSelStart: Int,
+        oldSelEnd: Int,
+        newSelStart: Int,
+        newSelEnd: Int,
+        candidatesStart: Int,
+        candidatesEnd: Int,
+    ) {
+        super.onUpdateSelection(
+            oldSelStart,
+            oldSelEnd,
+            newSelStart,
+            newSelEnd,
+            candidatesStart,
+            candidatesEnd,
+        )
+        controller.updateShiftModeByContext()
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateInputView(): View {
-        val context = this.context
-
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
-                SenBoardTheme(darkTheme = isAppInDarkTheme()) {
+                SenBoardTheme {
                     SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
                         SenBoardSurface {
                             SenBoardContent(controller) {
                                 val state = controller.state
                                 Column {
-                                    Toolbar {
+                                    SenToolbar {
                                         // TODO: move these buttons somewhere else
                                         val isAaaaaMode = state.mode == AaaaaMode
 
-                                        TooltipBox(
-                                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                                                TooltipAnchorPosition.Above
-                                            ),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier = Modifier.semantics {
-                                                        liveRegion = LiveRegionMode.Assertive
-                                                        paneTitle = "Switch Vietnamese engine"
-                                                    }) {
-                                                    Text("Switch Vietnamese engine")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
+                                        SenToolbarButton(
+                                            color = MaterialTheme.colorScheme.primaryContainer,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                         ) {
-                                            IconButton(onClick = {}) {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .size(24.dp)
-                                                        .border(
-                                                            width = 2.dp,
-                                                            color = LocalContentColor.current,
-                                                            shape = RoundedCornerShape(4.dp),
-                                                        ),
-                                                    contentAlignment = Alignment.Center,
-                                                ) {
-                                                    Text(
-                                                        "V",
-                                                        color = LocalContentColor.current,
-                                                        fontWeight = FontWeight.Bold,
-                                                    )
-                                                }
-                                            }
+                                            Icon(
+                                                Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                                                contentDescription = "Hide word predictions",
+                                            )
                                         }
 
-                                        if (true) {
-                                            TooltipBox(
-                                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                                                    TooltipAnchorPosition.Above
-                                                ),
-                                                tooltip = {
-                                                    PlainTooltip(
-                                                        modifier = Modifier.semantics {
-                                                            liveRegion = LiveRegionMode.Assertive
-                                                            paneTitle = "Toggle aaaaa"
-                                                        }) {
-                                                        Text("Mystery mode")
-                                                    }
-                                                },
-                                                state = rememberTooltipState(),
-                                            ) {
-                                                IconToggleButton(
-                                                    checked = isAaaaaMode,
-                                                    onCheckedChange = {
-                                                        context.state = state.copy(
-                                                            mode = if (isAaaaaMode) CharactersMode else AaaaaMode
-                                                        )
-                                                    },
-                                                ) {
-                                                    if (isAaaaaMode) Icon(
-                                                        Icons.Filled.Redeem,
-                                                        contentDescription = "Turn off aaaaa",
-                                                    ) else Icon(
-                                                        Icons.Outlined.Redeem,
-                                                        contentDescription = "Turn on aaaaa",
-                                                    )
-                                                }
-                                            }
+                                        SenToolbarButton {
+                                            SenToolbarSwitchEngineIcon()
                                         }
 
-                                        TooltipBox(
-                                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                                                TooltipAnchorPosition.Above
-                                            ),
-                                            tooltip = {
-                                                PlainTooltip(
-                                                    modifier = Modifier.semantics {
-                                                        liveRegion = LiveRegionMode.Assertive
-                                                        paneTitle = "Open settings"
-                                                    }) {
-                                                    Text("Open settings")
-                                                }
-                                            },
-                                            state = rememberTooltipState(),
-                                        ) {
-                                            IconButton(onClick = {
-                                                val intent = Intent(
-                                                    this@SenImService,
-                                                    MainActivity::class.java,
-                                                ).apply {
-                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                }
-                                                startActivity(intent)
-                                                requestHideSelf(0)
-                                            }) {
-                                                Icon(
-                                                    Icons.Outlined.Settings,
-                                                    contentDescription = "Open settings",
-                                                )
-                                            }
+                                        SenToolbarButton {
+                                            if (isAaaaaMode) Icon(
+                                                Icons.Filled.Redeem,
+                                                contentDescription = "Turn off aaaaa",
+                                            ) else Icon(
+                                                Icons.Outlined.Redeem,
+                                                contentDescription = "Turn on aaaaa",
+                                            )
+                                        }
+
+                                        SenToolbarButton {
+                                            Icon(
+                                                Icons.Outlined.Settings,
+                                                contentDescription = "Open settings",
+                                            )
+                                        }
+
+                                        SenToolbarButton {
+                                            Icon(
+                                                Icons.Outlined.KeyboardHide,
+                                                contentDescription = "Hide keyboard",
+                                            )
                                         }
                                     }
                                     SenBoardLayout(

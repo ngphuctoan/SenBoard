@@ -1,11 +1,9 @@
 package banhmi.senboard.app.settings.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -26,6 +24,7 @@ import banhmi.senboard.app.settings.ui.scope.SenSettingsListGroupScope
 
 @Composable
 private fun SenSettingsIcon(
+    isSubMenu: Boolean,
     icon: ImageVector,
     description: String? = null,
     color: Color,
@@ -36,7 +35,10 @@ private fun SenSettingsIcon(
     rightMargin: Dp,
 ) {
     Box(
-        modifier = Modifier
+        modifier = if (isSubMenu) Modifier
+            .padding(end = rightMargin)
+            .size(size)
+        else Modifier
             .padding(end = rightMargin)
             .size(shapeSize)
             .background(color, shape = shape),
@@ -52,27 +54,13 @@ private fun SenSettingsIcon(
 }
 
 @Composable
-private fun SenSettingsItemBottomAction(action: SenSettingsItemAction = SenSettingsItemAction.None) {
-    if (action is SenSettingsItemAction.Bottom) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(bottom = 12.dp),
-        ) {
-            action.content()
-        }
-    }
-}
-
-@Composable
 fun SenSettingsListGroupScope.SenSettingsItem(
     label: String,
     supportingLabels: List<String> = emptyList(),
     icon: ImageVector? = null,
     iconDescription: String? = null,
-    color: Color = MaterialTheme.colorScheme.primaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    color: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     action: SenSettingsItemAction = SenSettingsItemAction.None,
     onClick: (() -> Unit)? = null,
 ) {
@@ -94,9 +82,9 @@ fun SenSettingsListGroupScope.SenSettingsItem(
         null
     }
 
-    Column(modifier = clickableModifier) {
+    Column {
         ListItem(
-            modifier = Modifier
+            modifier = clickableModifier
                 .padding(horizontal = horizontalMargin)
                 .padding(horizontalPadding, verticalPadding),
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
@@ -104,12 +92,27 @@ fun SenSettingsListGroupScope.SenSettingsItem(
             supportingContent = supportingContent,
             leadingContent = {
                 if (showIcons && icon != null) SenSettingsIcon(
+                    isSubMenu,
                     icon, iconDescription, color, contentColor,
                     iconSize, iconShape, iconShapeSize, horizontalPadding,
                 )
             },
             trailingContent = trailingContent,
         )
-        SenSettingsItemBottomAction(action)
+
+        if (action is SenSettingsItemAction.Bottom) {
+            val iconSize = if (isSubMenu) iconSize else iconShapeSize
+            val additionalPadding = if (showIcons) iconSize + horizontalPadding else 0.dp
+
+            Box(
+                modifier = Modifier.padding(
+                    start = horizontalMargin + horizontalPadding + additionalPadding + 32.dp,
+                    end = horizontalMargin + 16.dp,
+                    bottom = verticalMargin,
+                ),
+            ) {
+                action.content()
+            }
+        }
     }
 }

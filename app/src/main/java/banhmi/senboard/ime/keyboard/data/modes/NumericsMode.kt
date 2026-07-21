@@ -6,6 +6,7 @@ import androidx.compose.material.icons.automirrored.outlined.KeyboardReturn
 import banhmi.senboard.ime.keyboard.core.handlers.BackSpaceKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.ReturnKeyHandler
+import banhmi.senboard.ime.keyboard.core.handlers.SpaceKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.SwitchModeHandler
 import banhmi.senboard.ime.keyboard.data.layouts.StandardLayout
 import banhmi.senboard.ime.keyboard.models.KeyData
@@ -143,7 +144,7 @@ val NumericsMode = Mode(
             handler = CharKeyHandler("!"),
         ),
         KeyData(
-            handler = CharKeyHandler(" "),
+            handler = SpaceKeyHandler,
         ),
         KeyData(
             display = KeyDisplay.Text("?"),

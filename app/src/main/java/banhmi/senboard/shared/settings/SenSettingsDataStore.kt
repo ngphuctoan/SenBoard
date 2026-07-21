@@ -1,4 +1,4 @@
-package banhmi.senboard.app.settings.data
+package banhmi.senboard.shared.settings
 
 import android.content.Context
 import androidx.datastore.core.DataStore

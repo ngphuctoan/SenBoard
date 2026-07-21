@@ -1,4 +1,4 @@
-package banhmi.senboard.app.settings.data
+package banhmi.senboard.shared.settings
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
@@ -24,20 +24,25 @@ class SenSettingsRepository(private val context: Context) {
 
     val soundsAndHapticsFlow: Flow<SoundsAndHapticsSettings> = mapPreferencesToFlow { preferences ->
         SoundsAndHapticsSettings(
-            hapticEnabled = preferences[SenSettingsKeys.hapticEnabled] ?: true,
-            hapticIntensity = preferences[SenSettingsKeys.hapticIntensity] ?: 60,
+            hapticIntensity = preferences[SenSettingsKeys.hapticIntensity] ?: 66,
             soundVolume = preferences[SenSettingsKeys.soundVolume] ?: 50,
         )
     }
 
-    val aboutFlow: Flow<AboutSettings> = mapPreferencesToFlow { preferences ->
-        AboutSettings(
+    val inputMethodFlow: Flow<InputMethodSettings> = mapPreferencesToFlow { preferences ->
+        InputMethodSettings(
+            autoCapitalizationEnabled = preferences[SenSettingsKeys.autoCapitalizationEnabled] ?: true,
+            spaceBarShortcutEnabled = preferences[SenSettingsKeys.spaceBarShortcutEnabled] ?: true,
             easterEggEnabled = preferences[SenSettingsKeys.easterEggEnabled] ?: false,
         )
     }
 
-    suspend fun updateHapticEnabled(enabled: Boolean) =
-        updateSetting(SenSettingsKeys.hapticEnabled, enabled)
+    val appearanceFlow: Flow<AppearanceSettings> = mapPreferencesToFlow { preferences ->
+        AppearanceSettings(
+            fullWidthKeyboard = preferences[SenSettingsKeys.fullWidthKeyboard] ?: false,
+            showKeyBackground = preferences[SenSettingsKeys.showKeyBackground] ?: false,
+        )
+    }
 
     suspend fun updateHapticIntensity(intensity: Int) =
         updateSetting(SenSettingsKeys.hapticIntensity, intensity.coerceIn(0, 100))
@@ -45,6 +50,18 @@ class SenSettingsRepository(private val context: Context) {
     suspend fun updateSoundVolume(volume: Int) =
         updateSetting(SenSettingsKeys.soundVolume, volume.coerceIn(0, 100))
 
+    suspend fun updateAutoCapitalizationEnabled(enabled: Boolean) =
+        updateSetting(SenSettingsKeys.autoCapitalizationEnabled, enabled)
+
+    suspend fun updateSpaceBarShortcutEnabled(enabled: Boolean) =
+        updateSetting(SenSettingsKeys.spaceBarShortcutEnabled, enabled)
+
     suspend fun updateEasterEggEnabled(enabled: Boolean) =
         updateSetting(SenSettingsKeys.easterEggEnabled, enabled)
+
+    suspend fun updateFullWidthKeyboard(enabled: Boolean) =
+        updateSetting(SenSettingsKeys.fullWidthKeyboard, enabled)
+
+    suspend fun updateShowKeyBackground(enabled: Boolean) =
+        updateSetting(SenSettingsKeys.showKeyBackground, enabled)
 }

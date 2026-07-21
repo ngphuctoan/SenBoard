@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.KeyboardHide
+import androidx.compose.material.icons.outlined.Redeem
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +40,8 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import banhmi.senboard.ime.keyboard.core.SenBoardController
 import banhmi.senboard.ime.keyboard.core.SenBoardState
@@ -44,26 +49,39 @@ import banhmi.senboard.ime.keyboard.data.modes.CharactersMode
 import banhmi.senboard.ime.keyboard.models.ShiftMode
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardScope
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardScopeImpl
-import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbar
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarButton
+import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarSwitchEngineIcon
+import banhmi.senboard.ime.keyboard.ui.toolbar.SwitchEngineLabel
+import banhmi.senboard.shared.settings.AppearanceSettings
+import banhmi.senboard.shared.settings.InputMethodSettings
+import banhmi.senboard.shared.settings.SenSettingsViewModel
+import banhmi.senboard.shared.settings.SoundsAndHapticsSettings
 import banhmi.senboard.ui.theme.SenBoardTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun SenBoardSurface(
     maxWidth: Dp = 900.dp,
     horizontalMargin: Dp = 8.dp,
-    content: @Composable () -> Unit
+    viewModel: SenSettingsViewModel = viewModel(factory = SenSettingsViewModel.Factory),
+    content: @Composable () -> Unit,
 ) {
+    val state by viewModel.appearanceState.collectAsStateWithLifecycle()
+
     val window = LocalWindowInfo.current
 
     val isTablet = window.containerDpSize.width > maxWidth + horizontalMargin * 2
 
-    val radius = if (isTablet) 8.dp else 0.dp
-    val horizontalPadding = if (isTablet) horizontalMargin else 0.dp
+    val radius = if (isTablet && !state.fullWidthKeyboard) 8.dp else 0.dp
+    val horizontalPadding = if (isTablet && !state.fullWidthKeyboard) horizontalMargin else 0.dp
+
     val additionalWidth = if (isTablet) 0.dp else horizontalMargin * 2
+    val widthModifier = if (state.fullWidthKeyboard) Modifier.fillMaxWidth()
+    else Modifier.widthIn(max = maxWidth + additionalWidth)
 
     Surface(
-        modifier = Modifier
-            .widthIn(max = maxWidth + additionalWidth)
+        modifier = widthModifier
             .fillMaxHeight()
             .padding(horizontal = horizontalPadding)
             .clickable(
@@ -133,12 +151,6 @@ fun BoxWithConstraintsScope.SenBoardContent(
     }
 }
 
-@Preview(widthDp = 280, heightDp = 600)
-@Composable
-fun SenBoardNarrowPreview() {
-    SenBoardPreview()
-}
-
 @PreviewScreenSizes
 @Composable
 fun SenBoardPreview() {
@@ -147,7 +159,19 @@ fun SenBoardPreview() {
         shiftMode = ShiftMode.Off,
     )
 
-    val context = remember { SenBoardContext(im = null, initialState = initialState) }
+    val inputMethodStateFlow = remember { MutableStateFlow(InputMethodSettings()) }
+    val appearanceStateFlow = remember { MutableStateFlow(AppearanceSettings()) }
+    val soundsAndHapticsStateFlow = remember { MutableStateFlow(SoundsAndHapticsSettings()) }
+
+    val context = remember {
+        SenBoardContext(
+            im = null,
+            inputMethodStateFlow = inputMethodStateFlow,
+            appearanceStateFlow = appearanceStateFlow,
+            soundsAndHapticsStateFlow = soundsAndHapticsStateFlow,
+            initialState = initialState,
+        )
+    }
     val controller = remember { SenBoardController(context) }
 
     SenBoardTheme {
@@ -160,15 +184,30 @@ fun SenBoardPreview() {
                     SenBoardContent(controller) {
                         val state = controller.state
                         Column {
-                            Toolbar {
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Outlined.Edit, contentDescription = null)
+                            SenToolbar {
+                                SenToolbarButton {
+                                    SenToolbarSwitchEngineIcon(SwitchEngineLabel.Cvnss40)
                                 }
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Outlined.DarkMode, contentDescription = null)
+
+                                SenToolbarButton {
+                                    Icon(
+                                        Icons.Outlined.Redeem,
+                                        contentDescription = "Turn on aaaaa",
+                                    )
                                 }
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Outlined.Settings, contentDescription = null)
+
+                                SenToolbarButton {
+                                    Icon(
+                                        Icons.Outlined.Settings,
+                                        contentDescription = "Open settings",
+                                    )
+                                }
+
+                                SenToolbarButton {
+                                    Icon(
+                                        Icons.Outlined.KeyboardHide,
+                                        contentDescription = "Hide keyboard",
+                                    )
                                 }
                             }
                             SenBoardLayout(

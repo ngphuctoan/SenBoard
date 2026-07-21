@@ -1,4 +1,4 @@
-package banhmi.senboard.app.settings.data
+package banhmi.senboard.shared.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +30,7 @@ class SenSettingsViewModel(private val repository: SenSettingsRepository) : View
 
     private fun <T> Flow<T>.asStateFlow(initialValue: T): StateFlow<T> = stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Eagerly,
         initialValue = initialValue,
     )
 
@@ -41,13 +41,21 @@ class SenSettingsViewModel(private val repository: SenSettingsRepository) : View
     val soundsAndHapticsState =
         repository.soundsAndHapticsFlow.asStateFlow(SoundsAndHapticsSettings())
 
-    val aboutState = repository.aboutFlow.asStateFlow(AboutSettings())
+    val inputMethodState = repository.inputMethodFlow.asStateFlow(InputMethodSettings())
 
-    val updateHapticEnabled = updater(repository::updateHapticEnabled)
+    val appearanceState = repository.appearanceFlow.asStateFlow(AppearanceSettings())
 
     val updateHapticIntensity = updater(repository::updateHapticIntensity)
 
     val updateSoundVolume = updater(repository::updateSoundVolume)
 
+    val updateAutoCapitalizationEnabled = updater(repository::updateAutoCapitalizationEnabled)
+
+    val updateSpaceBarShortcutEnabled = updater(repository::updateSpaceBarShortcutEnabled)
+
     val updateEasterEggEnabled = updater(repository::updateEasterEggEnabled)
+
+    val updateFullWidthKeyboard = updater(repository::updateFullWidthKeyboard)
+
+    val updateShowKeyBackground = updater(repository::updateShowKeyBackground)
 }
