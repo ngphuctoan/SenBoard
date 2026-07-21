@@ -41,9 +41,7 @@ class SenSettingsViewModel(private val repository: SenSettingsRepository) : View
     val soundsAndHapticsState =
         repository.soundsAndHapticsFlow.asStateFlow(SoundsAndHapticsSettings())
 
-    val aboutState = repository.aboutFlow.asStateFlow(AboutSettings())
-
-    val updateHapticEnabled = updater(repository::updateHapticEnabled)
+    val inputMethodState = repository.inputMethodFlow.asStateFlow(InputMethodSettings())
 
     val updateHapticIntensity = updater(repository::updateHapticIntensity)
 

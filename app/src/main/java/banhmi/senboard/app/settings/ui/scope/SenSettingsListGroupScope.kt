@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 interface SenSettingsListGroupScope {
+    val isSubMenu: Boolean
     val horizontalMargin: Dp
     val verticalMargin: Dp
     val horizontalPadding: Dp
@@ -20,6 +21,7 @@ interface SenSettingsListGroupScope {
 
 class SenSettingsListGroupScopeImpl(
     val scope: ColumnScope,
+    override val isSubMenu: Boolean = false,
     override val horizontalMargin: Dp = 12.dp,
     override val verticalMargin: Dp = 12.dp,
     override val horizontalPadding: Dp = 6.dp,

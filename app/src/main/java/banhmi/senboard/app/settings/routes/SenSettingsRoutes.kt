@@ -8,6 +8,15 @@ sealed interface SenSettingsRoutes {
     object SettingsRoute : SenSettingsRoutes
 
     @Serializable
+    object InstructionsRoute : SenSettingsRoutes
+
+    @Serializable
+    object InputMethodSettingsRoute : SenSettingsRoutes
+
+    @Serializable
+    object AppearanceSettingsRoute : SenSettingsRoutes
+
+    @Serializable
     object SoundsAndHapticsSettingsRoute : SenSettingsRoutes
 
     @Serializable

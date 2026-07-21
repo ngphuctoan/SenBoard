@@ -24,20 +24,16 @@ class SenSettingsRepository(private val context: Context) {
 
     val soundsAndHapticsFlow: Flow<SoundsAndHapticsSettings> = mapPreferencesToFlow { preferences ->
         SoundsAndHapticsSettings(
-            hapticEnabled = preferences[SenSettingsKeys.hapticEnabled] ?: true,
             hapticIntensity = preferences[SenSettingsKeys.hapticIntensity] ?: 60,
             soundVolume = preferences[SenSettingsKeys.soundVolume] ?: 50,
         )
     }
 
-    val aboutFlow: Flow<AboutSettings> = mapPreferencesToFlow { preferences ->
-        AboutSettings(
+    val inputMethodFlow: Flow<InputMethodSettings> = mapPreferencesToFlow { preferences ->
+        InputMethodSettings(
             easterEggEnabled = preferences[SenSettingsKeys.easterEggEnabled] ?: false,
         )
     }
-
-    suspend fun updateHapticEnabled(enabled: Boolean) =
-        updateSetting(SenSettingsKeys.hapticEnabled, enabled)
 
     suspend fun updateHapticIntensity(intensity: Int) =
         updateSetting(SenSettingsKeys.hapticIntensity, intensity.coerceIn(0, 100))

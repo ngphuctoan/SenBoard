@@ -14,7 +14,8 @@ import banhmi.senboard.app.settings.ui.scope.SenSettingsListGroupScope
 
 @Composable
 fun SenSettingsListGroupScope.SenSettingsDivider() {
-    val additionalPadding = if (showIcons) iconShapeSize + horizontalPadding else 0.dp
+    val iconSize = if (isSubMenu) iconSize else iconShapeSize
+    val additionalPadding = if (showIcons) iconSize + horizontalPadding else 0.dp
 
     Box(
         modifier = Modifier

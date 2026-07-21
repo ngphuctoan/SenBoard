@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 
 object SenSettingsKeys {
     // Sounds & Haptics
-    val hapticEnabled = booleanPreferencesKey("haptic_enabled")
     val hapticIntensity = intPreferencesKey("haptic_intensity")
     val soundVolume = intPreferencesKey("sound_volume")
 

@@ -26,7 +26,7 @@ fun SettingsScreen(onRouteNavigate: (SenSettingsRoutes) -> Unit) {
                     icon = Icons.Rounded.QuestionMark,
                     color = LightRainbow.teal.color,
                     contentColor = LightRainbow.teal.onColor,
-                    onClick = { },
+                    onClick = { onRouteNavigate(SenSettingsRoutes.InstructionsRoute) },
                 )
             }
         }
@@ -39,7 +39,7 @@ fun SettingsScreen(onRouteNavigate: (SenSettingsRoutes) -> Unit) {
                     icon = Icons.Rounded.Edit,
                     color = LightRainbow.green.color,
                     contentColor = LightRainbow.green.onColor,
-                    onClick = { },
+                    onClick = { onRouteNavigate(SenSettingsRoutes.InputMethodSettingsRoute) },
                 )
                 SenSettingsDivider()
                 SenSettingsItem(
@@ -48,7 +48,7 @@ fun SettingsScreen(onRouteNavigate: (SenSettingsRoutes) -> Unit) {
                     icon = Icons.Rounded.Palette,
                     color = LightRainbow.blue.color,
                     contentColor = LightRainbow.blue.onColor,
-                    onClick = { },
+                    onClick = { onRouteNavigate(SenSettingsRoutes.AppearanceSettingsRoute) },
                 )
                 SenSettingsDivider()
                 SenSettingsItem(
@@ -66,7 +66,7 @@ fun SettingsScreen(onRouteNavigate: (SenSettingsRoutes) -> Unit) {
             SenSettingsListContent {
                 SenSettingsItem(
                     label = "Giới thiệu",
-                    supportingLabels = listOf("Phiên bản", "Mã nguồn"),
+                    supportingLabels = listOf("Phiên bản", "Giấy phép", "Mã nguồn"),
                     icon = Icons.Rounded.Info,
                     color = LightRainbow.indigo.color,
                     contentColor = LightRainbow.indigo.onColor,
