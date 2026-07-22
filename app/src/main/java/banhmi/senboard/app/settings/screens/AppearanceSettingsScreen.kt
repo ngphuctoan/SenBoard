@@ -3,6 +3,7 @@ package banhmi.senboard.app.settings.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BorderStyle
+import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.OpenInFull
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -29,6 +30,22 @@ fun AppearanceSettingsScreen(
 
     SenScreenScaffold(topBar = { SenScreenTopAppBar("Giao diện", onBackClick) }) { innerPadding ->
         SenSettingsList(modifier = Modifier.padding(innerPadding)) {
+            SenSettingsListGroup(isSubMenu = true) {
+                SenSettingsListContent {
+                    SenSettingsItem(
+                        label = "Chủ đề OLED",
+                        supportingLabels = listOf("Nhìn khá là ngầu đấy chứ!"),
+                        icon = Icons.Rounded.DarkMode,
+                        action = SenSettingsItemAction.Trailing({
+                            Switch(
+                                checked = state.oledThemeEnabled,
+                                onCheckedChange = { viewModel.updateOledThemeEnabled(!state.oledThemeEnabled) },
+                            )
+                        }),
+                        onClick = { viewModel.updateOledThemeEnabled(!state.oledThemeEnabled) },
+                    )
+                }
+            }
             SenSettingsListGroup(isSubMenu = true) {
                 SenSettingsListContent {
                     SenSettingsItem(

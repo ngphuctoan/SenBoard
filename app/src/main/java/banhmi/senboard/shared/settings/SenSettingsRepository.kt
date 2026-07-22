@@ -39,6 +39,7 @@ class SenSettingsRepository(private val context: Context) {
 
     val appearanceFlow: Flow<AppearanceSettings> = mapPreferencesToFlow { preferences ->
         AppearanceSettings(
+            oledThemeEnabled = preferences[SenSettingsKeys.oledThemeEnabled] ?: false,
             fullWidthKeyboard = preferences[SenSettingsKeys.fullWidthKeyboard] ?: false,
             showKeyBackground = preferences[SenSettingsKeys.showKeyBackground] ?: false,
         )
@@ -58,6 +59,9 @@ class SenSettingsRepository(private val context: Context) {
 
     suspend fun updateEasterEggEnabled(enabled: Boolean) =
         updateSetting(SenSettingsKeys.easterEggEnabled, enabled)
+
+    suspend fun updateOledThemeEnabled(enabled: Boolean) =
+        updateSetting(SenSettingsKeys.oledThemeEnabled, enabled)
 
     suspend fun updateFullWidthKeyboard(enabled: Boolean) =
         updateSetting(SenSettingsKeys.fullWidthKeyboard, enabled)

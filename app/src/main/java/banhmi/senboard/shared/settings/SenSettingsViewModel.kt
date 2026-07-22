@@ -55,6 +55,8 @@ class SenSettingsViewModel(private val repository: SenSettingsRepository) : View
 
     val updateEasterEggEnabled = updater(repository::updateEasterEggEnabled)
 
+    val updateOledThemeEnabled = updater(repository::updateOledThemeEnabled)
+
     val updateFullWidthKeyboard = updater(repository::updateFullWidthKeyboard)
 
     val updateShowKeyBackground = updater(repository::updateShowKeyBackground)

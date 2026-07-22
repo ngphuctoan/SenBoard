@@ -7,6 +7,7 @@ data class InputMethodSettings(
 )
 
 data class AppearanceSettings(
+    val oledThemeEnabled: Boolean = false,
     val fullWidthKeyboard: Boolean = false,
     val showKeyBackground: Boolean = false,
 )

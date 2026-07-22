@@ -1,5 +1,6 @@
 package banhmi.senboard.app.settings.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.automirrored.rounded.Backspace
 import androidx.compose.material.icons.rounded.KeyboardAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -34,6 +36,9 @@ fun BoxScope.SenSettingsTestingTextField(
     onInputMethodChange: () -> Unit,
 ) {
     val state = rememberTextFieldState()
+
+    val containerColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceContainerHighest
+    else MaterialTheme.colorScheme.surfaceContainerLowest
 
     TextField(
         modifier = Modifier
@@ -66,6 +71,9 @@ fun BoxScope.SenSettingsTestingTextField(
         shape = RoundedCornerShape(radius),
         contentPadding = padding,
         colors = TextFieldDefaults.colors(
+            focusedContainerColor = containerColor,
+            unfocusedContainerColor = containerColor,
+            disabledContainerColor = containerColor,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,

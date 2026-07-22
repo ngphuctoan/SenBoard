@@ -170,6 +170,19 @@ val LightPink = ColorFamily(
     onColorFixed = Color(0xFF3F001D), onColorFixedVariant = Color(0xFF9E1D5B)
 )
 
+// --- NEUTRAL PALETTE (Grayscale - OKLCH 10% Lightness increments) ---
+val Gray0 = Color(0xFF000000)
+val Gray10 = Color(0xFF151515)
+val Gray20 = Color(0xFF2B2B2B)
+val Gray30 = Color(0xFF424242)
+val Gray40 = Color(0xFF5B5B5B)
+val Gray50 = Color(0xFF757575)
+val Gray60 = Color(0xFF909090)
+val Gray70 = Color(0xFFABABAB)
+val Gray80 = Color(0xFFC8C8C8)
+val Gray90 = Color(0xFFE5E5E5)
+val Gray100 = Color(0xFFFFFFFF)
+
 val LightRainbow = RainbowColors(
     red = LightRed, rose = LightRose, pink = LightPink, fuchsia = LightFuchsia,
     purple = LightPurple, violet = LightViolet, indigo = LightIndigo, blue = LightBlue,

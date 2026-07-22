@@ -10,6 +10,7 @@ object SenSettingsKeys {
     val easterEggEnabled = booleanPreferencesKey("easter_egg_enabled")
 
     // Appearance
+    val oledThemeEnabled = booleanPreferencesKey("oled_theme_enabled")
     val fullWidthKeyboard = booleanPreferencesKey("full_width_keyboard")
     val showKeyBackground = booleanPreferencesKey("show_key_background")
 
