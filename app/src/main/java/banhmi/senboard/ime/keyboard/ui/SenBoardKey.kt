@@ -1,9 +1,5 @@
 package banhmi.senboard.ime.keyboard.ui
 
-import android.content.Context
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.view.ViewConfiguration
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -33,12 +29,13 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.ime.keyboard.core.SenBoardContext
+import banhmi.senboard.ime.keyboard.core.SenBoardController
 import banhmi.senboard.ime.keyboard.models.Key
 import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScope
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardKeyScopeImpl
-import banhmi.senboard.shared.utils.isAppInDarkTheme
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -125,12 +122,13 @@ fun SenBoardKeyScope.SenBoardKeyContent(
 
 @Composable
 fun SenBoardKeyScope.SenBoardKeyShape(
+    context: SenBoardContext,
     margin: PaddingValues = PaddingValues(8.dp),
     forceHighlightState: Boolean? = null,
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
-    val style = key.variant()
-    val pressedColor = if (isAppInDarkTheme()) Color.White else Color.Black
+    val style = key.variant(context)
+    val pressedColor = if (isSystemInDarkTheme()) Color.White else Color.Black
 
     Surface(
         modifier = Modifier
@@ -162,7 +160,9 @@ fun RowScope.SenBoardKeyArea(
     content: @Composable SenBoardKeyScope.() -> Unit,
 ) {
     val source = remember { MutableInteractionSource() }
-    val scope = remember { SenBoardKeyScopeImpl(key, onTap, onDoubleTap, source) }
+    val scope = remember(key, onTap, onDoubleTap) {
+        SenBoardKeyScopeImpl(key, onTap, onDoubleTap, source)
+    }
 
     Box(
         modifier = Modifier

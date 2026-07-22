@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.SpaceBar
 import banhmi.senboard.ime.keyboard.core.handlers.BackSpaceKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.core.handlers.ReturnKeyHandler
+import banhmi.senboard.ime.keyboard.core.handlers.SpaceKeyHandler
 import banhmi.senboard.ime.keyboard.data.layouts.AaaaaLayout
 import banhmi.senboard.ime.keyboard.models.KeyData
 import banhmi.senboard.ime.keyboard.models.KeyDisplay
@@ -29,7 +30,7 @@ val AaaaaMode = Mode(
         ),
         KeyData(
             display = KeyDisplay.Icon(Icons.Outlined.SpaceBar),
-            handler = CharKeyHandler(" "),
+            handler = SpaceKeyHandler,
         ),
         KeyData(
             display = KeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),

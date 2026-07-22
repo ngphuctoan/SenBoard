@@ -9,7 +9,17 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+
+private val LocalRainbowColors = staticCompositionLocalOf { LightRainbow }
+
+val MaterialTheme.rainbow: RainbowColors
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalRainbowColors.current
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -50,9 +60,13 @@ fun SenBoardTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    val rainbowColors = if (darkTheme) DarkRainbow else LightRainbow
+
+    CompositionLocalProvider(LocalRainbowColors provides rainbowColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content,
+        )
+    }
 }

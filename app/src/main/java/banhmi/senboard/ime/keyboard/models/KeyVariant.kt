@@ -1,16 +1,20 @@
 package banhmi.senboard.ime.keyboard.models
 
-import androidx.compose.foundation.shape.CircleShape
+import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import banhmi.senboard.shared.settings.SenSettingsViewModel
 
 data class KeyStyle(
     val color: Color,
@@ -25,47 +29,46 @@ data class KeyStyle(
 )
 
 enum class KeyVariant {
-    Neutral,
-    Ghost,
-    Tertiary,
-    Secondary,
-    Primary,
+    Neutral, Ghost, Tertiary, Secondary, Primary,
 }
 
 @Composable
-operator fun KeyVariant.invoke(): KeyStyle =
-    when (this) {
-        KeyVariant.Neutral -> KeyStyle(
+operator fun KeyVariant.invoke(context: SenBoardContext): KeyStyle {
+    val appearanceState by context.appearanceStateFlow.collectAsStateWithLifecycle()
+
+    val ghostKeyStyle = KeyStyle(
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        useReferenceFontSize = true,
+    )
+
+    return when (this) {
+        KeyVariant.Neutral -> if (appearanceState.showKeyBackground) KeyStyle(
             color = MaterialTheme.colorScheme.surfaceBright,
             contentColor = MaterialTheme.colorScheme.onSurface,
             useReferenceFontSize = true,
-        )
+        ) else ghostKeyStyle
 
-        KeyVariant.Ghost -> KeyStyle(
-            color = MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            useReferenceFontSize = true,
-        )
+        KeyVariant.Ghost -> ghostKeyStyle
 
         KeyVariant.Tertiary -> KeyStyle(
             color = MaterialTheme.colorScheme.tertiaryContainer,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-            shape = CircleShape,
             fontWeight = FontWeight.Medium,
             maxFontSize = 24.sp,
         )
 
-        KeyVariant.Secondary -> KeyStyle(
+        KeyVariant.Secondary -> if (appearanceState.showKeyBackground) KeyStyle(
             color = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             useReferenceFontSize = true,
-        )
+        ) else ghostKeyStyle
 
         KeyVariant.Primary -> KeyStyle(
             color = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            shape = CircleShape,
             fontWeight = FontWeight.Medium,
             maxFontSize = 24.sp,
         )
     }
+}
