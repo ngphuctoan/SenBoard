@@ -1,59 +1,54 @@
 package banhmi.senboard
 
 import banhmi.senboard.ime.engine.CvnssEngine
-import org.junit.Test
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.io.File
+import java.util.stream.Stream
+
+@Serializable
+data class DictEntry(
+    val cvnss: String,
+    val definition: String = ""
+)
+
+@Serializable
+data class DictionaryRoot(
+    val dictionary: Map<String, DictEntry>
+)
 
 class CvnssEngineTest {
 
-    @Test
-    fun testAllDictionaryEntries() {
-        val dictFile = File("../dictionary.json")
-        if (!dictFile.exists()) {
-            println("dictionary.json not found at ${dictFile.absolutePath}")
-            return
-        }
-
-        val content = dictFile.readText(Charsets.UTF_8)
-        val regex = Regex("\"([^\"]+)\":\\s*\\{\\s*\"cvnss\":\\s*\"([^\"]+)\"")
-        val matches = regex.findAll(content)
-
-        var total = 0
-        var passed = 0
-        var failed = 0
-        val failList = mutableListOf<String>()
-
-        for (match in matches) {
-            total++
-            val expectedCqn = match.groupValues[1]
-            val cvnssCode = match.groupValues[2]
-
-            val actualCqn = CvnssEngine.convertWord(cvnssCode)
-
-            if (actualCqn.equals(expectedCqn, ignoreCase = true)) {
-                passed++
-            } else {
-                failed++
-                if (failList.size < 50) {
-                    failList.add("Code: '$cvnssCode' -> Actual: '$actualCqn', Expected: '$expectedCqn'")
-                }
+    companion object {
+        @JvmStatic
+        fun provideDictionaryEntries(): Stream<Arguments> {
+            val file = File("../dictionary.json")
+            if (!file.exists()) {
+                println("Không tìm thấy tệp dictionary.json tại: ${file.absolutePath}")
+                return Stream.empty()
+            }
+            val content = file.readText(Charsets.UTF_8)
+            val json = Json { ignoreUnknownKeys = true }
+            val root = json.decodeFromString<DictionaryRoot>(content)
+            
+            return root.dictionary.entries.stream().map { entry ->
+                Arguments.of(entry.value.cvnss, entry.key)
             }
         }
+    }
 
-        val logFile = File("../test_results.txt")
-        val sb = StringBuilder()
-        sb.appendLine("=== CVNSS 4.0 TEST RESULTS ===")
-        sb.appendLine("Total tested: $total")
-        sb.appendLine("Passed: $passed")
-        sb.appendLine("Failed: $failed")
-        sb.appendLine("Pass rate: ${String.format("%.2f", passed.toDouble() / total * 100)}%")
-
-        if (failList.isNotEmpty()) {
-            sb.appendLine("\nFirst 100 Mismatches:")
-            failList.take(100).forEach { sb.appendLine(it) }
+    @ParameterizedTest(name = "{index} => Chữ Việt Nhanh: {0} -> Quốc Ngữ: {1}")
+    @MethodSource("provideDictionaryEntries")
+    fun testConversion(cvnssInput: String, expectedCqn: String) {
+        val actual = java.text.Normalizer.normalize(CvnssEngine.convertWord(cvnssInput), java.text.Normalizer.Form.NFC)
+        val expected = java.text.Normalizer.normalize(expectedCqn, java.text.Normalizer.Form.NFC)
+        if (actual != expected) {
+            println("MISMATCH: Code: '$cvnssInput' -> Actual: '$actual' (${actual.map { it.code.toString(16) }}), Expected: '$expected' (${expected.map { it.code.toString(16) }})")
         }
-
-        logFile.writeText(sb.toString(), Charsets.UTF_8)
-        println("Saved test results to ${logFile.absolutePath}")
+        assertEquals(expected, actual)
     }
 }
