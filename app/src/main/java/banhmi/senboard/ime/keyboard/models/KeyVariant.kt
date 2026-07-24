@@ -13,8 +13,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import banhmi.senboard.shared.settings.SenSettingsViewModel
 
 data class KeyStyle(
     val color: Color,
@@ -37,7 +35,7 @@ operator fun KeyVariant.invoke(context: SenBoardContext): KeyStyle {
     val appearanceState by context.appearanceStateFlow.collectAsStateWithLifecycle()
 
     val ghostKeyStyle = KeyStyle(
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onSurface,
         useReferenceFontSize = true,
     )
@@ -68,7 +66,6 @@ operator fun KeyVariant.invoke(context: SenBoardContext): KeyStyle {
             color = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             fontWeight = FontWeight.Medium,
-            maxFontSize = 24.sp,
         )
     }
 }

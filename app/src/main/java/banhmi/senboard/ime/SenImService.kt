@@ -2,6 +2,7 @@ package banhmi.senboard.ime
 
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
@@ -23,6 +24,7 @@ import banhmi.senboard.ime.keyboard.data.modes.AaaaaMode
 import banhmi.senboard.ime.keyboard.ui.SenBoardContent
 import banhmi.senboard.ime.keyboard.ui.SenBoardLayout
 import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
+import banhmi.senboard.ime.keyboard.ui.SenBoardFullscreenContainer
 import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbar
 import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarButton
 import banhmi.senboard.ime.keyboard.ui.toolbar.SenToolbarSwitchEngineIcon
@@ -74,66 +76,94 @@ class SenImService : LifecycleImService() {
         controller.updateShiftModeByContext()
     }
 
+    private var keyboardTopInset = 0
+
+    override fun onComputeInsets(outInsets: Insets?) {
+        super.onComputeInsets(outInsets)
+        outInsets?.apply {
+            contentTopInsets = keyboardTopInset
+            visibleTopInsets = keyboardTopInset
+            touchableInsets = Insets.TOUCHABLE_INSETS_REGION
+
+            val windowWidth = window.window?.decorView?.width ?: 0
+            val windowHeight = window.window?.decorView?.height ?: 0
+
+            touchableRegion.set(0, keyboardTopInset, windowWidth, windowHeight)
+        }
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateInputView(): View {
         return ComposeView(this).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            )
             setViewTreeOwners()
             setContent {
                 val appearanceState by controller.context.appearanceStateFlow.collectAsStateWithLifecycle()
 
                 SenBoardTheme(oled = appearanceState.oledThemeEnabled) {
-                    SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
-                        SenBoardSurface {
-                            SenBoardContent(controller) {
-                                val state = controller.state
-                                Column {
-                                    SenToolbar {
-                                        // TODO: move these buttons somewhere else
-                                        val isAaaaaMode = state.mode == AaaaaMode
-
-                                        SenToolbarButton(
-                                            color = MaterialTheme.colorScheme.primaryContainer,
-                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        ) {
-                                            Icon(
-                                                Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                                                contentDescription = "Hide word predictions",
-                                            )
-                                        }
-
-                                        SenToolbarButton {
-                                            SenToolbarSwitchEngineIcon()
-                                        }
-
-                                        SenToolbarButton {
-                                            if (isAaaaaMode) Icon(
-                                                Icons.Filled.Redeem,
-                                                contentDescription = "Turn off aaaaa",
-                                            ) else Icon(
-                                                Icons.Outlined.Redeem,
-                                                contentDescription = "Turn on aaaaa",
-                                            )
-                                        }
-
-                                        SenToolbarButton {
-                                            Icon(
-                                                Icons.Outlined.Settings,
-                                                contentDescription = "Open settings",
-                                            )
-                                        }
-
-                                        SenToolbarButton {
-                                            Icon(
-                                                Icons.Outlined.KeyboardHide,
-                                                contentDescription = "Hide keyboard",
-                                            )
-                                        }
+                    SenBoardFullscreenContainer {
+                        SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
+                            SenBoardSurface(
+                                onPositioned = { newTop ->
+                                    if (keyboardTopInset != newTop) {
+                                        keyboardTopInset = newTop
+                                        window.window?.decorView?.requestLayout()
                                     }
-                                    SenBoardLayout(
-                                        mode = state.mode,
-                                        onKeyTap = { controller.handle(it) },
-                                        onKeyDoubleTap = { controller.handleDoubleTap(it) },
-                                    )
+                                },
+                            ) {
+                                SenBoardContent(controller) {
+                                    val state = controller.state
+                                    Column {
+                                        SenToolbar {
+                                            // TODO: move these buttons somewhere else
+                                            val isAaaaaMode = state.mode == AaaaaMode
+
+                                            SenToolbarButton(
+                                                color = MaterialTheme.colorScheme.primaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            ) {
+                                                Icon(
+                                                    Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                                                    contentDescription = "Hide word predictions",
+                                                )
+                                            }
+
+                                            SenToolbarButton {
+                                                SenToolbarSwitchEngineIcon()
+                                            }
+
+                                            SenToolbarButton {
+                                                if (isAaaaaMode) Icon(
+                                                    Icons.Filled.Redeem,
+                                                    contentDescription = "Turn off aaaaa",
+                                                ) else Icon(
+                                                    Icons.Outlined.Redeem,
+                                                    contentDescription = "Turn on aaaaa",
+                                                )
+                                            }
+
+                                            SenToolbarButton {
+                                                Icon(
+                                                    Icons.Outlined.Settings,
+                                                    contentDescription = "Open settings",
+                                                )
+                                            }
+
+                                            SenToolbarButton {
+                                                Icon(
+                                                    Icons.Outlined.KeyboardHide,
+                                                    contentDescription = "Hide keyboard",
+                                                )
+                                            }
+                                        }
+                                        SenBoardLayout(
+                                            mode = state.mode,
+                                            onKeyTap = { controller.handle(it) },
+                                            onKeyDoubleTap = { controller.handleDoubleTap(it) },
+                                        )
+                                    }
                                 }
                             }
                         }

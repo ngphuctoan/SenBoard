@@ -92,7 +92,7 @@ private fun calculateReferenceFontSize(
 }
 
 @Composable
-private fun SenBoardKeyDisplay(
+fun SenBoardKeyDisplay(
     display: KeyDisplay.Static,
     style: KeyStyle,
     overrideFontSize: TextUnit? = null,
@@ -160,16 +160,20 @@ fun SenBoardScope.SenBoardLayout(
                         }
 
                         val forceCapsLockHighlight = slot.handler is ShiftKeyHandler && isCapsLocked
+                        val keyMargins = layout.keyMargins(screenWidth).getPaddingValues()
 
                         SenBoardKeyArea(
                             key = key,
+                            context = controller.context,
+                            popup = slot.popup,
+                            onPopupAction = onKeyTap,
                             desc = if (display is KeyDisplay.Icon) display.description else null,
                             onTap = { onKeyTap(handler) },
                             onDoubleTap = { onKeyDoubleTap(handler) },
                         ) {
                             SenBoardKeyShape(
                                 context = controller.context,
-                                margin = layout.keyMargins(screenWidth).getPaddingValues(),
+                                margin = keyMargins,
                                 forceHighlightState =
                                     // Prioritise forceCapsLockHighlight then nullable forceHighlightState
                                     if (forceCapsLockHighlight) true

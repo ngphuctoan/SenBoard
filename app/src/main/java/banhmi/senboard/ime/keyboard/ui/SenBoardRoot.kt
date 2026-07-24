@@ -56,12 +56,25 @@ import banhmi.senboard.shared.settings.SoundsAndHapticsSettings
 import banhmi.senboard.ui.theme.SenBoardTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
+
+@Composable
+fun SenBoardFullscreenContainer(content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        content()
+    }
+}
 
 @Composable
 fun SenBoardSurface(
     maxWidth: Dp = 900.dp,
     horizontalMargin: Dp = 8.dp,
     viewModel: SenSettingsViewModel = viewModel(factory = SenSettingsViewModel.Factory),
+    onPositioned: (Int) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val state by viewModel.appearanceState.collectAsStateWithLifecycle()
@@ -81,6 +94,9 @@ fun SenBoardSurface(
         modifier = widthModifier
             .fillMaxHeight()
             .padding(horizontal = horizontalPadding)
+            .onGloballyPositioned { coords ->
+                onPositioned(coords.positionInWindow().y.toInt())
+            }
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -145,77 +161,5 @@ fun BoxWithConstraintsScope.SenBoardContent(
             .fillMaxSize()
     ) {
         scope.content()
-    }
-}
-
-@PreviewScreenSizes
-@Composable
-fun SenBoardPreview() {
-    val initialState = SenBoardState(
-        mode = CharactersMode,
-        shiftMode = ShiftMode.Off,
-    )
-
-    val inputMethodStateFlow = remember { MutableStateFlow(InputMethodSettings()) }
-    val appearanceStateFlow = remember { MutableStateFlow(AppearanceSettings()) }
-    val soundsAndHapticsStateFlow = remember { MutableStateFlow(SoundsAndHapticsSettings()) }
-
-    val context = remember {
-        SenBoardContext(
-            im = null,
-            inputMethodStateFlow = inputMethodStateFlow,
-            appearanceStateFlow = appearanceStateFlow,
-            soundsAndHapticsStateFlow = soundsAndHapticsStateFlow,
-            initialState = initialState,
-        )
-    }
-    val controller = remember { SenBoardController(context) }
-
-    SenBoardTheme(oled = appearanceStateFlow.collectAsState().value.oledThemeEnabled) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            SenBoardRoot {
-                SenBoardSurface {
-                    SenBoardContent(controller) {
-                        val state = controller.state
-                        Column {
-                            SenToolbar {
-                                SenToolbarButton {
-                                    SenToolbarSwitchEngineIcon(SwitchEngineLabel.Cvnss40)
-                                }
-
-                                SenToolbarButton {
-                                    Icon(
-                                        Icons.Outlined.Redeem,
-                                        contentDescription = "Turn on aaaaa",
-                                    )
-                                }
-
-                                SenToolbarButton {
-                                    Icon(
-                                        Icons.Outlined.Settings,
-                                        contentDescription = "Open settings",
-                                    )
-                                }
-
-                                SenToolbarButton {
-                                    Icon(
-                                        Icons.Outlined.KeyboardHide,
-                                        contentDescription = "Hide keyboard",
-                                    )
-                                }
-                            }
-                            SenBoardLayout(
-                                mode = state.mode,
-                                onKeyTap = { controller.handle(it) },
-                                onKeyDoubleTap = { controller.handleDoubleTap(it) },
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 }

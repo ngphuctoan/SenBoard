@@ -30,7 +30,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
-import banhmi.senboard.ime.keyboard.core.SenBoardController
 import banhmi.senboard.ime.keyboard.models.Key
 import banhmi.senboard.ime.keyboard.models.invoke
 import banhmi.senboard.ime.keyboard.ui.indications.KeyHighlightIndication
@@ -41,13 +40,25 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import banhmi.senboard.ime.keyboard.models.KeyAltPopup
+import banhmi.senboard.ime.keyboard.models.KeyHandler
+import banhmi.senboard.ime.keyboard.models.KeyVariant
 
 private fun Modifier.keyInteraction(
     source: MutableInteractionSource,
     onTap: () -> Unit,
     onDoubleTap: () -> Unit,
+    hasPopup: Boolean,
     key: Any?,
-): Modifier = pointerInput(key, source, onTap, onDoubleTap) {
+): Modifier = pointerInput(key, source, onTap, onDoubleTap, hasPopup) {
     val doubleTapTimeout = ViewConfiguration.getDoubleTapTimeout().toLong()
     val longPressTimeout = ViewConfiguration.getLongPressTimeout().toLong()
 
@@ -68,9 +79,11 @@ private fun Modifier.keyInteraction(
                 hasRepeated = true
                 lastTapUpTime = 0L
 
-                while (isActive) {
-                    onTap()
-                    delay(50.milliseconds)
+                if (!hasPopup) {
+                    while (isActive) {
+                        onTap()
+                        delay(50.milliseconds)
+                    }
                 }
             }
 
@@ -100,6 +113,53 @@ private fun Modifier.keyInteraction(
             } else {
                 onTap()
                 lastTapUpTime = upChanged.uptimeMillis
+            }
+        }
+    }
+}
+
+private fun Modifier.popupInteraction(
+    popup: KeyAltPopup?,
+    onShowPopup: (Offset) -> Unit,
+    onPointerMove: (Offset) -> Unit,
+    onPopupRelease: () -> Unit,
+): Modifier = if (popup == null) this else pointerInput(popup) {
+    val longPressTimeout = ViewConfiguration.getLongPressTimeout().toLong()
+    coroutineScope {
+        awaitEachGesture {
+            val down = awaitFirstDown(requireUnconsumed = false)
+
+            var isLongPressed = false
+            var currentPosition = down.position
+            val longPressJob = launch {
+                delay(longPressTimeout.milliseconds)
+                isLongPressed = true
+                onShowPopup(currentPosition)
+            }
+
+            while (true) {
+                val event = awaitPointerEvent()
+                if (event.changes.any { it.pressed.not() }) {
+                    break
+                }
+                val change = event.changes.firstOrNull()
+                if (change != null) {
+                    currentPosition = change.position
+                    if (isLongPressed) {
+                        onPointerMove(currentPosition)
+                    } else {
+                        val dx = currentPosition.x - down.position.x
+                        val dy = currentPosition.y - down.position.y
+                        val distance = kotlin.math.sqrt(dx * dx + dy * dy)
+                        if (distance > viewConfiguration.touchSlop) {
+                            longPressJob.cancel()
+                        }
+                    }
+                }
+            }
+            longPressJob.cancel()
+            if (isLongPressed) {
+                onPopupRelease()
             }
         }
     }
@@ -154,6 +214,9 @@ fun SenBoardKeyScope.SenBoardKeyShape(
 @Composable
 fun RowScope.SenBoardKeyArea(
     key: Key,
+    context: SenBoardContext,
+    popup: KeyAltPopup?,
+    onPopupAction: (KeyHandler) -> Unit,
     desc: String?,
     onTap: () -> Unit,
     onDoubleTap: () -> Unit,
@@ -164,18 +227,84 @@ fun RowScope.SenBoardKeyArea(
         SenBoardKeyScopeImpl(key, onTap, onDoubleTap, source)
     }
 
+    var isPopupVisible by remember { mutableStateOf(false) }
+    var isPopupDismissed by remember { mutableStateOf(false) }
+    var pointerPosition by remember { mutableStateOf(Offset.Zero) }
+    var keySize by remember { mutableStateOf(IntSize.Zero) }
+
+    val density = LocalDensity.current
+
+    // "Clean" code should look like this :b
+    fun convertToPx(dp: Dp): Float = with(density) { dp.toPx() }
+    fun convertToDp(px: Int): Dp = with(density) { px.toDp() }
+
+    // This is what PEAK Kotlin looks like!!!
+    fun getKeyWidthPx(): Float = popup?.keyWidth?.let { convertToPx(it) } ?: keySize.width.toFloat()
+    fun getKeyHeightPx(): Float = popup?.keyHeight?.let { convertToPx(it) } ?: keySize.height.toFloat()
+
+    val popupState by remember(popup, keySize, isPopupDismissed) {
+        derivedStateOf {
+            if (isPopupVisible && popup != null && keySize.width > 0 && keySize.height > 0 && !isPopupDismissed) {
+                calculatePopupState(pointerPosition, popup, getKeyWidthPx(), getKeyHeightPx())
+            } else {
+                null
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .weight(key.areaWeight)
             .fillMaxHeight()
+            .onGloballyPositioned { keySize = it.size }
             .semantics {
                 role = Role.Button
                 if (!desc.isNullOrEmpty()) contentDescription = desc
                 onClick { onTap().let { true } }
             }
-            .keyInteraction(source, onTap, onDoubleTap, key = null),
+            .keyInteraction(source, onTap, onDoubleTap, hasPopup = popup != null, key = null)
+            .popupInteraction(
+                popup = popup,
+                onShowPopup = { position ->
+                    pointerPosition = position
+                    isPopupVisible = true
+                },
+                onPointerMove = { position ->
+                    pointerPosition = position
+                    if (position.y > getKeyHeightPx()) isPopupDismissed = true
+                },
+                onPopupRelease = {
+                    // Hovered item needs to be re-accessed in here to avoid "stale" null
+                    val currentlyHoveredItem = popupState?.first
+                    if (isPopupVisible && !isPopupDismissed && currentlyHoveredItem != null) {
+                        onPopupAction(currentlyHoveredItem.handler)
+                    }
+                    isPopupVisible = false
+                    isPopupDismissed = false
+                    pointerPosition = Offset.Zero
+                },
+            ),
         contentAlignment = key.shapeAlignment,
     ) {
         scope.content()
+
+        val hoveredItem = popupState?.first
+        val popupOffset = popupState?.second
+
+        if (isPopupVisible && !isPopupDismissed && popup != null && hoveredItem != null && popupOffset != null) {
+            val keyWidth = popup.keyWidth ?: convertToDp(keySize.width)
+            val keyHeight = popup.keyHeight ?: convertToDp(keySize.height)
+
+            SenBoardKeyAltPopup(
+                context = context,
+                popupData = popup,
+                hoveredItem = hoveredItem,
+                keyWidth = keyWidth,
+                keyHeight = keyHeight,
+                style = KeyVariant.Ghost(context),
+                activeStyle = KeyVariant.Primary(context),
+                offset = popupOffset,
+            )
+        }
     }
 }
