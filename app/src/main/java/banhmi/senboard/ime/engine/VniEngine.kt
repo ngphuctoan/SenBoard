@@ -2,7 +2,7 @@ package banhmi.senboard.ime.engine
 
 import java.text.Normalizer
 
-object TelexEngine {
+object VniEngine {
 
     fun convertWord(rawWord: String): String {
         if (rawWord.isEmpty()) return rawWord
@@ -10,95 +10,57 @@ object TelexEngine {
         var word = rawWord.lowercase()
         val (cleanWord, existingTone) = stripTone(word)
         word = cleanWord
-        
-        // 1. Process initial consonant and double-d
-        word = word.replace("dd", "đ").replace("Dd", "Đ").replace("DD", "Đ")
 
-        // 2. Extract tone mark from the word (after the initial consonant)
+        // Extract VNI strokes (digits 0-9)
+        val modifiers = mutableSetOf<Char>()
         var newTone = ""
-        var toneCharIdx = -1
-        
-        // Find initial consonant length
-        var initialLen = 0
-        val lower = word.lowercase()
-        if (lower.startsWith("ngh")) initialLen = 3
-        else if (lower.startsWith("ch") || lower.startsWith("tr") || lower.startsWith("nh") ||
-                 lower.startsWith("ng") || lower.startsWith("ph") || lower.startsWith("th") ||
-                 lower.startsWith("kh") || lower.startsWith("gh") || lower.startsWith("gi") ||
-                 lower.startsWith("qu")) {
-            initialLen = 2
-        } else if (lower.isNotEmpty() && !isVowel(lower[0])) {
-            initialLen = 1
-        }
+        val cleanedWordBuilder = StringBuilder()
 
-        // Scan from the end for tone keys
-        val toneKeys = setOf('s', 'f', 'r', 'x', 'j', 'z')
-        for (i in word.length - 1 downTo initialLen) {
-            if (toneKeys.contains(word[i])) {
-                newTone = when (word[i]) {
-                    's' -> "sac"
-                    'f' -> "huyen"
-                    'r' -> "hoi"
-                    'x' -> "nga"
-                    'j' -> "nang"
-                    'z' -> "none"
-                    else -> ""
+        for (c in word) {
+            if (c.isDigit()) {
+                when (c) {
+                    '1' -> newTone = "sac"
+                    '2' -> newTone = "huyen"
+                    '3' -> newTone = "hoi"
+                    '4' -> newTone = "nga"
+                    '5' -> newTone = "nang"
+                    '0' -> newTone = "none"
+                    else -> modifiers.add(c)
                 }
-                toneCharIdx = i
-                break
+            } else {
+                cleanedWordBuilder.append(c)
             }
         }
+        word = cleanedWordBuilder.toString()
 
-        if (toneCharIdx != -1) {
-            word = word.substring(0, toneCharIdx) + word.substring(toneCharIdx + 1)
+        // 1. Consonant modifier (9 -> đ)
+        if (modifiers.contains('9')) {
+            word = word.replace("d", "đ")
         }
 
-        // 3. Process Telex vowel modifications
-        // Try replacing combined modifiers first
-        if (word.contains("uow")) word = word.replace("uow", "ươ")
-        if (word.contains("uwow")) word = word.replace("uwow", "ươ")
+        // 2. Vowel modifier (6 -> â, ê, ô)
+        if (modifiers.contains('6')) {
+            word = word.replace("a", "â")
+                       .replace("e", "ê")
+                       .replace("o", "ô")
+        }
 
-        // Single modifications
-        word = word.replace("aa", "â")
-        word = word.replace("ee", "ê")
-        word = word.replace("oo", "ô")
-        word = word.replace("aw", "ă")
-        word = word.replace("uw", "ư")
-        word = word.replace("ow", "ơ")
+        // 3. Vowel modifier (8 -> ă)
+        if (modifiers.contains('8')) {
+            word = word.replace("a", "ă")
+        }
 
-        // Handle standalone 'w' at the end or acting on preceding vowels
-        if (word.contains("w")) {
-            val sb = StringBuilder()
-            var hasU = false
-            var hasO = false
-            for (c in word) {
-                if (c == 'u') hasU = true
-                if (c == 'o') hasO = true
-            }
-            for (c in word) {
-                if (c == 'w') {
-                    // If no u/o, 'w' is a standalone vowel 'ư'
-                    if (!hasU && !hasO) {
-                        sb.append('ư')
-                    }
-                    continue
-                }
-                if (c == 'u' && !word.contains("uo")) {
-                    sb.append('ư')
-                } else if (c == 'o' && !word.contains("uo")) {
-                    sb.append('ơ')
-                } else {
-                    sb.append(c)
-                }
-            }
-            word = sb.toString()
-            // If it had uo and was followed by w, it should be ươ
-            if (hasU && hasO) {
+        // 4. Vowel modifier (7 -> ơ, ư, ươ)
+        if (modifiers.contains('7')) {
+            if (word.contains("u") && word.contains("o")) {
                 word = word.replace("uo", "ươ")
+            } else {
+                word = word.replace("u", "ư")
+                           .replace("o", "ơ")
             }
         }
 
-        // 4. Apply Tone Accent if present
+        // 5. Apply Tone Accent if present
         val tone = if (newTone.isNotEmpty()) newTone else existingTone
         if (tone.isNotEmpty() && tone != "none") {
             word = applyToneMark(word, tone)

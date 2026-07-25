@@ -69,6 +69,21 @@ fun InputMethodSettingsScreen(viewModel: SenSettingsViewModel = viewModel(factor
                     }
                 )
 
+                SenSettingsItem(
+                    label = "VNI",
+                    supportingLabels = listOf("Phương thức gõ tiếng Việt bằng phím số"),
+                    icon = Icons.Outlined.Keyboard,
+                    action = if (currentMode == "vni") {
+                        SenSettingsItemAction.Trailing({
+                            Icon(Icons.Outlined.Check, contentDescription = "Đã chọn")
+                        })
+                    } else SenSettingsItemAction.None,
+                    onClick = {
+                        prefs.typingMode = "vni"
+                        currentMode = "vni"
+                    }
+                )
+
                 if (showEasterEggToggle) {
                     SenSettingsItem(
                         label = "Easter egg",

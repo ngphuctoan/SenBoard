@@ -37,6 +37,18 @@ class CharKeyHandler(private val char: String) : KeyHandler {
             }
         }
 
+        // VNI Auto-conversion on Space / Punctuation
+        if (prefs.typingMode == "vni" && (char == " " || isPunctuation(char))) {
+            val wordBefore = getWordBeforeCursor(editor)
+            if (wordBefore.isNotEmpty()) {
+                val converted = banhmi.senboard.ime.engine.VniEngine.convertWord(wordBefore)
+                if (converted != wordBefore) {
+                    editor.deleteSurroundingText(wordBefore.length, 0)
+                    editor.commitText(converted, 1)
+                }
+            }
+        }
+
         // 1. Double space to insert period
         if (char == " " && prefs.doubleSpacePeriod) {
             val lastTwo = editor.getTextBeforeCursor(2, 0)
@@ -75,6 +87,37 @@ class CharKeyHandler(private val char: String) : KeyHandler {
 
             val candidateWord = wordBefore + textToCommit
             val converted = banhmi.senboard.ime.engine.TelexEngine.convertWord(candidateWord)
+            if (converted != candidateWord) {
+                editor.deleteSurroundingText(wordBefore.length, 0)
+                editor.commitText(converted, 1)
+                
+                // Reset temporary shift mode
+                if (currentShiftMode == ShiftMode.Shifted) {
+                    context.state = context.state.copy(shiftMode = ShiftMode.Off)
+                }
+                return
+            }
+        }
+
+        // On-the-fly VNI conversion for digit keys
+        if (prefs.typingMode == "vni" && char.length == 1 && char[0].isDigit()) {
+            val wordBefore = getWordBeforeCursor(editor)
+            
+            // Try VNI escape first
+            val escaped = tryVniEscape(wordBefore, textToCommit)
+            if (escaped != null) {
+                editor.deleteSurroundingText(wordBefore.length, 0)
+                editor.commitText(escaped, 1)
+                
+                // Reset temporary shift mode
+                if (currentShiftMode == ShiftMode.Shifted) {
+                    context.state = context.state.copy(shiftMode = ShiftMode.Off)
+                }
+                return
+            }
+
+            val candidateWord = wordBefore + textToCommit
+            val converted = banhmi.senboard.ime.engine.VniEngine.convertWord(candidateWord)
             if (converted != candidateWord) {
                 editor.deleteSurroundingText(wordBefore.length, 0)
                 editor.commitText(converted, 1)
@@ -152,6 +195,86 @@ class CharKeyHandler(private val char: String) : KeyHandler {
                 return wordBefore.dropLast(1) + (if (isAllUpper) "W" else "W")
             }
         }
+        return null
+    }
+
+    private fun tryVniEscape(wordBefore: String, key: String): String? {
+        if (wordBefore.isEmpty()) return null
+        val lastChar = wordBefore.last()
+        val keyChar = key.firstOrNull() ?: return null
+
+        if (keyChar == '9') {
+            if (lastChar == 'đ') return wordBefore.dropLast(1) + "d9"
+            if (lastChar == 'Đ') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "D9" else "D9")
+            }
+        }
+        if (keyChar == '6') {
+            if (lastChar == 'â') return wordBefore.dropLast(1) + "a6"
+            if (lastChar == 'Â') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "A6" else "A6")
+            }
+            if (lastChar == 'ê') return wordBefore.dropLast(1) + "e6"
+            if (lastChar == 'Ê') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "E6" else "E6")
+            }
+            if (lastChar == 'ô') return wordBefore.dropLast(1) + "o6"
+            if (lastChar == 'Ô') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "O6" else "O6")
+            }
+        }
+        if (keyChar == '8') {
+            if (lastChar == 'ă') return wordBefore.dropLast(1) + "a8"
+            if (lastChar == 'Ă') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "A8" else "A8")
+            }
+        }
+        if (keyChar == '7') {
+            if (wordBefore.endsWith("ươ")) return wordBefore.dropLast(2) + "uo7"
+            if (wordBefore.endsWith("Ươ")) return wordBefore.dropLast(2) + "Uo7"
+            if (wordBefore.endsWith("ƯƠ")) return wordBefore.dropLast(2) + "UO7"
+            if (lastChar == 'ư') return wordBefore.dropLast(1) + "u7"
+            if (lastChar == 'Ư') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "U7" else "U7")
+            }
+            if (lastChar == 'ơ') return wordBefore.dropLast(1) + "o7"
+            if (lastChar == 'Ơ') {
+                val isAllUpper = wordBefore.dropLast(1).all { it.isUpperCase() }
+                return wordBefore.dropLast(1) + (if (isAllUpper) "O7" else "O7")
+            }
+        }
+        
+        // Tone escape mapping for keys 1-5 (only escape when key matches the tone type)
+        val toneEscapes = mapOf(
+            '1' to mapOf('á' to "a1", 'ấ' to "â1", 'ắ' to "ă1", 'é' to "e1", 'ế' to "ê1", 'í' to "i1",
+                         'ó' to "o1", 'ố' to "ô1", 'ớ' to "ơ1", 'ú' to "u1", 'ứ' to "ư1", 'ý' to "y1"),
+            '2' to mapOf('à' to "a2", 'ầ' to "â2", 'ằ' to "ă2", 'è' to "e2", 'ề' to "ê2", 'ì' to "i2",
+                         'ò' to "o2", 'ồ' to "ô2", 'ờ' to "ơ2", 'ù' to "u2", 'ừ' to "ư2", 'ỳ' to "y2"),
+            '3' to mapOf('ả' to "a3", 'ẩ' to "â3", 'ẳ' to "ă3", 'ẻ' to "e3", 'ể' to "ê3", 'ỉ' to "i3",
+                         'ỏ' to "o3", 'ổ' to "ô3", 'ở' to "ơ3", 'ủ' to "u3", 'ử' to "ư3", 'ỷ' to "y3"),
+            '4' to mapOf('ã' to "a4", 'ẫ' to "â4", 'ẵ' to "ă4", 'ẽ' to "e4", 'ễ' to "ê4", 'ĩ' to "i4",
+                         'õ' to "o4", 'ỗ' to "ô4", 'ỡ' to "ơ4", 'ũ' to "u4", 'ữ' to "ư4", 'ỹ' to "y4"),
+            '5' to mapOf('ạ' to "a5", 'ậ' to "â5", 'ặ' to "ă5", 'ẹ' to "e5", 'ệ' to "ê5", 'ị' to "i5",
+                         'ọ' to "o5", 'ộ' to "ô5", 'ợ' to "ơ5", 'ụ' to "u5", 'ự' to "ư5", 'ỵ' to "y5")
+        )
+
+        val escMap = toneEscapes[keyChar]
+        if (escMap != null) {
+            val lowerChar = lastChar.lowercaseChar()
+            val replacement = escMap[lowerChar]
+            if (replacement != null) {
+                val isUpper = lastChar.isUpperCase()
+                val finalReplacement = if (isUpper) replacement.uppercase() else replacement
+                return wordBefore.dropLast(1) + finalReplacement
+            }
+        }
+
         return null
     }
 

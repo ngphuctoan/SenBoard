@@ -31,5 +31,12 @@ class TelexEngineTest {
         // Capitalization
         assertEquals("Đường", TelexEngine.convertWord("Dduowngf"))
         assertEquals("Đông", TelexEngine.convertWord("Ddoong"))
+
+        // Tone changing/overwriting
+        assertEquals("á", TelexEngine.convertWord("às"))
+        assertEquals("đường", TelexEngine.convertWord("đươngf"))
+        assertEquals("chợ", TelexEngine.convertWord("chơj"))
+        assertEquals("tiếng", TelexEngine.convertWord("tiêngs"))
+        assertEquals("vế", TelexEngine.convertWord("vềs"))
     }
 }

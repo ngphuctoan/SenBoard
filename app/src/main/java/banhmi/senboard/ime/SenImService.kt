@@ -84,13 +84,23 @@ class SenImService : LifecycleImService() {
                                                         liveRegion = LiveRegionMode.Assertive
                                                         paneTitle = "Chuyển phương thức gõ"
                                                     }) {
-                                                    Text(if (typingMode == "cvnss") "Bộ gõ: CVNSS 4.0" else "Bộ gõ: Telex")
+                                                    Text(
+                                                        when (typingMode) {
+                                                            "cvnss" -> "Bộ gõ: CVNSS 4.0"
+                                                            "telex" -> "Bộ gõ: Telex"
+                                                            else -> "Bộ gõ: VNI"
+                                                        }
+                                                    )
                                                 }
                                             },
                                             state = rememberTooltipState(),
                                         ) {
                                             IconButton(onClick = {
-                                                val nextMode = if (typingMode == "cvnss") "telex" else "cvnss"
+                                                val nextMode = when (typingMode) {
+                                                    "cvnss" -> "telex"
+                                                    "telex" -> "vni"
+                                                    else -> "cvnss"
+                                                }
                                                 prefs.typingMode = nextMode
                                                 typingMode = nextMode
                                             }) {
@@ -105,7 +115,11 @@ class SenImService : LifecycleImService() {
                                                     contentAlignment = Alignment.Center,
                                                 ) {
                                                     Text(
-                                                        text = if (typingMode == "cvnss") "CV" else "V",
+                                                        text = when (typingMode) {
+                                                            "cvnss" -> "CV"
+                                                            "telex" -> "TE"
+                                                            else -> "VN"
+                                                        },
                                                         color = LocalContentColor.current,
                                                         fontWeight = FontWeight.Bold,
                                                         fontSize = androidx.compose.ui.unit.TextUnit.Unspecified
