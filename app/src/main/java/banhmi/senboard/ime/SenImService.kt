@@ -46,6 +46,8 @@ import banhmi.senboard.ime.keyboard.ui.SenBoardContent
 import banhmi.senboard.ime.keyboard.ui.SenBoardLayout
 import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
 import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
+import banhmi.senboard.ime.engine.PredictionEngine
+import banhmi.senboard.ime.engine.UserBigramStore
 import banhmi.senboard.ime.lifecycle.LifecycleImService
 import banhmi.senboard.shared.utils.isAppInDarkTheme
 import banhmi.senboard.ui.theme.SenBoardTheme
@@ -58,6 +60,9 @@ class SenImService : LifecycleImService() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateInputView(): View {
         val context = this.context
+
+        // Load bigrams for next-word prediction
+        PredictionEngine.loadBigrams(this)
 
         return ComposeView(this).apply {
             setViewTreeOwners()

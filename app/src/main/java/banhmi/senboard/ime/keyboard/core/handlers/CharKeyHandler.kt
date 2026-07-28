@@ -3,6 +3,8 @@ package banhmi.senboard.ime.keyboard.core.handlers
 import android.view.inputmethod.InputConnection
 import banhmi.senboard.app.settings.SenBoardPreferences
 import banhmi.senboard.ime.engine.CvnssEngine
+import banhmi.senboard.ime.engine.PredictionEngine
+import banhmi.senboard.ime.engine.UserBigramStore
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import banhmi.senboard.ime.keyboard.models.KeyHandler
 import banhmi.senboard.ime.keyboard.models.ShiftMode
@@ -132,7 +134,15 @@ class CharKeyHandler(private val char: String) : KeyHandler {
 
         editor.commitText(textToCommit, 1)
 
-        // 3. Reset temporary shift mode
+        // 3. Record user bigram after space
+        if (char == " ") {
+            val twoWords = getLastTwoWordsBeforeCursor(editor)
+            if (twoWords != null) {
+                UserBigramStore.recordBigram(context.im, twoWords.first, twoWords.second)
+            }
+        }
+
+        // 4. Reset temporary shift mode
         if (currentShiftMode == ShiftMode.Shifted) {
             context.state = context.state.copy(shiftMode = ShiftMode.Off)
         }
@@ -283,6 +293,16 @@ class CharKeyHandler(private val char: String) : KeyHandler {
         if (before.isEmpty()) return ""
         val parts = before.split(Regex("[\\s.,!?:;()\"']"))
         return parts.lastOrNull() ?: ""
+    }
+
+    private fun getLastTwoWordsBeforeCursor(editor: InputConnection): Pair<String, String>? {
+        val before = editor.getTextBeforeCursor(60, 0)?.toString() ?: ""
+        if (before.isEmpty()) return null
+        val parts = before.trim().split(Regex("[\\s.,!?:;()\"']+")).filter { it.isNotEmpty() }
+        if (parts.size >= 2) {
+            return Pair(parts[parts.size - 2], parts[parts.size - 1])
+        }
+        return null
     }
 
     private fun isPunctuation(c: String): Boolean {

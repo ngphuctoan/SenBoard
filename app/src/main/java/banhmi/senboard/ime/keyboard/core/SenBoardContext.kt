@@ -20,6 +20,10 @@ class SenBoardContext(
     var state by mutableStateOf(initialState)
         internal set
 
+    var suggestions by mutableStateOf<List<String>>(emptyList())
+
+    var onSuggestionSelected: ((String) -> Unit)? = null
+
     fun getEditor(): InputConnection? = im?.currentInputConnection
 
     fun getHaptic(): Vibrator? = im?.let {
