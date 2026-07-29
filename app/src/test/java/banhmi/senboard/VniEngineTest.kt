@@ -18,6 +18,7 @@ class VniEngineTest {
         // Capitalization
         assertEquals("Đường", VniEngine.convertWord("Duong972"))
         assertEquals("Đông", VniEngine.convertWord("Dong96"))
+        assertEquals("ĐƯỜNG", VniEngine.convertWord("DUONG972"))
 
         // Tone changing/overwriting
         assertEquals("á", VniEngine.convertWord("à1"))

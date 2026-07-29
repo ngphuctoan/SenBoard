@@ -234,7 +234,10 @@ object CvnssEngine {
         }
 
         // Restore capitalization
-        if (rawWord.firstOrNull()?.isUpperCase() == true) {
+        val lettersOnly = rawWord.filter { it.isLetter() }
+        if (lettersOnly.isNotEmpty() && lettersOnly.all { it.isUpperCase() }) {
+            fullWord = fullWord.uppercase()
+        } else if (rawWord.firstOrNull()?.isUpperCase() == true) {
             fullWord = fullWord.capitalizeFirstLetter()
         }
 

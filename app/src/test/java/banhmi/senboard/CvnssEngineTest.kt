@@ -51,4 +51,11 @@ class CvnssEngineTest {
         }
         assertEquals(expected, actual)
     }
+
+    @org.junit.jupiter.api.Test
+    fun testCvnssEdgeCases() {
+        assertEquals("tuyết", CvnssEngine.convertWord("tydb"))
+        assertEquals("Tuyết", CvnssEngine.convertWord("Tydb"))
+        assertEquals("TUYẾT", CvnssEngine.convertWord("TYDB"))
+    }
 }

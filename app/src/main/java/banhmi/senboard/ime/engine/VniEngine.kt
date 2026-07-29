@@ -67,7 +67,10 @@ object VniEngine {
         }
 
         // Restore capitalization
-        if (rawWord.firstOrNull()?.isUpperCase() == true) {
+        val lettersOnly = rawWord.filter { it.isLetter() }
+        if (lettersOnly.isNotEmpty() && lettersOnly.all { it.isUpperCase() }) {
+            word = word.uppercase()
+        } else if (rawWord.firstOrNull()?.isUpperCase() == true) {
             word = word.capitalizeFirstLetter()
         }
 

@@ -38,5 +38,16 @@ class TelexEngineTest {
         assertEquals("chợ", TelexEngine.convertWord("chơj"))
         assertEquals("tiếng", TelexEngine.convertWord("tiêngs"))
         assertEquals("vế", TelexEngine.convertWord("vềs"))
+
+        // No vowel stem & English word tests
+        assertEquals("cvns", TelexEngine.convertWord("cvns"))
+        assertEquals("cvnss", TelexEngine.convertWord("cvnss"))
+        assertEquals("Cvnss", TelexEngine.convertWord("Cvnss"))
+        assertEquals("telex", TelexEngine.convertWord("telex"))
+        assertEquals("play", TelexEngine.convertWord("play"))
+        assertEquals("print", TelexEngine.convertWord("print"))
+        assertEquals("stop", TelexEngine.convertWord("stop"))
+        assertEquals("skill", TelexEngine.convertWord("skill"))
+        assertEquals("club", TelexEngine.convertWord("club"))
     }
 }

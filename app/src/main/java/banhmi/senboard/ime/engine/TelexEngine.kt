@@ -8,6 +8,8 @@ object TelexEngine {
         if (rawWord.isEmpty()) return rawWord
 
         var word = rawWord.lowercase()
+        if (isEnglishPrefix(word)) return rawWord
+
         val (cleanWord, existingTone) = stripTone(word)
         word = cleanWord
         
@@ -35,17 +37,20 @@ object TelexEngine {
         val toneKeys = setOf('s', 'f', 'r', 'x', 'j', 'z')
         for (i in word.length - 1 downTo initialLen) {
             if (toneKeys.contains(word[i])) {
-                newTone = when (word[i]) {
-                    's' -> "sac"
-                    'f' -> "huyen"
-                    'r' -> "hoi"
-                    'x' -> "nga"
-                    'j' -> "nang"
-                    'z' -> "none"
-                    else -> ""
+                val stemBeforeTone = word.substring(0, i)
+                if (isValidSingleVietnameseSyllableStem(stemBeforeTone)) {
+                    newTone = when (word[i]) {
+                        's' -> "sac"
+                        'f' -> "huyen"
+                        'r' -> "hoi"
+                        'x' -> "nga"
+                        'j' -> "nang"
+                        'z' -> "none"
+                        else -> ""
+                    }
+                    toneCharIdx = i
+                    break
                 }
-                toneCharIdx = i
-                break
             }
         }
 
@@ -105,14 +110,53 @@ object TelexEngine {
         }
 
         // Restore capitalization
-        if (rawWord.firstOrNull()?.isUpperCase() == true) {
+        val lettersOnly = rawWord.filter { it.isLetter() }
+        if (lettersOnly.isNotEmpty() && lettersOnly.all { it.isUpperCase() }) {
+            word = word.uppercase()
+        } else if (rawWord.firstOrNull()?.isUpperCase() == true) {
             word = word.capitalizeFirstLetter()
         }
 
         return word
     }
 
-    private fun isVowel(c: Char) = "aeiouyâêôăơư".contains(c.lowercaseChar())
+    private fun isValidSingleVietnameseSyllableStem(stem: String): Boolean {
+        val vowelIndices = mutableListOf<Int>()
+        for (i in stem.indices) {
+            if (isVowel(stem[i])) vowelIndices.add(i)
+        }
+        if (vowelIndices.isEmpty()) return false
+
+        for (i in 0 until vowelIndices.size - 1) {
+            val gap = vowelIndices[i + 1] - vowelIndices[i]
+            if (gap > 1) {
+                val sub = stem.substring(vowelIndices[i], vowelIndices[i + 1] + 1).lowercase()
+                if (sub != "gi" && sub != "qu" && !stem.startsWith("gi") && !stem.startsWith("qu")) {
+                    return false
+                }
+            }
+        }
+
+        val lastVowelIdx = vowelIndices.last()
+        val ending = stem.substring(lastVowelIdx + 1).lowercase()
+        if (ending.isNotEmpty()) {
+            val validFinals = setOf("c", "ch", "m", "n", "ng", "nh", "p", "t")
+            if (!validFinals.contains(ending)) return false
+        }
+
+        return true
+    }
+
+    private fun isEnglishPrefix(word: String): Boolean {
+        val lower = word.lowercase()
+        val englishPrefixes = listOf(
+            "bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr",
+            "sc", "sk", "sl", "sm", "sn", "sp", "st", "str", "sw", "tw"
+        )
+        return englishPrefixes.any { lower.startsWith(it) }
+    }
+
+    private fun isVowel(c: Char) = "aeiouyâêôăơưw".contains(c.lowercaseChar())
 
     private fun applyToneMark(word: String, tone: String): String {
         val toneMap = mapOf(
@@ -131,12 +175,23 @@ object TelexEngine {
         )
 
         val normWord = Normalizer.normalize(word, Normalizer.Form.NFC)
-        val vowelIndices = mutableListOf<Int>()
+        val allVowelIndices = mutableListOf<Int>()
         for (i in normWord.indices) {
-            if (isVowel(normWord[i])) vowelIndices.add(i)
+            if (isVowel(normWord[i])) allVowelIndices.add(i)
         }
 
-        if (vowelIndices.isEmpty()) return normWord
+        if (allVowelIndices.isEmpty()) return normWord
+
+        // Extract the last contiguous cluster of vowels (final syllable's vowels)
+        val vowelIndices = mutableListOf<Int>()
+        vowelIndices.add(allVowelIndices.last())
+        for (i in allVowelIndices.size - 2 downTo 0) {
+            if (allVowelIndices[i] == allVowelIndices[i + 1] - 1) {
+                vowelIndices.add(0, allVowelIndices[i])
+            } else {
+                break
+            }
+        }
 
         // Special handling for gi + vowel (e.g. giá, giao, gián) -> tone goes to vowel after i
         if (normWord.startsWith("gi") && normWord.length > 2 && isVowel(normWord[2])) {

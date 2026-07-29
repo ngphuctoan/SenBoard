@@ -205,7 +205,54 @@ class CharKeyHandler(private val char: String) : KeyHandler {
                 return wordBefore.dropLast(1) + (if (isAllUpper) "W" else "W")
             }
         }
+
+        val toneKeyMap = mapOf(
+            "s" to "sac",
+            "f" to "huyen",
+            "r" to "hoi",
+            "x" to "nga",
+            "j" to "nang"
+        )
+        val targetTone = toneKeyMap[keyLower]
+        if (targetTone != null) {
+            val (strippedWord, currentTone) = stripToneFromWord(wordBefore)
+            if (currentTone == targetTone) {
+                return strippedWord + keyLower
+            }
+        }
+
         return null
+    }
+
+    private fun stripToneFromWord(word: String): Pair<String, String> {
+        val accentMap = mapOf(
+            'á' to Pair('a', "sac"), 'à' to Pair('a', "huyen"), 'ả' to Pair('a', "hoi"), 'ã' to Pair('a', "nga"), 'ạ' to Pair('a', "nang"),
+            'ấ' to Pair('â', "sac"), 'ầ' to Pair('â', "huyen"), 'ẩ' to Pair('â', "hoi"), 'ẫ' to Pair('â', "nga"), 'ậ' to Pair('â', "nang"),
+            'ắ' to Pair('ă', "sac"), 'ằ' to Pair('ă', "huyen"), 'ẳ' to Pair('ă', "hoi"), 'ẵ' to Pair('ă', "nga"), 'ặ' to Pair('ă', "nang"),
+            'é' to Pair('e', "sac"), 'è' to Pair('e', "huyen"), 'ẻ' to Pair('e', "hoi"), 'ẽ' to Pair('e', "nga"), 'ẹ' to Pair('e', "nang"),
+            'ế' to Pair('ê', "sac"), 'ề' to Pair('ê', "huyen"), 'ể' to Pair('ê', "hoi"), 'ễ' to Pair('ê', "nga"), 'ệ' to Pair('ê', "nang"),
+            'í' to Pair('i', "sac"), 'ì' to Pair('i', "huyen"), 'ỉ' to Pair('i', "hoi"), 'ĩ' to Pair('i', "nga"), 'ị' to Pair('i', "nang"),
+            'ó' to Pair('o', "sac"), 'ò' to Pair('o', "huyen"), 'ỏ' to Pair('o', "hoi"), 'õ' to Pair('o', "nga"), 'ọ' to Pair('o', "nang"),
+            'ố' to Pair('ô', "sac"), 'ồ' to Pair('ô', "huyen"), 'ổ' to Pair('ô', "hoi"), 'ỗ' to Pair('ô', "nga"), 'ộ' to Pair('ô', "nang"),
+            'ớ' to Pair('ơ', "sac"), 'ờ' to Pair('ơ', "huyen"), 'ở' to Pair('ơ', "hoi"), 'ỡ' to Pair('ơ', "nga"), 'ợ' to Pair('ơ', "nang"),
+            'ú' to Pair('u', "sac"), 'ù' to Pair('u', "huyen"), 'ủ' to Pair('u', "hoi"), 'ũ' to Pair('u', "nga"), 'ụ' to Pair('u', "nang"),
+            'ứ' to Pair('ư', "sac"), 'ừ' to Pair('ư', "huyen"), 'ử' to Pair('ư', "hoi"), 'ữ' to Pair('ư', "nga"), 'ự' to Pair('ư', "nang"),
+            'ý' to Pair('y', "sac"), 'ỳ' to Pair('y', "huyen"), 'ỷ' to Pair('y', "hoi"), 'ỹ' to Pair('y', "nga"), 'ỵ' to Pair('y', "nang")
+        )
+
+        val norm = java.text.Normalizer.normalize(word, java.text.Normalizer.Form.NFC)
+        val sb = StringBuilder()
+        var currentTone = ""
+        for (c in norm) {
+            val mapped = accentMap[c]
+            if (mapped != null) {
+                sb.append(mapped.first)
+                currentTone = mapped.second
+            } else {
+                sb.append(c)
+            }
+        }
+        return Pair(sb.toString(), currentTone)
     }
 
     private fun tryVniEscape(wordBefore: String, key: String): String? {
