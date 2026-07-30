@@ -1,308 +1,384 @@
 package banhmi.senboard.ui.theme
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
-@Immutable
-data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color,
-    val colorContainerSoft: Color,
-    val onColorContainerSoft: Color,
-    val colorFixed: Color,
-    val colorFixedDim: Color,
-    val onColorFixed: Color,
-    val onColorFixedVariant: Color,
-)
+val primaryLight = Color(0xFF5D5E5F)
+val onPrimaryLight = Color(0xFFFFFFFF)
+val primaryContainerLight = Color(0xFFB9B9B9)
+val onPrimaryContainerLight = Color(0xFF484A4A)
+val secondaryLight = Color(0xFF5F5E5E)
+val onSecondaryLight = Color(0xFFFFFFFF)
+val secondaryContainerLight = Color(0xFFE4E2E1)
+val onSecondaryContainerLight = Color(0xFF656464)
+val tertiaryLight = Color(0xFF615D5F)
+val onTertiaryLight = Color(0xFFFFFFFF)
+val tertiaryContainerLight = Color(0xFFBDB8BA)
+val onTertiaryContainerLight = Color(0xFF4C494B)
+val errorLight = Color(0xFFBA1A1A)
+val onErrorLight = Color(0xFFFFFFFF)
+val errorContainerLight = Color(0xFFFFDAD6)
+val onErrorContainerLight = Color(0xFF93000A)
+val backgroundLight = Color(0xFFFCF8F8)
+val onBackgroundLight = Color(0xFF1C1B1B)
+val surfaceLight = Color(0xFFFCF8F8)
+val onSurfaceLight = Color(0xFF1C1B1B)
+val surfaceVariantLight = Color(0xFFE0E3E3)
+val onSurfaceVariantLight = Color(0xFF444748)
+val outlineLight = Color(0xFF747878)
+val outlineVariantLight = Color(0xFFC4C7C7)
+val scrimLight = Color(0xFF000000)
+val inverseSurfaceLight = Color(0xFF313030)
+val inverseOnSurfaceLight = Color(0xFFF4F0EF)
+val inversePrimaryLight = Color(0xFFC6C6C6)
+val surfaceDimLight = Color(0xFFDDD9D9)
+val surfaceBrightLight = Color(0xFFFCF8F8)
+val surfaceContainerLowestLight = Color(0xFFFFFFFF)
+val surfaceContainerLowLight = Color(0xFFF7F3F2)
+val surfaceContainerLight = Color(0xFFF1EDEC)
+val surfaceContainerHighLight = Color(0xFFEBE7E7)
+val surfaceContainerHighestLight = Color(0xFFE5E2E1)
 
-/**
- * Rainbow colors defined using OKLCH consistency for uniform perceptual brightness.
- */
-@Immutable
-data class RainbowColors(
-    val red: ColorFamily,
-    val rose: ColorFamily,
-    val pink: ColorFamily,
-    val fuchsia: ColorFamily,
-    val purple: ColorFamily,
-    val violet: ColorFamily,
-    val indigo: ColorFamily,
-    val blue: ColorFamily,
-    val sky: ColorFamily,
-    val cyan: ColorFamily,
-    val teal: ColorFamily,
-    val emerald: ColorFamily,
-    val green: ColorFamily,
-    val lime: ColorFamily,
-    val yellow: ColorFamily,
-    val amber: ColorFamily,
-    val orange: ColorFamily,
-)
+val primaryLightMediumContrast = Color(0xFF353637)
+val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
+val primaryContainerLightMediumContrast = Color(0xFF6C6D6D)
+val onPrimaryContainerLightMediumContrast = Color(0xFFFFFFFF)
+val secondaryLightMediumContrast = Color(0xFF363636)
+val onSecondaryLightMediumContrast = Color(0xFFFFFFFF)
+val secondaryContainerLightMediumContrast = Color(0xFF6D6D6D)
+val onSecondaryContainerLightMediumContrast = Color(0xFFFFFFFF)
+val tertiaryLightMediumContrast = Color(0xFF383537)
+val onTertiaryLightMediumContrast = Color(0xFFFFFFFF)
+val tertiaryContainerLightMediumContrast = Color(0xFF706C6E)
+val onTertiaryContainerLightMediumContrast = Color(0xFFFFFFFF)
+val errorLightMediumContrast = Color(0xFF740006)
+val onErrorLightMediumContrast = Color(0xFFFFFFFF)
+val errorContainerLightMediumContrast = Color(0xFFCF2C27)
+val onErrorContainerLightMediumContrast = Color(0xFFFFFFFF)
+val backgroundLightMediumContrast = Color(0xFFFCF8F8)
+val onBackgroundLightMediumContrast = Color(0xFF1C1B1B)
+val surfaceLightMediumContrast = Color(0xFFFCF8F8)
+val onSurfaceLightMediumContrast = Color(0xFF111111)
+val surfaceVariantLightMediumContrast = Color(0xFFE0E3E3)
+val onSurfaceVariantLightMediumContrast = Color(0xFF333737)
+val outlineLightMediumContrast = Color(0xFF4F5354)
+val outlineVariantLightMediumContrast = Color(0xFF6A6E6E)
+val scrimLightMediumContrast = Color(0xFF000000)
+val inverseSurfaceLightMediumContrast = Color(0xFF313030)
+val inverseOnSurfaceLightMediumContrast = Color(0xFFF4F0EF)
+val inversePrimaryLightMediumContrast = Color(0xFFC6C6C6)
+val surfaceDimLightMediumContrast = Color(0xFFC9C6C5)
+val surfaceBrightLightMediumContrast = Color(0xFFFCF8F8)
+val surfaceContainerLowestLightMediumContrast = Color(0xFFFFFFFF)
+val surfaceContainerLowLightMediumContrast = Color(0xFFF7F3F2)
+val surfaceContainerLightMediumContrast = Color(0xFFEBE7E7)
+val surfaceContainerHighLightMediumContrast = Color(0xFFDFDCDB)
+val surfaceContainerHighestLightMediumContrast = Color(0xFFD4D1D0)
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val primaryLightHighContrast = Color(0xFF2B2C2D)
+val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
+val primaryContainerLightHighContrast = Color(0xFF484949)
+val onPrimaryContainerLightHighContrast = Color(0xFFFFFFFF)
+val secondaryLightHighContrast = Color(0xFF2C2C2C)
+val onSecondaryLightHighContrast = Color(0xFFFFFFFF)
+val secondaryContainerLightHighContrast = Color(0xFF494949)
+val onSecondaryContainerLightHighContrast = Color(0xFFFFFFFF)
+val tertiaryLightHighContrast = Color(0xFF2E2B2D)
+val onTertiaryLightHighContrast = Color(0xFFFFFFFF)
+val tertiaryContainerLightHighContrast = Color(0xFF4B484A)
+val onTertiaryContainerLightHighContrast = Color(0xFFFFFFFF)
+val errorLightHighContrast = Color(0xFF600004)
+val onErrorLightHighContrast = Color(0xFFFFFFFF)
+val errorContainerLightHighContrast = Color(0xFF98000A)
+val onErrorContainerLightHighContrast = Color(0xFFFFFFFF)
+val backgroundLightHighContrast = Color(0xFFFCF8F8)
+val onBackgroundLightHighContrast = Color(0xFF1C1B1B)
+val surfaceLightHighContrast = Color(0xFFFCF8F8)
+val onSurfaceLightHighContrast = Color(0xFF000000)
+val surfaceVariantLightHighContrast = Color(0xFFE0E3E3)
+val onSurfaceVariantLightHighContrast = Color(0xFF000000)
+val outlineLightHighContrast = Color(0xFF292D2D)
+val outlineVariantLightHighContrast = Color(0xFF464A4A)
+val scrimLightHighContrast = Color(0xFF000000)
+val inverseSurfaceLightHighContrast = Color(0xFF313030)
+val inverseOnSurfaceLightHighContrast = Color(0xFFFFFFFF)
+val inversePrimaryLightHighContrast = Color(0xFFC6C6C6)
+val surfaceDimLightHighContrast = Color(0xFFBBB8B7)
+val surfaceBrightLightHighContrast = Color(0xFFFCF8F8)
+val surfaceContainerLowestLightHighContrast = Color(0xFFFFFFFF)
+val surfaceContainerLowLightHighContrast = Color(0xFFF4F0EF)
+val surfaceContainerLightHighContrast = Color(0xFFE5E2E1)
+val surfaceContainerHighLightHighContrast = Color(0xFFD7D4D3)
+val surfaceContainerHighestLightHighContrast = Color(0xFFC9C6C5)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val primaryDark = Color(0xFFD5D5D5)
+val onPrimaryDark = Color(0xFF2F3131)
+val primaryContainerDark = Color(0xFFB9B9B9)
+val onPrimaryContainerDark = Color(0xFF484A4A)
+val secondaryDark = Color(0xFFC8C6C6)
+val onSecondaryDark = Color(0xFF303030)
+val secondaryContainerDark = Color(0xFF474747)
+val onSecondaryContainerDark = Color(0xFFB6B5B4)
+val tertiaryDark = Color(0xFFD9D4D6)
+val onTertiaryDark = Color(0xFF323031)
+val tertiaryContainerDark = Color(0xFFBDB8BA)
+val onTertiaryContainerDark = Color(0xFF4C494B)
+val errorDark = Color(0xFFFFB4AB)
+val onErrorDark = Color(0xFF690005)
+val errorContainerDark = Color(0xFF93000A)
+val onErrorContainerDark = Color(0xFFFFDAD6)
+val backgroundDark = Color(0xFF141313)
+val onBackgroundDark = Color(0xFFE5E2E1)
+val surfaceDark = Color(0xFF141313)
+val onSurfaceDark = Color(0xFFE5E2E1)
+val surfaceVariantDark = Color(0xFF444748)
+val onSurfaceVariantDark = Color(0xFFC4C7C7)
+val outlineDark = Color(0xFF8E9192)
+val outlineVariantDark = Color(0xFF444748)
+val scrimDark = Color(0xFF000000)
+val inverseSurfaceDark = Color(0xFFE5E2E1)
+val inverseOnSurfaceDark = Color(0xFF313030)
+val inversePrimaryDark = Color(0xFF5D5E5F)
+val surfaceDimDark = Color(0xFF141313)
+val surfaceBrightDark = Color(0xFF3A3939)
+val surfaceContainerLowestDark = Color(0xFF0E0E0E)
+val surfaceContainerLowDark = Color(0xFF1C1B1B)
+val surfaceContainerDark = Color(0xFF201F1F)
+val surfaceContainerHighDark = Color(0xFF2A2A2A)
+val surfaceContainerHighestDark = Color(0xFF353434)
 
-// --- LIGHT PALETTES ---
-val LightRed = ColorFamily(
-    color = Color(0xFFE52525), onColor = Color.White,
-    colorContainer = Color(0xFFFFDAD6), onColorContainer = Color(0xFF410002),
-    colorContainerSoft = Color(0xFFFFD8D5), onColorContainerSoft = Color(0xFF8D0008),
-    colorFixed = Color(0xFFFFDAD6), colorFixedDim = Color(0xFFFFB4AB),
-    onColorFixed = Color(0xFF410002), onColorFixedVariant = Color(0xFF93000A)
-)
-val LightRose = ColorFamily(
-    color = Color(0xFFE31B5F), onColor = Color.White,
-    colorContainer = Color(0xFFFFD9E2), onColorContainer = Color(0xFF3E001D),
-    colorContainerSoft = Color(0xFFFFE1E8), onColorContainerSoft = Color(0xFF8A003D),
-    colorFixed = Color(0xFFFFD9E2), colorFixedDim = Color(0xFFFFB1C8),
-    onColorFixed = Color(0xFF3E001D), onColorFixedVariant = Color(0xFF980047)
-)
-val LightOrange = ColorFamily(
-    color = Color(0xFFB35F00), onColor = Color.White,
-    colorContainer = Color(0xFFFFDCBE), onColorContainer = Color(0xFF2D1600),
-    colorContainerSoft = Color(0xFFFFD9B8), onColorContainerSoft = Color(0xFF633400),
-    colorFixed = Color(0xFFFFDCBE), colorFixedDim = Color(0xFFFFB870),
-    onColorFixed = Color(0xFF2D1600), onColorFixedVariant = Color(0xFF6A3B00)
-)
-val LightAmber = ColorFamily(
-    color = Color(0xFF956E00), onColor = Color.White,
-    colorContainer = Color(0xFFFFE08D), onColorContainer = Color(0xFF241A00),
-    colorContainerSoft = Color(0xFFFFF1CC), onColorContainerSoft = Color(0xFF644900),
-    colorFixed = Color(0xFFFFE08D), colorFixedDim = Color(0xFFF9BD00),
-    onColorFixed = Color(0xFF241A00), onColorFixedVariant = Color(0xFF755500)
-)
-val LightYellow = ColorFamily(
-    color = Color(0xFF7A7C00), onColor = Color.White,
-    colorContainer = Color(0xFFE6E971), onColorContainer = Color(0xFF1C1D00),
-    colorContainerSoft = Color(0xFFE4E76D), onColorContainerSoft = Color(0xFF444500),
-    colorFixed = Color(0xFFE6E971), colorFixedDim = Color(0xFFC9CC58),
-    onColorFixed = Color(0xFF1C1D00), onColorFixedVariant = Color(0xFF484900)
-)
-val LightLime = ColorFamily(
-    color = Color(0xFF4F8100), onColor = Color.White,
-    colorContainer = Color(0xFFD6FF8E), onColorContainer = Color(0xFF112000),
-    colorContainerSoft = Color(0xFFE6FFC0), onColorContainerSoft = Color(0xFF2D4B00),
-    colorFixed = Color(0xFFD6FF8E), colorFixedDim = Color(0xFFB4F34A),
-    onColorFixed = Color(0xFF112000), onColorFixedVariant = Color(0xFF385D00)
-)
-val LightGreen = ColorFamily(
-    color = Color(0xFF008D4D), onColor = Color.White,
-    colorContainer = Color(0xFF98F7B5), onColorContainer = Color(0xFF00210E),
-    colorContainerSoft = Color(0xFFB0F9C4), onColorContainerSoft = Color(0xFF00542D),
-    colorFixed = Color(0xFF98F7B5), colorFixedDim = Color(0xFF7CDAA0),
-    onColorFixed = Color(0xFF00210E), onColorFixedVariant = Color(0xFF00522B)
-)
-val LightEmerald = ColorFamily(
-    color = Color(0xFF008A70), onColor = Color.White,
-    colorContainer = Color(0xFF91FADF), onColorContainer = Color(0xFF002019),
-    colorContainerSoft = Color(0xFFC2FEEF), onColorContainerSoft = Color(0xFF005141),
-    colorFixed = Color(0xFF91FADF), colorFixedDim = Color(0xFF73DDC3),
-    onColorFixed = Color(0xFF002019), onColorFixedVariant = Color(0xFF005141)
-)
-val LightTeal = ColorFamily(
-    color = Color(0xFF008080), onColor = Color.White,
-    colorContainer = Color(0xFF9CF0F0), onColorContainer = Color(0xFF002020),
-    colorContainerSoft = Color(0xFFC6F7F7), onColorContainerSoft = Color(0xFF004D4D),
-    colorFixed = Color(0xFF9CF0F0), colorFixedDim = Color(0xFF7FD4D4),
-    onColorFixed = Color(0xFF002020), onColorFixedVariant = Color(0xFF004D4D)
-)
-val LightCyan = ColorFamily(
-    color = Color(0xFF007A8A), onColor = Color.White,
-    colorContainer = Color(0xFFB9F0FF), onColorContainer = Color(0xFF001F25),
-    colorContainerSoft = Color(0xFFD9F7FF), onColorContainerSoft = Color(0xFF004953),
-    colorFixed = Color(0xFFB9F0FF), colorFixedDim = Color(0xFF5DD6F4),
-    onColorFixed = Color(0xFF001F25), onColorFixedVariant = Color(0xFF004953)
-)
-val LightSky = ColorFamily(
-    color = Color(0xFF0077B6), onColor = Color.White,
-    colorContainer = Color(0xFFCAF0F8), onColorContainer = Color(0xFF001D2D),
-    colorContainerSoft = Color(0xFFE1F7FD), onColorContainerSoft = Color(0xFF00446A),
-    colorFixed = Color(0xFFCAF0F8), colorFixedDim = Color(0xFF90E0EF),
-    onColorFixed = Color(0xFF001D2D), onColorFixedVariant = Color(0xFF00446A)
-)
-val LightBlue = ColorFamily(
-    color = Color(0xFF007DCF), onColor = Color.White,
-    colorContainer = Color(0xFFD1E4FF), onColorContainer = Color(0xFF001D36),
-    colorContainerSoft = Color(0xFFCDE1FF), onColorContainerSoft = Color(0xFF004C81),
-    colorFixed = Color(0xFFD1E4FF), colorFixedDim = Color(0xFF9ECAFF),
-    onColorFixed = Color(0xFF001D36), onColorFixedVariant = Color(0xFF00497D)
-)
-val LightIndigo = ColorFamily(
-    color = Color(0xFF5D66C4), onColor = Color.White,
-    colorContainer = Color(0xFFE0E0FF), onColorContainer = Color(0xFF040B62),
-    colorContainerSoft = Color(0xFFDAD9FF), onColorContainerSoft = Color(0xFF323A8C),
-    colorFixed = Color(0xFFE0E0FF), colorFixedDim = Color(0xFFBEC2FF),
-    onColorFixed = Color(0xFF040B62), onColorFixedVariant = Color(0xFF373E90)
-)
-val LightViolet = ColorFamily(
-    color = Color(0xFFAD52A7), onColor = Color.White,
-    colorContainer = Color(0xFFFFD7F5), onColorContainer = Color(0xFF380036),
-    colorContainerSoft = Color(0xFFFFCEF3), onColorContainerSoft = Color(0xFF6F286C),
-    colorFixed = Color(0xFFFFD7F5), colorFixedDim = Color(0xFFFFADEB),
-    onColorFixed = Color(0xFF380036), onColorFixedVariant = Color(0xFF722A6F)
-)
-val LightPurple = ColorFamily(
-    color = Color(0xFF8B46B2), onColor = Color.White,
-    colorContainer = Color(0xFFF3D9FF), onColorContainer = Color(0xFF2D0050),
-    colorContainerSoft = Color(0xFFF7E6FF), onColorContainerSoft = Color(0xFF5D1E81),
-    colorFixed = Color(0xFFF3D9FF), colorFixedDim = Color(0xFFDDAFFF),
-    onColorFixed = Color(0xFF2D0050), onColorFixedVariant = Color(0xFF712B9A)
-)
-val LightFuchsia = ColorFamily(
-    color = Color(0xFFC026D3), onColor = Color.White,
-    colorContainer = Color(0xFFFFD7F1), onColorContainer = Color(0xFF3B0029),
-    colorContainerSoft = Color(0xFFFFE5F6), onColorContainerSoft = Color(0xFF8A0064),
-    colorFixed = Color(0xFFFFD7F1), colorFixedDim = Color(0xFFF9A8D4),
-    onColorFixed = Color(0xFF3B0029), onColorFixedVariant = Color(0xFF911E7D)
-)
-val LightPink = ColorFamily(
-    color = Color(0xFFDB2777), onColor = Color.White,
-    colorContainer = Color(0xFFFFD9E2), onColorContainer = Color(0xFF3F001D),
-    colorContainerSoft = Color(0xFFFFE2E9), onColorContainerSoft = Color(0xFF9A004B),
-    colorFixed = Color(0xFFFFD9E2), colorFixedDim = Color(0xFFF9A8D4),
-    onColorFixed = Color(0xFF3F001D), onColorFixedVariant = Color(0xFF9E1D5B)
-)
+val primaryDarkMediumContrast = Color(0xFFDDDCDC)
+val onPrimaryDarkMediumContrast = Color(0xFF242626)
+val primaryContainerDarkMediumContrast = Color(0xFFB9B9B9)
+val onPrimaryContainerDarkMediumContrast = Color(0xFF2B2D2D)
+val secondaryDarkMediumContrast = Color(0xFFDEDCDB)
+val onSecondaryDarkMediumContrast = Color(0xFF252626)
+val secondaryContainerDarkMediumContrast = Color(0xFF919090)
+val onSecondaryContainerDarkMediumContrast = Color(0xFF000000)
+val tertiaryDarkMediumContrast = Color(0xFFE0DBDD)
+val onTertiaryDarkMediumContrast = Color(0xFF272527)
+val tertiaryContainerDarkMediumContrast = Color(0xFFBDB8BA)
+val onTertiaryContainerDarkMediumContrast = Color(0xFF2E2C2E)
+val errorDarkMediumContrast = Color(0xFFFFD2CC)
+val onErrorDarkMediumContrast = Color(0xFF540003)
+val errorContainerDarkMediumContrast = Color(0xFFFF5449)
+val onErrorContainerDarkMediumContrast = Color(0xFF000000)
+val backgroundDarkMediumContrast = Color(0xFF141313)
+val onBackgroundDarkMediumContrast = Color(0xFFE5E2E1)
+val surfaceDarkMediumContrast = Color(0xFF141313)
+val onSurfaceDarkMediumContrast = Color(0xFFFFFFFF)
+val surfaceVariantDarkMediumContrast = Color(0xFF444748)
+val onSurfaceVariantDarkMediumContrast = Color(0xFFDADDDD)
+val outlineDarkMediumContrast = Color(0xFFAFB2B3)
+val outlineVariantDarkMediumContrast = Color(0xFF8D9191)
+val scrimDarkMediumContrast = Color(0xFF000000)
+val inverseSurfaceDarkMediumContrast = Color(0xFFE5E2E1)
+val inverseOnSurfaceDarkMediumContrast = Color(0xFF2A2A2A)
+val inversePrimaryDarkMediumContrast = Color(0xFF474848)
+val surfaceDimDarkMediumContrast = Color(0xFF141313)
+val surfaceBrightDarkMediumContrast = Color(0xFF454444)
+val surfaceContainerLowestDarkMediumContrast = Color(0xFF070707)
+val surfaceContainerLowDarkMediumContrast = Color(0xFF1E1D1D)
+val surfaceContainerDarkMediumContrast = Color(0xFF282828)
+val surfaceContainerHighDarkMediumContrast = Color(0xFF333232)
+val surfaceContainerHighestDarkMediumContrast = Color(0xFF3E3D3D)
 
-val LightRainbow = RainbowColors(
-    red = LightRed, rose = LightRose, pink = LightPink, fuchsia = LightFuchsia,
-    purple = LightPurple, violet = LightViolet, indigo = LightIndigo, blue = LightBlue,
-    sky = LightSky, cyan = LightCyan, teal = LightTeal, emerald = LightEmerald,
-    green = LightGreen, lime = LightLime, yellow = LightYellow, amber = LightAmber,
-    orange = LightOrange
-)
+val primaryDarkHighContrast = Color(0xFFF0F0F0)
+val onPrimaryDarkHighContrast = Color(0xFF000000)
+val primaryContainerDarkHighContrast = Color(0xFFC3C2C2)
+val onPrimaryContainerDarkHighContrast = Color(0xFF0A0B0C)
+val secondaryDarkHighContrast = Color(0xFFF2EFEF)
+val onSecondaryDarkHighContrast = Color(0xFF000000)
+val secondaryContainerDarkHighContrast = Color(0xFFC4C2C2)
+val onSecondaryContainerDarkHighContrast = Color(0xFF0B0B0B)
+val tertiaryDarkHighContrast = Color(0xFFF4EEF0)
+val onTertiaryDarkHighContrast = Color(0xFF000000)
+val tertiaryContainerDarkHighContrast = Color(0xFFC6C1C3)
+val onTertiaryContainerDarkHighContrast = Color(0xFF0C0B0C)
+val errorDarkHighContrast = Color(0xFFFFECE9)
+val onErrorDarkHighContrast = Color(0xFF000000)
+val errorContainerDarkHighContrast = Color(0xFFFFAEA4)
+val onErrorContainerDarkHighContrast = Color(0xFF220001)
+val backgroundDarkHighContrast = Color(0xFF141313)
+val onBackgroundDarkHighContrast = Color(0xFFE5E2E1)
+val surfaceDarkHighContrast = Color(0xFF141313)
+val onSurfaceDarkHighContrast = Color(0xFFFFFFFF)
+val surfaceVariantDarkHighContrast = Color(0xFF444748)
+val onSurfaceVariantDarkHighContrast = Color(0xFFFFFFFF)
+val outlineDarkHighContrast = Color(0xFFEEF0F1)
+val outlineVariantDarkHighContrast = Color(0xFFC0C3C4)
+val scrimDarkHighContrast = Color(0xFF000000)
+val inverseSurfaceDarkHighContrast = Color(0xFFE5E2E1)
+val inverseOnSurfaceDarkHighContrast = Color(0xFF000000)
+val inversePrimaryDarkHighContrast = Color(0xFF474848)
+val surfaceDimDarkHighContrast = Color(0xFF141313)
+val surfaceBrightDarkHighContrast = Color(0xFF51504F)
+val surfaceContainerLowestDarkHighContrast = Color(0xFF000000)
+val surfaceContainerLowDarkHighContrast = Color(0xFF201F1F)
+val surfaceContainerDarkHighContrast = Color(0xFF313030)
+val surfaceContainerHighDarkHighContrast = Color(0xFF3C3B3B)
+val surfaceContainerHighestDarkHighContrast = Color(0xFF484646)
 
-// --- DARK PALETTES ---
-val DarkRed = ColorFamily(
-    color = Color(0xFFFFD2CC), onColor = Color(0xFF690005),
-    colorContainer = Color(0xFF93000A), onColorContainer = Color(0xFFFFDAD6),
-    colorContainerSoft = Color(0xFF8D0008), onColorContainerSoft = Color(0xFFFFD8D5),
-    colorFixed = Color(0xFFFFDAD6), colorFixedDim = Color(0xFFFFB4AB),
-    onColorFixed = Color(0xFF410002), onColorFixedVariant = Color(0xFF93000A)
-)
-val DarkRose = ColorFamily(
-    color = Color(0xFFFFD1D9), onColor = Color(0xFF630030),
-    colorContainer = Color(0xFF8E0045), onColorContainer = Color(0xFFFFD9E2),
-    colorContainerSoft = Color(0xFF8A003D), onColorContainerSoft = Color(0xFFFFE1E8),
-    colorFixed = Color(0xFFFFD9E2), colorFixedDim = Color(0xFFFFB1C8),
-    onColorFixed = Color(0xFF3E001D), onColorFixedVariant = Color(0xFF980047)
-)
-val DarkOrange = ColorFamily(
-    color = Color(0xFFFFDAB7), onColor = Color(0xFF4A2800),
-    colorContainer = Color(0xFF6A3B00), onColorContainer = Color(0xFFFFDCBE),
-    colorContainerSoft = Color(0xFF633400), onColorContainerSoft = Color(0xFFFFD9B8),
-    colorFixed = Color(0xFFFFDCBE), colorFixedDim = Color(0xFFFFB870),
-    onColorFixed = Color(0xFF2D1600), onColorFixedVariant = Color(0xFF6A3B00)
-)
-val DarkAmber = ColorFamily(
-    color = Color(0xFFFFDCA6), onColor = Color(0xFF4E3A00),
-    colorContainer = Color(0xFF705300), onColorContainer = Color(0xFFFFE08D),
-    colorContainerSoft = Color(0xFF644900), onColorContainerSoft = Color(0xFFFFF1CC),
-    colorFixed = Color(0xFFFFE08D), colorFixedDim = Color(0xFFF9BD00),
-    onColorFixed = Color(0xFF241A00), onColorFixedVariant = Color(0xFF755500)
-)
-val DarkYellow = ColorFamily(
-    color = Color(0xFFE4E76D), onColor = Color(0xFF313300),
-    colorContainer = Color(0xFF484900), onColorContainer = Color(0xFFE6E971),
-    colorContainerSoft = Color(0xFF444500), onColorContainerSoft = Color(0xFFE4E76D),
-    colorFixed = Color(0xFFE6E971), colorFixedDim = Color(0xFFC9CC58),
-    onColorFixed = Color(0xFF1C1D00), onColorFixedVariant = Color(0xFF484900)
-)
-val DarkLime = ColorFamily(
-    color = Color(0xFFD6FF8E), onColor = Color(0xFF264400),
-    colorContainer = Color(0xFF376100), onColorContainer = Color(0xFFD6FF8E),
-    colorContainerSoft = Color(0xFF2D4B00), onColorContainerSoft = Color(0xFFE6FFC0),
-    colorFixed = Color(0xFFD6FF8E), colorFixedDim = Color(0xFFB4F34A),
-    onColorFixed = Color(0xFF112000), onColorFixedVariant = Color(0xFF385D00)
-)
-val DarkGreen = ColorFamily(
-    color = Color(0xFFB0F9C4), onColor = Color(0xFF00391C),
-    colorContainer = Color(0xFF00522B), onColorContainer = Color(0xFF98F7B5),
-    colorContainerSoft = Color(0xFF00542D), onColorContainerSoft = Color(0xFFB0F9C4),
-    colorFixed = Color(0xFF98F7B5), colorFixedDim = Color(0xFF7CDAA0),
-    onColorFixed = Color(0xFF00210E), onColorFixedVariant = Color(0xFF00522B)
-)
-val DarkEmerald = ColorFamily(
-    color = Color(0xFF91FADF), onColor = Color(0xFF00372D),
-    colorContainer = Color(0xFF005141), onColorContainer = Color(0xFF91FADF),
-    colorContainerSoft = Color(0xFF005141), onColorContainerSoft = Color(0xFFC2FEEF),
-    colorFixed = Color(0xFF91FADF), colorFixedDim = Color(0xFF73DDC3),
-    onColorFixed = Color(0xFF002019), onColorFixedVariant = Color(0xFF005141)
-)
-val DarkTeal = ColorFamily(
-    color = Color(0xFF9CF0F0), onColor = Color(0xFF003737),
-    colorContainer = Color(0xFF004D4D), onColorContainer = Color(0xFF9CF0F0),
-    colorContainerSoft = Color(0xFF004D4D), onColorContainerSoft = Color(0xFFC6F7F7),
-    colorFixed = Color(0xFF9CF0F0), colorFixedDim = Color(0xFF7FD4D4),
-    onColorFixed = Color(0xFF002020), onColorFixedVariant = Color(0xFF004D4D)
-)
-val DarkCyan = ColorFamily(
-    color = Color(0xFFB9F0FF), onColor = Color(0xFF00363D),
-    colorContainer = Color(0xFF004953), onColorContainer = Color(0xFFB9F0FF),
-    colorContainerSoft = Color(0xFF004953), onColorContainerSoft = Color(0xFFD9F7FF),
-    colorFixed = Color(0xFFB9F0FF), colorFixedDim = Color(0xFF5DD6F4),
-    onColorFixed = Color(0xFF001F25), onColorFixedVariant = Color(0xFF004953)
-)
-val DarkSky = ColorFamily(
-    color = Color(0xFFCAF0F8), onColor = Color(0xFF003350),
-    colorContainer = Color(0xFF00446A), onColorContainer = Color(0xFFCAF0F8),
-    colorContainerSoft = Color(0xFF00446A), onColorContainerSoft = Color(0xFFE1F7FD),
-    colorFixed = Color(0xFFCAF0F8), colorFixedDim = Color(0xFF90E0EF),
-    onColorFixed = Color(0xFF001D2D), onColorFixedVariant = Color(0xFF00446A)
-)
-val DarkBlue = ColorFamily(
-    color = Color(0xFFCDE1FF), onColor = Color(0xFF003258),
-    colorContainer = Color(0xFF00497D), onColorContainer = Color(0xFFD1E4FF),
-    colorContainerSoft = Color(0xFF004C81), onColorContainerSoft = Color(0xFFCDE1FF),
-    colorFixed = Color(0xFFD1E4FF), colorFixedDim = Color(0xFF9ECAFF),
-    onColorFixed = Color(0xFF001D36), onColorFixedVariant = Color(0xFF00497D)
-)
-val DarkIndigo = ColorFamily(
-    color = Color(0xFFDAD9FF), onColor = Color(0xFF1F2578),
-    colorContainer = Color(0xFF373E90), onColorContainer = Color(0xFFE0E0FF),
-    colorContainerSoft = Color(0xFF323A8C), onColorContainerSoft = Color(0xFFDAD9FF),
-    colorFixed = Color(0xFFE0E0FF), colorFixedDim = Color(0xFFBEC2FF),
-    onColorFixed = Color(0xFF040B62), onColorFixedVariant = Color(0xFF373E90)
-)
-val DarkViolet = ColorFamily(
-    color = Color(0xFFFFCEF3), onColor = Color(0xFF571257),
-    colorContainer = Color(0xFF722A6F), onColorContainer = Color(0xFFFFD7F5),
-    colorContainerSoft = Color(0xFF6F286C), onColorContainerSoft = Color(0xFFFFCEF3),
-    colorFixed = Color(0xFFFFD7F5), colorFixedDim = Color(0xFFFFADEB),
-    onColorFixed = Color(0xFF380036), onColorFixedVariant = Color(0xFF722A6F)
-)
-val DarkPurple = ColorFamily(
-    color = Color(0xFFF3D9FF), onColor = Color(0xFF451963),
-    colorContainer = Color(0xFF62298C), onColorContainer = Color(0xFFF3D9FF),
-    colorContainerSoft = Color(0xFF5D1E81), onColorContainerSoft = Color(0xFFF7E6FF),
-    colorFixed = Color(0xFFF3D9FF), colorFixedDim = Color(0xFFDDAFFF),
-    onColorFixed = Color(0xFF2D0050), onColorFixedVariant = Color(0xFF712B9A)
-)
-val DarkFuchsia = ColorFamily(
-    color = Color(0xFFFFD7F1), onColor = Color(0xFF65004A),
-    colorContainer = Color(0xFF911E7D), onColorContainer = Color(0xFFFFD7F1),
-    colorContainerSoft = Color(0xFF8A0064), onColorContainerSoft = Color(0xFFFFE5F6),
-    colorFixed = Color(0xFFFFD7F1), colorFixedDim = Color(0xFFF9A8D4),
-    onColorFixed = Color(0xFF3B0029), onColorFixedVariant = Color(0xFF911E7D)
-)
-val DarkPink = ColorFamily(
-    color = Color(0xFFFFD9E2), onColor = Color(0xFF6F0038),
-    colorContainer = Color(0xFF9E1D5B), onColorContainer = Color(0xFFFFD9E2),
-    colorContainerSoft = Color(0xFF9A004B), onColorContainerSoft = Color(0xFFFFE2E9),
-    colorFixed = Color(0xFFFFD9E2), colorFixedDim = Color(0xFFF9A8D4),
-    onColorFixed = Color(0xFF3F001D), onColorFixedVariant = Color(0xFF9E1D5B)
-)
+// Group: Static palette - Static – Blue
+val m3RefPaletteBlue100 = Color(0xffffffff)
+val m3RefPaletteBlue98 = Color(0xfff5faff)
+val m3RefPaletteBlue95 = Color(0xffe7f2ff)
+val m3RefPaletteBlue90 = Color(0xffd0e4ff)
+val m3RefPaletteBlue80 = Color(0xffa1c9ff)
+val m3RefPaletteBlue70 = Color(0xff76acff)
+val m3RefPaletteBlue60 = Color(0xff4e8ff8)
+val m3RefPaletteBlue50 = Color(0xff3271ea)
+val m3RefPaletteBlue40 = Color(0xff1157ce)
+val m3RefPaletteBlue30 = Color(0xff04409f)
+val m3RefPaletteBlue20 = Color(0xff012c6f)
+val m3RefPaletteBlue10 = Color(0xff001944)
+val m3RefPaletteBlue0 = Color(0xff000000)
 
-val DarkRainbow = RainbowColors(
-    red = DarkRed, rose = DarkRose, pink = DarkPink, fuchsia = DarkFuchsia,
-    purple = DarkPurple, violet = DarkViolet, indigo = DarkIndigo, blue = DarkBlue,
-    sky = DarkSky, cyan = DarkCyan, teal = DarkTeal, emerald = DarkEmerald,
-    green = DarkGreen, lime = DarkLime, yellow = DarkYellow, amber = DarkAmber,
-    orange = DarkOrange
-)
+// Group: Static palette - Static – Yellow
+val m3RefPaletteYellow100 = Color(0xffffffff)
+val m3RefPaletteYellow98 = Color(0xfffffade)
+val m3RefPaletteYellow95 = Color(0xfffff2b4)
+val m3RefPaletteYellow90 = Color(0xffffe07c)
+val m3RefPaletteYellow80 = Color(0xfffcbd00)
+val m3RefPaletteYellow70 = Color(0xffef9800)
+val m3RefPaletteYellow60 = Color(0xffd37b00)
+val m3RefPaletteYellow50 = Color(0xffb16300)
+val m3RefPaletteYellow40 = Color(0xff8f4e06)
+val m3RefPaletteYellow30 = Color(0xff6d3a01)
+val m3RefPaletteYellow20 = Color(0xff4d2600)
+val m3RefPaletteYellow10 = Color(0xff2f1400)
+val m3RefPaletteYellow0 = Color(0xff000000)
+
+// Group: Static palette - Static – Red
+val m3RefPaletteRed100 = Color(0xffffffff)
+val m3RefPaletteRed98 = Color(0xfffff8f8)
+val m3RefPaletteRed95 = Color(0xffffecee)
+val m3RefPaletteRed90 = Color(0xffffdadc)
+val m3RefPaletteRed80 = Color(0xffffb3ae)
+val m3RefPaletteRed70 = Color(0xffff8983)
+val m3RefPaletteRed60 = Color(0xfff55e57)
+val m3RefPaletteRed50 = Color(0xffdb372d)
+val m3RefPaletteRed40 = Color(0xffb3251e)
+val m3RefPaletteRed30 = Color(0xff8a1a16)
+val m3RefPaletteRed20 = Color(0xff60150f)
+val m3RefPaletteRed10 = Color(0xff3a0907)
+val m3RefPaletteRed0 = Color(0xff000000)
+
+// Group: Static palette - Static – Purple
+val m3RefPalettePurple100 = Color(0xffffffff)
+val m3RefPalettePurple98 = Color(0xfffdf8ff)
+val m3RefPalettePurple95 = Color(0xfff7ecfe)
+val m3RefPalettePurple90 = Color(0xffeedcfe)
+val m3RefPalettePurple80 = Color(0xffd9bafd)
+val m3RefPalettePurple70 = Color(0xffc597ff)
+val m3RefPalettePurple60 = Color(0xffad72ff)
+val m3RefPalettePurple50 = Color(0xff9254ea)
+val m3RefPalettePurple40 = Color(0xff7438d2)
+val m3RefPalettePurple30 = Color(0xff5629a4)
+val m3RefPalettePurple20 = Color(0xff400b84)
+val m3RefPalettePurple10 = Color(0xff280255)
+val m3RefPalettePurple0 = Color(0xff000000)
+
+// Group: Static palette - Static – Blue variant
+val m3RefPaletteBlueVariant100 = Color(0xffffffff)
+val m3RefPaletteBlueVariant98 = Color(0xfff4faff)
+val m3RefPaletteBlueVariant95 = Color(0xffe0f4ff)
+val m3RefPaletteBlueVariant90 = Color(0xffbde9ff)
+val m3RefPaletteBlueVariant80 = Color(0xff67d4ff)
+val m3RefPaletteBlueVariant70 = Color(0xff00bbea)
+val m3RefPaletteBlueVariant60 = Color(0xff009dc9)
+val m3RefPaletteBlueVariant50 = Color(0xff0081a8)
+val m3RefPaletteBlueVariant40 = Color(0xff006788)
+val m3RefPaletteBlueVariant30 = Color(0xff004d68)
+val m3RefPaletteBlueVariant20 = Color(0xff003549)
+val m3RefPaletteBlueVariant10 = Color(0xff001f2d)
+val m3RefPaletteBlueVariant0 = Color(0xff000000)
+
+// Group: Static palette - Static – Cyan
+val m3RefPaletteCyan100 = Color(0xffffffff)
+val m3RefPaletteCyan98 = Color(0xfff0fbff)
+val m3RefPaletteCyan95 = Color(0xffd8f6ff)
+val m3RefPaletteCyan90 = Color(0xffacedff)
+val m3RefPaletteCyan80 = Color(0xff60d5f3)
+val m3RefPaletteCyan70 = Color(0xff00bbdf)
+val m3RefPaletteCyan60 = Color(0xff009ebb)
+val m3RefPaletteCyan50 = Color(0xff00839b)
+val m3RefPaletteCyan40 = Color(0xff00687c)
+val m3RefPaletteCyan30 = Color(0xff004e5d)
+val m3RefPaletteCyan20 = Color(0xff003641)
+val m3RefPaletteCyan10 = Color(0xff001f26)
+val m3RefPaletteCyan0 = Color(0xff000000)
+
+// Group: Static palette - Static – Grey
+val m3RefPaletteGrey100 = Color(0xffffffff)
+val m3RefPaletteGrey98 = Color(0xfff9f9f9)
+val m3RefPaletteGrey95 = Color(0xfff2f2f2)
+val m3RefPaletteGrey90 = Color(0xffe3e3e3)
+val m3RefPaletteGrey80 = Color(0xffc7c7c7)
+val m3RefPaletteGrey70 = Color(0xffababab)
+val m3RefPaletteGrey60 = Color(0xff919191)
+val m3RefPaletteGrey50 = Color(0xff777777)
+val m3RefPaletteGrey40 = Color(0xff5e5e5e)
+val m3RefPaletteGrey30 = Color(0xff474747)
+val m3RefPaletteGrey20 = Color(0xff303030)
+val m3RefPaletteGrey10 = Color(0xff1b1b1c)
+val m3RefPaletteGrey0 = Color(0xff000000)
+
+// Group: Static palette - Static – Green
+val m3RefPaletteGreen100 = Color(0xffffffff)
+val m3RefPaletteGreen98 = Color(0xfff2fcef)
+val m3RefPaletteGreen95 = Color(0xffddf8d8)
+val m3RefPaletteGreen90 = Color(0xffbeefbb)
+val m3RefPaletteGreen80 = Color(0xff80da88)
+val m3RefPaletteGreen70 = Color(0xff44c265)
+val m3RefPaletteGreen60 = Color(0xff1aa64a)
+val m3RefPaletteGreen50 = Color(0xff128937)
+val m3RefPaletteGreen40 = Color(0xff006c35)
+val m3RefPaletteGreen30 = Color(0xff00522c)
+val m3RefPaletteGreen20 = Color(0xff00381f)
+val m3RefPaletteGreen10 = Color(0xff002110)
+val m3RefPaletteGreen0 = Color(0xff000000)
+
+// Group: Static palette - Static – Grey variant
+val m3RefPaletteGreyVariant100 = Color(0xffffffff)
+val m3RefPaletteGreyVariant98 = Color(0xfff7faf7)
+val m3RefPaletteGreyVariant95 = Color(0xffeff2ef)
+val m3RefPaletteGreyVariant90 = Color(0xffe1e3e1)
+val m3RefPaletteGreyVariant80 = Color(0xffc4c7c5)
+val m3RefPaletteGreyVariant70 = Color(0xffa9acaa)
+val m3RefPaletteGreyVariant60 = Color(0xff8e918f)
+val m3RefPaletteGreyVariant50 = Color(0xff747775)
+val m3RefPaletteGreyVariant40 = Color(0xff5c5f5e)
+val m3RefPaletteGreyVariant30 = Color(0xff444746)
+val m3RefPaletteGreyVariant20 = Color(0xff2d312f)
+val m3RefPaletteGreyVariant10 = Color(0xff191d1c)
+val m3RefPaletteGreyVariant0 = Color(0xff000000)
+
+// Group: Static palette - Static – Orange
+val m3RefPaletteOrange100 = Color(0xffffffff)
+val m3RefPaletteOrange98 = Color(0xfffff8f4)
+val m3RefPaletteOrange95 = Color(0xffffede1)
+val m3RefPaletteOrange90 = Color(0xffffdcc3)
+val m3RefPaletteOrange80 = Color(0xffffb683)
+val m3RefPaletteOrange70 = Color(0xffff8d41)
+val m3RefPaletteOrange60 = Color(0xffe86e00)
+val m3RefPaletteOrange50 = Color(0xffc05a01)
+val m3RefPaletteOrange40 = Color(0xff9a4600)
+val m3RefPaletteOrange30 = Color(0xff753403)
+val m3RefPaletteOrange20 = Color(0xff522302)
+val m3RefPaletteOrange10 = Color(0xff321200)
+val m3RefPaletteOrange0 = Color(0xff000000)
+
+// Group: Static palette - Static – Pink
+val m3RefPalettePink100 = Color(0xffffffff)
+val m3RefPalettePink98 = Color(0xfffff7fc)
+val m3RefPalettePink95 = Color(0xffffecf6)
+val m3RefPalettePink90 = Color(0xffffd8ef)
+val m3RefPalettePink80 = Color(0xffffaee4)
+val m3RefPalettePink70 = Color(0xffff7dd2)
+val m3RefPalettePink60 = Color(0xfff94aab)
+val m3RefPalettePink50 = Color(0xffdc258d)
+val m3RefPalettePink40 = Color(0xffb60d6e)
+val m3RefPalettePink30 = Color(0xff8d0053)
+val m3RefPalettePink20 = Color(0xff620438)
+val m3RefPalettePink10 = Color(0xff3d0023)
+val m3RefPalettePink0 = Color(0xff000000)

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".SenApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,9 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SenBoard">
         <activity
-            android:name=".MainActivity"
+            android:name=".SenActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.SenBoard"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -26,13 +25,15 @@
             </intent-filter>
         </activity>
         <!-- Declares the input method service. -->
-        <service android:name=".ime.SenImService"
+        <service
+            android:name=".ime.SenImService"
             android:exported="true"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
-            <meta-data android:name="android.view.im"
+            <meta-data
+                android:name="android.view.im"
                 android:resource="@xml/method" />
         </service>
     </application>

@@ -3,7 +3,6 @@ package banhmi.senboard.ime
 import android.content.Intent
 import android.view.View
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -23,10 +22,6 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -34,20 +29,18 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import banhmi.senboard.MainActivity
-import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
+import banhmi.senboard.SenActivity
+import banhmi.senboard.ime.engine.PredictionEngine
 import banhmi.senboard.ime.keyboard.core.SenBoardContext
 import banhmi.senboard.ime.keyboard.core.SenBoardController
 import banhmi.senboard.ime.keyboard.data.modes.AaaaaMode
 import banhmi.senboard.ime.keyboard.data.modes.CharactersMode
 import banhmi.senboard.ime.keyboard.ui.SenBoardContent
 import banhmi.senboard.ime.keyboard.ui.SenBoardLayout
+import banhmi.senboard.ime.keyboard.ui.SenBoardRoot
 import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
 import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
-import banhmi.senboard.ime.engine.PredictionEngine
-import banhmi.senboard.ime.engine.UserBigramStore
 import banhmi.senboard.ime.lifecycle.LifecycleImService
 import banhmi.senboard.shared.utils.isAppInDarkTheme
 import banhmi.senboard.ui.theme.SenBoardTheme
@@ -72,8 +65,8 @@ class SenImService : LifecycleImService() {
                         SenBoardSurface {
                             SenBoardContent(controller) {
                                 val state = controller.state
-                                val prefs = remember { banhmi.senboard.app.settings.SenBoardPreferences(this@SenImService) }
-                                var typingMode by remember { mutableStateOf(prefs.typingMode) }
+//                                val prefs = remember { banhmi.senboard.app.settings.SenBoardPreferences(this@SenImService) }
+//                                var typingMode by remember { mutableStateOf(prefs.typingMode) }
 
                                 Column {
                                     Toolbar {
@@ -89,25 +82,25 @@ class SenImService : LifecycleImService() {
                                                         liveRegion = LiveRegionMode.Assertive
                                                         paneTitle = "Chuyển phương thức gõ"
                                                     }) {
-                                                    Text(
-                                                        when (typingMode) {
-                                                            "cvnss" -> "Bộ gõ: CVNSS 4.0"
-                                                            "telex" -> "Bộ gõ: Telex"
-                                                            else -> "Bộ gõ: VNI"
-                                                        }
-                                                    )
+//                                                    Text(
+//                                                        when (typingMode) {
+//                                                            "cvnss" -> "Bộ gõ: CVNSS 4.0"
+//                                                            "telex" -> "Bộ gõ: Telex"
+//                                                            else -> "Bộ gõ: VNI"
+//                                                        }
+//                                                    )
                                                 }
                                             },
                                             state = rememberTooltipState(),
                                         ) {
                                             IconButton(onClick = {
-                                                val nextMode = when (typingMode) {
-                                                    "cvnss" -> "telex"
-                                                    "telex" -> "vni"
-                                                    else -> "cvnss"
-                                                }
-                                                prefs.typingMode = nextMode
-                                                typingMode = nextMode
+//                                                val nextMode = when (typingMode) {
+//                                                    "cvnss" -> "telex"
+//                                                    "telex" -> "vni"
+//                                                    else -> "cvnss"
+//                                                }
+//                                                prefs.typingMode = nextMode
+//                                                typingMode = nextMode
                                             }) {
                                                 Box(
                                                     modifier = Modifier
@@ -119,16 +112,16 @@ class SenImService : LifecycleImService() {
                                                         ),
                                                     contentAlignment = Alignment.Center,
                                                 ) {
-                                                    Text(
-                                                        text = when (typingMode) {
-                                                            "cvnss" -> "CV"
-                                                            "telex" -> "TE"
-                                                            else -> "VN"
-                                                        },
-                                                        color = LocalContentColor.current,
-                                                        fontWeight = FontWeight.Bold,
-                                                        fontSize = androidx.compose.ui.unit.TextUnit.Unspecified
-                                                    )
+//                                                    Text(
+//                                                        text = when (typingMode) {
+//                                                            "cvnss" -> "CV"
+//                                                            "telex" -> "TE"
+//                                                            else -> "VN"
+//                                                        },
+//                                                        color = LocalContentColor.current,
+//                                                        fontWeight = FontWeight.Bold,
+//                                                        fontSize = androidx.compose.ui.unit.TextUnit.Unspecified
+//                                                    )
                                                 }
                                             }
                                         }
@@ -186,7 +179,7 @@ class SenImService : LifecycleImService() {
                                             IconButton(onClick = {
                                                 val intent = Intent(
                                                     this@SenImService,
-                                                    MainActivity::class.java,
+                                                    SenActivity::class.java,
                                                 ).apply {
                                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                                 }
