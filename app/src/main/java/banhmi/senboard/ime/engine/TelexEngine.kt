@@ -8,13 +8,31 @@ object TelexEngine {
         if (rawWord.isEmpty()) return rawWord
 
         var word = rawWord.lowercase()
-        if (isEnglishPrefix(word)) return rawWord
+        if (isEnglishPrefix(word) || hasEnglishConsonantCluster(word)) return rawWord
 
         val (cleanWord, existingTone) = stripTone(word)
         word = cleanWord
         
-        // 1. Process initial consonant and double-d
-        word = word.replace("dd", "đ").replace("Dd", "Đ").replace("DD", "Đ")
+        // 1. Process initial consonant and double-d (including flexible non-adjacent d's: dedem -> đeem)
+        val dCount = word.count { it == 'd' }
+        if (dCount >= 2) {
+            val firstD = word.indexOf('d')
+            val sb = StringBuilder()
+            var seenD = false
+            for (i in word.indices) {
+                if (word[i] == 'd') {
+                    if (!seenD) {
+                        sb.append('đ')
+                        seenD = true
+                    }
+                } else {
+                    sb.append(word[i])
+                }
+            }
+            word = sb.toString()
+        } else {
+            word = word.replace("dd", "đ").replace("Dd", "Đ").replace("DD", "Đ")
+        }
 
         // 2. Extract tone mark from the word (after the initial consonant)
         var newTone = ""
@@ -37,6 +55,19 @@ object TelexEngine {
         val toneKeys = setOf('s', 'f', 'r', 'x', 'j', 'z')
         for (i in word.length - 1 downTo initialLen) {
             if (toneKeys.contains(word[i])) {
+                // Skip adjacent doubled tone keys (e.g. 'ff' in confflict, 'rr' in merrge, 'ss' in cvnss)
+                if ((i > 0 && word[i - 1] == word[i]) || (i < word.length - 1 && word[i + 1] == word[i])) {
+                    continue
+                }
+                // Tone key in Telex cannot be followed by non-Vietnamese final consonants (e.g. 'f' in confl, 'r' in merg, 's' in dash)
+                if (i < word.length - 1) {
+                    val afterTone = word.substring(i + 1)
+                    val validFinals = setOf("c", "ch", "m", "n", "ng", "nh", "p", "t")
+                    if (!isVowel(word[i + 1]) && !validFinals.contains(afterTone)) {
+                        continue
+                    }
+                }
+
                 val stemBeforeTone = word.substring(0, i)
                 if (isValidSingleVietnameseSyllableStem(stemBeforeTone)) {
                     newTone = when (word[i]) {
@@ -71,7 +102,37 @@ object TelexEngine {
         word = word.replace("uw", "ư")
         word = word.replace("ow", "ơ")
 
-        // Handle standalone 'w' at the end or acting on preceding vowels
+        // Collapse extra modifier keystrokes (e.g. ddeeem -> đêem -> đêm)
+        while (word.contains("êe")) word = word.replace("êe", "ê")
+        while (word.contains("eê")) word = word.replace("eê", "ê")
+        while (word.contains("ôo")) word = word.replace("ôo", "ô")
+        while (word.contains("oô")) word = word.replace("oô", "ô")
+        while (word.contains("âa")) word = word.replace("âa", "â")
+        while (word.contains("aâ")) word = word.replace("aâ", "â")
+
+        // Delayed modifier vowel (gõ dấu cuối từ: homo -> hôm, tama -> tâm, deme -> đêm)
+        if (word.length >= 4) {
+            val lastChar = word.last()
+            if (lastChar == 'o' || lastChar == 'a' || lastChar == 'e') {
+                val stem = word.dropLast(1)
+                val lastVowelIdx = stem.indexOfLast { it == lastChar }
+                if (lastVowelIdx != -1) {
+                    val afterVowel = stem.substring(lastVowelIdx + 1)
+                    val validMiddleConsonants = setOf("m", "n", "ng", "nh", "p", "t", "c", "ch")
+                    if (validMiddleConsonants.contains(afterVowel)) {
+                        val modifiedVowel = when (lastChar) {
+                            'o' -> "ô"
+                            'a' -> "â"
+                            'e' -> "ê"
+                            else -> lastChar.toString()
+                        }
+                        word = stem.substring(0, lastVowelIdx) + modifiedVowel + afterVowel
+                    }
+                }
+            }
+        }
+
+        // Handle 'w' acting as 'ư' after initial consonants or standalone
         if (word.contains("w")) {
             val sb = StringBuilder()
             var hasU = false
@@ -80,26 +141,23 @@ object TelexEngine {
                 if (c == 'u') hasU = true
                 if (c == 'o') hasO = true
             }
-            for (c in word) {
-                if (c == 'w') {
-                    // If no u/o, 'w' is a standalone vowel 'ư'
-                    if (!hasU && !hasO) {
+            if (!hasU && !hasO) {
+                word = word.replace("w", "ư")
+            } else {
+                for (c in word) {
+                    if (c == 'w') continue
+                    if (c == 'u' && !word.contains("uo")) {
                         sb.append('ư')
+                    } else if (c == 'o' && !word.contains("uo")) {
+                        sb.append('ơ')
+                    } else {
+                        sb.append(c)
                     }
-                    continue
                 }
-                if (c == 'u' && !word.contains("uo")) {
-                    sb.append('ư')
-                } else if (c == 'o' && !word.contains("uo")) {
-                    sb.append('ơ')
-                } else {
-                    sb.append(c)
+                word = sb.toString()
+                if (hasU && hasO) {
+                    word = word.replace("uo", "ươ")
                 }
-            }
-            word = sb.toString()
-            // If it had uo and was followed by w, it should be ươ
-            if (hasU && hasO) {
-                word = word.replace("uo", "ươ")
             }
         }
 
@@ -147,11 +205,26 @@ object TelexEngine {
         return true
     }
 
+    private fun hasEnglishConsonantCluster(word: String): Boolean {
+        val lower = word.lowercase()
+        // Double tone letters
+        if (lower.contains("ff") || lower.contains("rr") || lower.contains("ss") || lower.contains("xx") || lower.contains("jj")) {
+            return true
+        }
+
+        // Non-Vietnamese consonant clusters
+        val englishClusters = listOf(
+            "fl", "fr", "gl", "gr", "pl", "pr", "cl", "cr", "dr", "br", "bl",
+            "ct", "ft", "lt", "mp", "nd", "nt", "pt", "sk", "sp", "st", "sm", "sn"
+        )
+        return englishClusters.any { lower.contains(it) }
+    }
+
     private fun isEnglishPrefix(word: String): Boolean {
         val lower = word.lowercase()
         val englishPrefixes = listOf(
             "bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr",
-            "sc", "sk", "sl", "sm", "sn", "sp", "st", "str", "sw", "tw"
+            "sc", "sk", "sl", "sm", "sn", "sp", "st", "str"
         )
         return englishPrefixes.any { lower.startsWith(it) }
     }
