@@ -6,16 +6,16 @@ import banhmi.senboard.ime.keyboard.core.handlers.CharKeyHandler
 import banhmi.senboard.ime.keyboard.data.layouts.StandardLayout
 import banhmi.senboard.ime.keyboard.dsl.mode
 
-val NumericsMode = mode("numerics", StandardLayout) {
-    // Row 1 (10 keys)
-    textKeys("1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
+val SymbolicsMode = mode("symbolics", StandardLayout) {
+    // Row 1: Extended symbols & math operators (10 keys)
+    textKeys("~", "`", "|", "•", "√", "π", "÷", "×", "¶", "∆")
 
-    // Row 2 (9 keys)
-    textKeys("@", "#", "$", "%", "&", "-", "+", "(", ")")
+    // Row 2: Currency & special characters (9 keys)
+    textKeys("£", "¥", "€", "¢", "^", "°", "=", "{", "}")
 
-    // Row 3: Switch to Symbolics (=\<) + Punctuation + Backspace (9 keys)
-    switchModeKey(ModeRegistry.Symbolics, displayLabel = "=\\<")
-    textKeys("*", "/", "_", ":", ";", "'", "\"")
+    // Row 3: Switch to Numerics (?123) + Brackets & Quotes + Backspace (9 keys)
+    switchModeKey(ModeRegistry.Numerics, displayLabel = "?123")
+    textKeys("\\", "%", "<", ">", "«", "»", "[")
     backspaceKey()
 
     // Row 4: Switch to Characters (ABC) + Punctuation + Space + Return (6 keys)

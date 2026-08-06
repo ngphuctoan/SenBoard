@@ -51,10 +51,14 @@ class KeyboardDslTest {
         assertNotNull(StandardLayout)
         assertNotNull(CharactersMode)
         assertNotNull(NumericsMode)
+        assertNotNull(banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode)
         assertEquals("standard", StandardLayout.name)
         assertEquals("characters", CharactersMode.name)
         assertEquals("numerics", NumericsMode.name)
+        assertEquals("symbolics", banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode.name)
         assertEquals(4, StandardLayout.keyRows.size)
         assertEquals(34, CharactersMode.slots.size)
+        assertEquals(34, NumericsMode.slots.size)
+        assertEquals(34, banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode.slots.size)
     }
 }

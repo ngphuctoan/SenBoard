@@ -177,6 +177,7 @@ class ModeBuilder(
         val label = displayLabel ?: when (targetMode) {
             ModeRegistry.Numerics -> "?123"
             ModeRegistry.Characters -> "ABC"
+            ModeRegistry.Symbolics -> "=\\"
         }
         slots.add(KeyData(display = KeyDisplay.Text(label), handler = SwitchModeHandler(targetMode)))
     }
