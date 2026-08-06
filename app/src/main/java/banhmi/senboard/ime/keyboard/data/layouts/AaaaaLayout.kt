@@ -1,27 +1,17 @@
 package banhmi.senboard.ime.keyboard.data.layouts
 
-import banhmi.senboard.ime.keyboard.models.Key
-import banhmi.senboard.ime.keyboard.models.KeyRow
+import banhmi.senboard.ime.keyboard.dsl.layout
 import banhmi.senboard.ime.keyboard.models.KeyVariant
-import banhmi.senboard.ime.keyboard.models.Layout
 
 // Easter egg inspired by "aaaaa" by dkter
 // App repo: https://github.com/dkter/aaaaa
-val AaaaaLayout = Layout(
-    name = "aaaaa",
-    keyRows = listOf(
-        KeyRow(
-            listOf(
-                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
-            ),
-            heightWeight = 3f,
-        ),
-        KeyRow(
-            listOf(
-                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
-                Key(4f, variant = KeyVariant.Ghost, forceHighlightState = false),
-                Key(variant = KeyVariant.Ghost, forceHighlightState = false),
-            ),
-        ),
-    ),
-)
+val AaaaaLayout = layout("aaaaa") {
+    row(heightWeight = 3f) {
+        key(variant = KeyVariant.Ghost, forceHighlightState = false)
+    }
+    row {
+        key(variant = KeyVariant.Ghost, forceHighlightState = false)
+        key(areaWeight = 4f, variant = KeyVariant.Ghost, forceHighlightState = false)
+        key(variant = KeyVariant.Ghost, forceHighlightState = false)
+    }
+}
