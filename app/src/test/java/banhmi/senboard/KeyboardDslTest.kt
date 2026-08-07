@@ -3,6 +3,7 @@ package banhmi.senboard
 import banhmi.senboard.ime.keyboard.data.layouts.StandardLayout
 import banhmi.senboard.ime.keyboard.data.modes.CharactersMode
 import banhmi.senboard.ime.keyboard.data.modes.NumericsMode
+import banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode
 import banhmi.senboard.ime.keyboard.dsl.layout
 import banhmi.senboard.ime.keyboard.dsl.mode
 import banhmi.senboard.ime.keyboard.models.KeyVariant
@@ -35,7 +36,9 @@ class KeyboardDslTest {
     @Test
     fun testModeDslBuilder() {
         val testMode = mode("test_mode", StandardLayout) {
-            charKeys("q", "w", "e")
+            charKey("q")
+            charKey("w")
+            charKey("e")
             spaceKey()
             backspaceKey()
             returnKey()
@@ -51,14 +54,14 @@ class KeyboardDslTest {
         assertNotNull(StandardLayout)
         assertNotNull(CharactersMode)
         assertNotNull(NumericsMode)
-        assertNotNull(banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode)
+        assertNotNull(SymbolicsMode)
         assertEquals("standard", StandardLayout.name)
         assertEquals("characters", CharactersMode.name)
         assertEquals("numerics", NumericsMode.name)
-        assertEquals("symbolics", banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode.name)
+        assertEquals("symbolics", SymbolicsMode.name)
         assertEquals(4, StandardLayout.keyRows.size)
         assertEquals(34, CharactersMode.slots.size)
         assertEquals(34, NumericsMode.slots.size)
-        assertEquals(34, banhmi.senboard.ime.keyboard.data.modes.SymbolicsMode.slots.size)
+        assertEquals(34, SymbolicsMode.slots.size)
     }
 }

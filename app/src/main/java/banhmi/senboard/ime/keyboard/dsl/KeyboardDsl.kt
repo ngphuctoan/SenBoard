@@ -132,20 +132,8 @@ class ModeBuilder(
         slots.add(KeyData(display = KeyDisplay.Char(char), handler = CharKeyHandler(char)))
     }
 
-    fun charKeys(vararg chars: String) {
-        for (c in chars) {
-            charKey(c)
-        }
-    }
-
     fun textKey(text: String, charToCommit: String = text) {
         slots.add(KeyData(display = KeyDisplay.Text(text), handler = CharKeyHandler(charToCommit)))
-    }
-
-    fun textKeys(vararg texts: String) {
-        for (t in texts) {
-            textKey(t)
-        }
     }
 
     fun iconKey(
