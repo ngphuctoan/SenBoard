@@ -49,5 +49,26 @@ class TelexEngineTest {
         assertEquals("stop", TelexEngine.convertWord("stop"))
         assertEquals("skill", TelexEngine.convertWord("skill"))
         assertEquals("club", TelexEngine.convertWord("club"))
+
+        // Delayed modifier vowel tests & Flexible keystroke order
+        assertEquals("hôm", TelexEngine.convertWord("homo"))
+        assertEquals("dêm", TelexEngine.convertWord("deme"))
+        assertEquals("đêm", TelexEngine.convertWord("ddeme"))
+        assertEquals("đêm", TelexEngine.convertWord("dedem"))
+        assertEquals("đêm", TelexEngine.convertWord("ddeeem"))
+        assertEquals("tâm", TelexEngine.convertWord("tama"))
+
+        // 'w' after initial consonant tests
+        assertEquals("sư", TelexEngine.convertWord("sw"))
+        assertEquals("sứ", TelexEngine.convertWord("sws"))
+        assertEquals("thư", TelexEngine.convertWord("thw"))
+
+        // English words containing tone key letters followed by consonants
+        assertEquals("confflict", TelexEngine.convertWord("confflict"))
+        assertEquals("conflict", TelexEngine.convertWord("conflict"))
+        assertEquals("confl", TelexEngine.convertWord("confl"))
+        assertEquals("merrge", TelexEngine.convertWord("merrge"))
+        assertEquals("merge", TelexEngine.convertWord("merge"))
+        assertEquals("merg", TelexEngine.convertWord("merg"))
     }
 }

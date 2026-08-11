@@ -26,5 +26,11 @@ class VniEngineTest {
         assertEquals("chợ", VniEngine.convertWord("chơ5"))
         assertEquals("tiếng", VniEngine.convertWord("tiêng1"))
         assertEquals("vế", VniEngine.convertWord("về1"))
+
+        // Alphanumeric words protection (digits followed by letters)
+        assertEquals("a1b", VniEngine.convertWord("a1b"))
+        assertEquals("h2o", VniEngine.convertWord("h2o"))
+        assertEquals("page1a", VniEngine.convertWord("page1a"))
+        assertEquals("mp3player", VniEngine.convertWord("mp3player"))
     }
 }

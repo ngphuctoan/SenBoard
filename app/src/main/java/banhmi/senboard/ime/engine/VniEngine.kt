@@ -8,6 +8,15 @@ object VniEngine {
         if (rawWord.isEmpty()) return rawWord
 
         var word = rawWord.lowercase()
+        // If a digit is followed by letters (e.g. a1b, h2o, page1a, mp3player), treat as literal alphanumeric text
+        val lastDigitIndex = word.indexOfLast { it.isDigit() }
+        if (lastDigitIndex != -1 && lastDigitIndex < word.length - 1) {
+            val hasLettersAfterDigit = word.substring(lastDigitIndex + 1).any { it.isLetter() }
+            if (hasLettersAfterDigit) {
+                return rawWord
+            }
+        }
+
         val (cleanWord, existingTone) = stripTone(word)
         word = cleanWord
 
