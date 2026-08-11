@@ -7,4 +7,4 @@ object SenSettingsAbout
 
 object SenSettingsInputMethod
 object SenSettingsAppearance
-object SenSettingsSoundsAndHaptics
+object SenSettingsHaptics

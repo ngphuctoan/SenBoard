@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,20 +20,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-// Avoid having to call the calculation function when using PaddingValues
-data class SenSettingsInputTesterContentPadding(
-    val horizontal: Dp,
-    val vertical: Dp,
-)
 
 data class SenSettingsInputTesterColors(
     val containerColor: Color,
@@ -50,32 +41,34 @@ object SenSettingsInputTesterDefaults {
 
     val ContainerShape: Shape = CircleShape
 
-    val FontSize: TextUnit = 20.sp
+    @Composable
+    fun textStyle(): TextStyle = LocalTextStyle.current.copy(fontSize = 20.sp)
 
     val ContentPadding: PaddingValues = TextFieldDefaults.contentPaddingWithoutLabel(
-        top = 24.dp, bottom = 24.dp, start = 20.dp, end = 24.dp,
+        top = 22.dp, bottom = 22.dp, start = 20.dp, end = 20.dp,
     )
+
+    val LeadingIconPadding = PaddingValues(start = 12.dp)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SenSettingsInputTester(
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = SenSettingsInputTesterDefaults.FontSize,
+    textStyle: TextStyle = SenSettingsInputTesterDefaults.textStyle(),
     shape: Shape = SenSettingsInputTesterDefaults.ContainerShape,
     colors: SenSettingsInputTesterColors = SenSettingsInputTesterDefaults.colors(),
     contentPadding: PaddingValues = SenSettingsInputTesterDefaults.ContentPadding,
+    leadingIconPadding: PaddingValues = SenSettingsInputTesterDefaults.LeadingIconPadding,
 ) {
     val context = LocalContext.current
     val imService = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-    val textStyle = LocalTextStyle.current.copy(fontSize = fontSize)
 
     TextField(
         state = rememberTextFieldState(),
         placeholder = { Text(text = "Nhấp để gõ thử", style = textStyle) },
         leadingIcon = {
-            Row(modifier = Modifier.padding(start = 12.dp)) {
+            Row(modifier = Modifier.padding(leadingIconPadding)) {
                 IconButton(onClick = { imService.showInputMethodPicker() }) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
@@ -84,13 +77,7 @@ fun SenSettingsInputTester(
                 }
             }
         },
-        modifier = modifier
-            .border(
-                width = 1.dp,
-                color = colors.outlineColor,
-                shape = shape,
-            )
-            .clip(shape),
+        modifier = modifier.border(width = 1.dp, color = colors.outlineColor, shape = shape),
         textStyle = textStyle,
         contentPadding = contentPadding,
         shape = shape,

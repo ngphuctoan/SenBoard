@@ -18,7 +18,7 @@ Appearance
 val showKeyBackground = booleanPreferencesKey("show_key_background")
 
 /*====================
-Sounds and Haptics
+Haptics
 ====================*/
-val hapticIntensity = intPreferencesKey("haptic_intensity")
-val soundVolume = intPreferencesKey("sound_volume")
+val hapticsEnabled = booleanPreferencesKey("haptics_enabled")
+val hapticsIntensity = intPreferencesKey("haptics_intensity")

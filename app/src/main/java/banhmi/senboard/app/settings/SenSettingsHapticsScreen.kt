@@ -5,25 +5,28 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import banhmi.senboard.BuildConfig
 import banhmi.senboard.app.settings.ui.SenSettingsLabel
 import banhmi.senboard.app.settings.ui.SenSettingsMenu
+import banhmi.senboard.app.settings.ui.SenSettingsMenuDefaults
+import banhmi.senboard.app.settings.ui.SenSettingsMenuExtra
 import banhmi.senboard.app.settings.ui.SenSettingsScaffold
-import banhmi.senboard.app.settings.ui.SenSettingsSupportingLabels
 import banhmi.senboard.app.settings.ui.SenSettingsTitle
 import banhmi.senboard.app.settings.ui.SenSettingsTopBar
 import banhmi.senboard.app.settings.ui.senSettingsVerticalSpacer
 import banhmi.senboard.ui.theme.SenBoardTheme
 
 @Composable
-fun SenSettingsAboutScreen(onNavigateBack: () -> Unit) {
+fun SenSettingsHapticsScreen(onNavigateBack: () -> Unit) {
     SenSettingsScaffold(
         topBar = {
             SenSettingsTopBar(
-                title = { SenSettingsTitle("Giới thiệu ứng dụng") },
+                title = { SenSettingsTitle("Haptic") },
                 onNavigateBack = onNavigateBack,
             )
         },
@@ -35,26 +38,28 @@ fun SenSettingsAboutScreen(onNavigateBack: () -> Unit) {
         ) {
             item {
                 SenSettingsMenu(
-                    shapes = ListItemDefaults.segmentedShapes(index = 0, count = 3),
-                    headlineContent = { SenSettingsLabel("Phiên bản ứng dụng") },
-                    supportingContent = { SenSettingsSupportingLabels(BuildConfig.VERSION_NAME) },
-                    onClick = {},
+                    shapes = SenSettingsMenuDefaults.pillShapes(),
+                    headlineContent = { SenSettingsLabel("Sử dụng haptic") },
+                    trailingContent = {
+                        Switch(checked = true, onCheckedChange = {})
+                    },
+                    outerPadding = SenSettingsMenuDefaults.PillOuterPadding,
+                    contentPadding = SenSettingsMenuDefaults.PillContentPadding,
+                    colors = SenSettingsMenuDefaults.primaryContainerColors(),
                 )
             }
+
+            item { Spacer(modifier = Modifier.senSettingsVerticalSpacer()) }
+
             item {
                 SenSettingsMenu(
-                    shapes = ListItemDefaults.segmentedShapes(index = 1, count = 3),
-                    headlineContent = { SenSettingsLabel("Giấy phép") },
-                    supportingContent = { SenSettingsSupportingLabels("Apache-2.0") },
-                    onClick = {},
-                )
-            }
-            item {
-                SenSettingsMenu(
-                    shapes = ListItemDefaults.segmentedShapes(index = 2, count = 3),
-                    headlineContent = { SenSettingsLabel("Mã nguồn") },
-                    supportingContent = { SenSettingsSupportingLabels("Yêu cầu tài khoản trường") },
-                    onClick = {},
+                    shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+                    headlineContent = { SenSettingsLabel("Độ mạnh haptic") },
+                    supportingContent = {
+                        SenSettingsMenuExtra {
+                            Slider(state = rememberSliderState(0.25f))
+                        }
+                    },
                 )
             }
 
@@ -68,8 +73,8 @@ fun SenSettingsAboutScreen(onNavigateBack: () -> Unit) {
     device = "id:pixel_10_pro_xl",
     showSystemUi = true,
 )
-fun SenSettingsAboutScreenPreview() {
+fun SenSettingsHapticsScreenPreview() {
     SenBoardTheme(dynamicColor = false) {
-        SenSettingsAboutScreen(onNavigateBack = {})
+        SenSettingsHapticsScreen(onNavigateBack = {})
     }
 }

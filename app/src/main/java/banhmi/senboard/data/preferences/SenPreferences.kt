@@ -18,8 +18,8 @@ data class SenPreferences(
     val showKeyBackground: Boolean = false,
 
     /*====================
-    Sounds and Haptics
+    Haptics
     ====================*/
-    val hapticIntensity: Int = 66,
-    val soundVolume: Int = 50,
+    val hapticsEnabled: Boolean = true,
+    val hapticsIntensity: Int = 50,
 )

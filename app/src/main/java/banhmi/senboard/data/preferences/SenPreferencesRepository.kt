@@ -27,8 +27,8 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
                 spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
                 easterEggEnabled = preferences[easterEggEnabled] ?: false,
                 showKeyBackground = preferences[showKeyBackground] ?: false,
-                hapticIntensity = preferences[hapticIntensity] ?: 66,
-                soundVolume = preferences[soundVolume] ?: 50,
+                hapticsEnabled = preferences[hapticsEnabled] ?: true,
+                hapticsIntensity = preferences[hapticsIntensity] ?: 50,
             )
         }
 
@@ -58,11 +58,11 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
         showKeyBackground, newShowKeyBackground,
     )
 
-    suspend fun updateHapticIntensity(newHapticIntensity: Int) = updatePreferences(
-        hapticIntensity, newHapticIntensity,
+    suspend fun updateHapticsEnabled(newHapticsEnabled: Boolean) = updatePreferences(
+        hapticsEnabled, newHapticsEnabled,
     )
 
-    suspend fun updateSoundVolume(newSoundVolume: Int) = updatePreferences(
-        soundVolume, newSoundVolume,
+    suspend fun updateHapticsIntensity(newHapticsIntensity: Int) = updatePreferences(
+        hapticsIntensity, newHapticsIntensity,
     )
 }

@@ -1,10 +1,11 @@
 package banhmi.senboard.app.settings
 
-import androidx.compose.foundation.background
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -24,22 +25,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.app.navigation.SenSettingsAbout
 import banhmi.senboard.app.navigation.SenSettingsAppearance
+import banhmi.senboard.app.navigation.SenSettingsHaptics
 import banhmi.senboard.app.navigation.SenSettingsHelp
 import banhmi.senboard.app.navigation.SenSettingsInputMethod
-import banhmi.senboard.app.navigation.SenSettingsSoundsAndHaptics
 import banhmi.senboard.app.settings.ui.SenSettingsIcon
 import banhmi.senboard.app.settings.ui.SenSettingsIconDefaults
 import banhmi.senboard.app.settings.ui.SenSettingsInputTester
+import banhmi.senboard.app.settings.ui.SenSettingsLabel
 import banhmi.senboard.app.settings.ui.SenSettingsMenu
 import banhmi.senboard.app.settings.ui.SenSettingsScaffold
-import banhmi.senboard.app.settings.ui.SenSettingsSpacer
 import banhmi.senboard.app.settings.ui.SenSettingsSupportingLabels
+import banhmi.senboard.app.settings.ui.senSettingsVerticalSpacer
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenBoardTheme
 import banhmi.senboard.ui.theme.m3RefPaletteCyan
@@ -53,16 +54,9 @@ fun SenSettingsHomeTopBar(
 ) {
     CenterAlignedTopAppBar(
         title = content,
-        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 16.dp),
+        contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp, start = 4.dp, end = 4.dp),
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-        modifier = modifier.background(
-            // Add cool fading effect behind the title
-            // TODO: Do height calculation rather than relying on fractions
-            brush = Brush.verticalGradient(
-                0.66f to MaterialTheme.colorScheme.surfaceContainer,
-                1f to Color.Transparent,
-            ),
-        ),
+        modifier = modifier,
     )
 }
 
@@ -80,7 +74,7 @@ fun SenSettingsHomeKeyboardDisabledWarning(
 
     SenSettingsMenu(
         shapes = shapes,
-        headlineContent = { Text("Bàn phím chưa được kích hoạt") },
+        headlineContent = { SenSettingsLabel("Bàn phím chưa được kích hoạt") },
         supportingContent = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Kiểm tra trong Cài đặt - Trợ năng - Bàn phím")
@@ -128,23 +122,21 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
             contentPadding = innerPadding,
             verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
         ) {
-            item {
+            /* item {
                 SenSettingsHomeKeyboardDisabledWarning(
                     shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
                     onClick = {},
                 )
             }
 
-            item { SenSettingsSpacer() }
+            item { Spacer(modifier = Modifier.senSettingsVerticalSpacer()) } */
 
             // First section for general stuff like Help and About
             item {
                 SenSettingsMenu(
                     shapes = ListItemDefaults.segmentedShapes(index = 0, count = 2),
-                    headlineContent = { Text("Hướng dẫn sử dụng") },
-                    supportingContent = {
-                        SenSettingsSupportingLabels("Bộ gõ Chữ Việt Song Song")
-                    },
+                    headlineContent = { SenSettingsLabel("Hướng dẫn sử dụng") },
+                    supportingContent = { SenSettingsSupportingLabels("Bộ gõ Chữ Việt Song Song") },
                     leadingContent = {
                         SenSettingsIcon(
                             icon = Icons.AutoMirrored.Filled.MenuBook,
@@ -158,10 +150,8 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
             item {
                 SenSettingsMenu(
                     shapes = ListItemDefaults.segmentedShapes(index = 1, count = 2),
-                    headlineContent = { Text("Giới thiệu ứng dụng") },
-                    supportingContent = {
-                        SenSettingsSupportingLabels("Phiên bản", "Giấy phép")
-                    },
+                    headlineContent = { SenSettingsLabel("Giới thiệu ứng dụng") },
+                    supportingContent = { SenSettingsSupportingLabels("Phiên bản", "giấy phép") },
                     leadingContent = {
                         SenSettingsIcon(
                             icon = Icons.Filled.PermDeviceInformation,
@@ -173,15 +163,19 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
                 )
             }
 
-            item { SenSettingsSpacer() }
+            item { Spacer(modifier = Modifier.senSettingsVerticalSpacer()) }
 
             // Second section for actual settings
             item {
                 SenSettingsMenu(
                     shapes = ListItemDefaults.segmentedShapes(index = 0, count = 3),
-                    headlineContent = { Text("Phương thức nhập") },
+                    headlineContent = { SenSettingsLabel("Phương thức nhập") },
                     supportingContent = {
-                        SenSettingsSupportingLabels("Tự động viết hoa", "Phím tắt", "Gợi ý")
+                        SenSettingsSupportingLabels(
+                            "Tự động viết hoa",
+                            "phím tắt",
+                            "gợi ý"
+                        )
                     },
                     leadingContent = {
                         SenSettingsIcon(
@@ -196,9 +190,12 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
             item {
                 SenSettingsMenu(
                     shapes = ListItemDefaults.segmentedShapes(index = 1, count = 3),
-                    headlineContent = { Text("Giao diện") },
+                    headlineContent = { SenSettingsLabel("Giao diện") },
                     supportingContent = {
-                        SenSettingsSupportingLabels("Viền phím", "Độ rộng bàn phím")
+                        SenSettingsSupportingLabels(
+                            "Viền phím",
+                            "độ rộng bàn phím"
+                        )
                     },
                     leadingContent = {
                         SenSettingsIcon(
@@ -213,10 +210,8 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
             item {
                 SenSettingsMenu(
                     shapes = ListItemDefaults.segmentedShapes(index = 2, count = 3),
-                    headlineContent = { Text("Âm thanh & Haptic") },
-                    supportingContent = {
-                        SenSettingsSupportingLabels("Haptic", "Cường độ haptic", "Âm lượng")
-                    },
+                    headlineContent = { SenSettingsLabel("Haptic") },
+                    supportingContent = { SenSettingsSupportingLabels("Độ mạnh của haptic") },
                     leadingContent = {
                         SenSettingsIcon(
                             icon = Icons.AutoMirrored.Filled.VolumeUp,
@@ -224,17 +219,20 @@ fun SenSettingsHomeScreen(onNavigate: (Any) -> Unit) {
                             colors = SenSettingsIconDefaults.vibrantColors(m3RefPaletteYellow),
                         )
                     },
-                    onClick = { onNavigate(SenSettingsSoundsAndHaptics) },
+                    onClick = { onNavigate(SenSettingsHaptics) },
                 )
             }
 
-            item { SenSettingsSpacer() }
+            item { Spacer(modifier = Modifier.senSettingsVerticalSpacer()) }
         }
     }
 }
 
 @Composable
-@Preview(device = "id:pixel_10_pro_xl", showSystemUi = true)
+@Preview(
+    device = "id:pixel_10_pro_xl",
+    showSystemUi = true,
+)
 fun SenSettingsHomeScreenPreview() {
     SenBoardTheme(dynamicColor = false) {
         SenSettingsHomeScreen(onNavigate = {})

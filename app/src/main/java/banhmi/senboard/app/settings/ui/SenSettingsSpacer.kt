@@ -1,38 +1,23 @@
 package banhmi.senboard.app.settings.ui
 
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class SenSettingsSpacerValues(
-    val width: Dp,
-    val height: Dp,
-)
+// Technically not an actual @Composable function, but this is a much better abstraction
 
 object SenSettingsSpacerDefaults {
-    val DefaultSpacingValue: Dp = 16.dp
+    val HorizontalSpacing: Dp = 16.dp
 
-    val VerticalSpacingValues = SenSettingsSpacerValues(
-        width = 0.dp, height = DefaultSpacingValue,
-    )
-
-    val HorizontalSpacingValues = SenSettingsSpacerValues(
-        width = DefaultSpacingValue, height = 0.dp,
-    )
+    val VerticalSpacing: Dp = 16.dp
 }
 
-@Composable
-fun SenSettingsSpacer(
-    modifier: Modifier = Modifier,
-    spacingValues: SenSettingsSpacerValues = SenSettingsSpacerDefaults.VerticalSpacingValues,
-) {
-    Spacer(
-        modifier = modifier
-            .width(spacingValues.width)
-            .height(spacingValues.height),
-    )
-}
+fun Modifier.senSettingsHorizontalSpacer(spacing: Dp = SenSettingsSpacerDefaults.HorizontalSpacing) =
+    width(spacing).fillMaxHeight()
+
+fun Modifier.senSettingsVerticalSpacer(spacing: Dp = SenSettingsSpacerDefaults.VerticalSpacing) =
+    height(spacing).fillMaxWidth()
