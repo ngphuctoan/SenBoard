@@ -44,11 +44,11 @@ class SenPreferencesViewModel @Inject constructor(private val repository: SenPre
         repository::updateShowKeyBackground, newShowKeyBackground,
     )
 
-    fun updateHapticIntensity(newHapticIntensity: Int) = updatePreferences(
-        repository::updateHapticIntensity, newHapticIntensity,
+    fun updateHapticsEnabled(newHapticsIntensity: Boolean) = updatePreferences(
+        repository::updateHapticsEnabled, newHapticsIntensity,
     )
 
-    fun updateSoundVolume(newSoundVolume: Int) = updatePreferences(
-        repository::updateSoundVolume, newSoundVolume,
+    fun updateHapticsIntensity(newHapticIntensity: Int) = updatePreferences(
+        repository::updateHapticsIntensity, newHapticIntensity,
     )
 }

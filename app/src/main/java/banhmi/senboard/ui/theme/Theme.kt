@@ -443,7 +443,7 @@ val m3RefPalettePink = M3RefPalette(
 )
 
 @Composable
-fun SenBoardTheme(
+fun SenTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true, content: @Composable() () -> Unit
@@ -464,7 +464,6 @@ fun SenBoardTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme, typography = AppTypography, content = content
+        colorScheme = colorScheme, typography = SenTypography, content = content
     )
 }
-

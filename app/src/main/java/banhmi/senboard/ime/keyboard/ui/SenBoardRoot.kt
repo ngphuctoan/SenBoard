@@ -45,7 +45,7 @@ import banhmi.senboard.ime.keyboard.models.ShiftMode
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardScope
 import banhmi.senboard.ime.keyboard.ui.scope.SenBoardScopeImpl
 import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
-import banhmi.senboard.ui.theme.SenBoardTheme
+import banhmi.senboard.ui.theme.SenTheme
 
 @Composable
 fun SenBoardSurface(
@@ -93,7 +93,9 @@ fun SenBoardRoot(
         window.containerDpSize.height * minHeightRatio.coerceIn(0f, 1f),
         preferredHeight,
     )
-    val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val navBarHeight = WindowInsets.navigationBars
+        .asPaddingValues()
+        .calculateBottomPadding()
 
     CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale = 1f)) {
         BoxWithConstraints(
@@ -136,12 +138,12 @@ fun BoxWithConstraintsScope.SenBoardContent(
 @Preview(widthDp = 280, heightDp = 600)
 @Composable
 fun SenBoardNarrowPreview() {
-    SenBoardPreview()
+    SenPreview()
 }
 
 @PreviewScreenSizes
 @Composable
-fun SenBoardPreview() {
+fun SenPreview() {
     val initialState = SenBoardState(
         mode = CharactersMode,
         shiftMode = ShiftMode.Off,
@@ -150,7 +152,7 @@ fun SenBoardPreview() {
     val context = remember { SenBoardContext(im = null, initialState = initialState) }
     val controller = remember { SenBoardController(context) }
 
-    SenBoardTheme {
+    SenTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter,

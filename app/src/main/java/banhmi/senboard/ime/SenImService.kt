@@ -43,7 +43,7 @@ import banhmi.senboard.ime.keyboard.ui.SenBoardSurface
 import banhmi.senboard.ime.keyboard.ui.toolbar.Toolbar
 import banhmi.senboard.ime.lifecycle.LifecycleImService
 import banhmi.senboard.shared.utils.isAppInDarkTheme
-import banhmi.senboard.ui.theme.SenBoardTheme
+import banhmi.senboard.ui.theme.SenTheme
 
 class SenImService : LifecycleImService() {
     private val context by lazy { SenBoardContext(im = this) }
@@ -60,7 +60,7 @@ class SenImService : LifecycleImService() {
         return ComposeView(this).apply {
             setViewTreeOwners()
             setContent {
-                SenBoardTheme(darkTheme = isAppInDarkTheme()) {
+                SenTheme(darkTheme = isAppInDarkTheme()) {
                     SenBoardRoot(onDismiss = { requestHideSelf(0) }) {
                         SenBoardSurface {
                             SenBoardContent(controller) {

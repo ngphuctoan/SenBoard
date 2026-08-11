@@ -1,7 +1,7 @@
 package banhmi.senboard.app
 
 import banhmi.senboard.app.navigation.SenNavigator
-import banhmi.senboard.app.navigation.SenSettingsHome
+import banhmi.senboard.app.settings.SenSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 object SenAppModule {
     @Provides
     @ActivityRetainedScoped
-    fun provideNavigator(): SenNavigator = SenNavigator(startDestination = SenSettingsHome)
+    fun provideNavigator(): SenNavigator = SenNavigator(startDestination = SenSettings)
 }

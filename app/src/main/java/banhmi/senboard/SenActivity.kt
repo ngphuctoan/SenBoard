@@ -10,7 +10,7 @@ import androidx.navigation3.ui.NavDisplay
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.ui.theme.SenBoardTheme
+import banhmi.senboard.ui.theme.SenTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class SenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SenBoardTheme {
+            SenTheme {
                 NavDisplay(
                     backStack = navigator.backStack,
                     onBack = { navigator.goBack() },
