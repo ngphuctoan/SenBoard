@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,9 @@ import banhmi.senboard.app.ui.SenIcon
 import banhmi.senboard.app.ui.SenIconDefaults
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenScaffold
+import banhmi.senboard.app.ui.SenTopBar
+import banhmi.senboard.app.ui.SenTopBarBackButton
+import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteCyan
 import dagger.Module
@@ -187,12 +191,16 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
         }
     }
 
+    val topAppBarState = rememberSenTopBarState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
     SenScaffold(
         topBar = {
-//            SenTopBar(
-//                title = { Text("Quy tắc gõ CVNSS 4.0") },
-//                onNavigateBack = onNavigateBack,
-//            )
+            SenTopBar(
+                title = { Text("Quy tắc gõ CVNSS 4.0") },
+                navigationIcon = { SenTopBarBackButton(onClick = onNavigateBack) },
+                scrollBehavior = scrollBehavior,
+            )
         },
     ) { innerPadding ->
         Column(

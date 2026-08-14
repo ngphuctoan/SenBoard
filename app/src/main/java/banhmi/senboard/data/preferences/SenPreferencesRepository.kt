@@ -22,7 +22,8 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
         }
         .map { preferences ->
             SenPreferences(
-                vietnameseEngine = preferences[vietnameseEngine] ?: VietnameseEngine.Cvnss40.value,
+                vietnameseEngine = preferences[vietnameseEngine]
+                    ?: VietnameseEngine.Cvss.dataStoreValue,
                 autoCapitalizationEnabled = preferences[autoCapitalizationEnabled] ?: true,
                 spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
                 easterEggEnabled = preferences[easterEggEnabled] ?: false,
@@ -39,16 +40,18 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
 
     // Pass in the enum instead, inside we do the value access for convenience
     suspend fun updateVietnameseEngine(newVietnameseEngine: VietnameseEngine) = updatePreferences(
-        vietnameseEngine, newVietnameseEngine.value,
+        vietnameseEngine, newVietnameseEngine.dataStoreValue,
     )
 
-    suspend fun updateAutoCapitalizationEnabled(newAutoCapitalizationEnabled: Boolean) = updatePreferences(
-        autoCapitalizationEnabled, newAutoCapitalizationEnabled,
-    )
+    suspend fun updateAutoCapitalizationEnabled(newAutoCapitalizationEnabled: Boolean) =
+        updatePreferences(
+            autoCapitalizationEnabled, newAutoCapitalizationEnabled,
+        )
 
-    suspend fun updateSpaceBarShortcutEnabled(newSpaceBarShortcutEnabled: Boolean) = updatePreferences(
-        spaceBarShortcutEnabled, newSpaceBarShortcutEnabled,
-    )
+    suspend fun updateSpaceBarShortcutEnabled(newSpaceBarShortcutEnabled: Boolean) =
+        updatePreferences(
+            spaceBarShortcutEnabled, newSpaceBarShortcutEnabled,
+        )
 
     suspend fun updateEasterEggEnabled(newEasterEggEnabled: Boolean) = updatePreferences(
         easterEggEnabled, newEasterEggEnabled,

@@ -155,6 +155,7 @@
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
       <option name="METHOD_CALL_CHAIN_WRAP" value="2" />
       <option name="WRAP_FIRST_METHOD_IN_CALL_CHAIN" value="true" />
+      <option name="ENUM_CONSTANTS_WRAP" value="5" />
     </codeStyleSettings>
   </code_scheme>
 </component>

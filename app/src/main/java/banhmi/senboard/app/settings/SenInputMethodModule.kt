@@ -1,44 +1,58 @@
 package banhmi.senboard.app.settings
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.LinkInteractionListener
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withLink
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import banhmi.senboard.app.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
+import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn
-import banhmi.senboard.app.ui.SenColumnSpacer
+import banhmi.senboard.app.ui.SenDescription
 import banhmi.senboard.app.ui.SenHeader
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
+import banhmi.senboard.app.ui.SenMenuHasActionTrailingContent
 import banhmi.senboard.app.ui.SenScaffold
+import banhmi.senboard.app.ui.SenTopBar
+import banhmi.senboard.app.ui.SenTopBarBackButton
+import banhmi.senboard.app.ui.isLast
+import banhmi.senboard.app.ui.lastMenuPadding
 import banhmi.senboard.app.ui.outOf
+import banhmi.senboard.app.ui.rememberSenTopBarState
+import banhmi.senboard.data.preferences.SenPreferences
+import banhmi.senboard.data.preferences.SenPreferencesViewModel
+import banhmi.senboard.ime.engine.VietnameseEngine
 import banhmi.senboard.ui.theme.SenTheme
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.multibindings.IntoSet
+import kotlin.math.pow
 
 object SenInputMethod
 
@@ -47,17 +61,63 @@ object SenInputMethod
 object SenInputMethodModule {
     @Provides
     @IntoSet
-    fun provideEntryProviderInstaller(): SenEntryProviderInstaller = {
+    fun provideEntryProviderInstaller(navigator: SenNavigator): SenEntryProviderInstaller = {
         entry<SenInputMethod> {
-            SenInputMethodScreen()
+            SenInputMethodScreen(
+                onNavigate = navigator::goTo,
+                onNavigateBack = navigator::goBack,
+                preferencesViewModel = hiltViewModel(),
+            )
         }
     }
 }
 
 @Composable
-fun SenInputMethodScreen() {
+fun SenInputMethodScreen(
+    onNavigate: (Any) -> Unit,
+    onNavigateBack: () -> Unit,
+    preferencesViewModel: SenPreferencesViewModel,
+) {
+    val preferences by preferencesViewModel.preferences.collectAsState()
+    SenInputMethodContent(
+        preferences = preferences,
+        onNavigate = onNavigate,
+        onNavigateBack = onNavigateBack,
+        onVietnameseEngineUpdate = preferencesViewModel::updateVietnameseEngine,
+        onAutoCapitalizationEnabledUpdate = preferencesViewModel::updateAutoCapitalizationEnabled,
+        onSpaceBarShortcutEnabledUpdate = preferencesViewModel::updateSpaceBarShortcutEnabled,
+        onEasterEggEnabledUpdate = preferencesViewModel::updateEasterEggEnabled,
+    )
+}
+
+@Composable
+fun SenInputMethodContent(
+    preferences: SenPreferences,
+    onNavigate: (Any) -> Unit,
+    onNavigateBack: () -> Unit,
+    onVietnameseEngineUpdate: (VietnameseEngine) -> Unit,
+    onAutoCapitalizationEnabledUpdate: (Boolean) -> Unit,
+    onSpaceBarShortcutEnabledUpdate: (Boolean) -> Unit,
+    onEasterEggEnabledUpdate: (Boolean) -> Unit,
+) {
+    // Persist the Easter egg options even after disabling the Easter egg
+    var showEasterEggOptions by remember { mutableStateOf<Boolean?>(null) }
+
+    // Kinda not need to launch an effect
+    if (showEasterEggOptions == null) showEasterEggOptions = preferences.easterEggEnabled
+
+    val topAppBarState = rememberSenTopBarState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
     SenScaffold(
-        topBar = {},
+        topBar = {
+            SenTopBar(
+                title = { Text("Phương thức nhập") },
+                navigationIcon = { SenTopBarBackButton(onClick = onNavigateBack) },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         SenColumn(
             modifier = Modifier
@@ -67,36 +127,44 @@ fun SenInputMethodScreen() {
         ) {
             item { SenHeader("Phương thức gõ") }
 
-            itemsIndexed(listOf("Chữ Việt song song", "Telex", "VNI")) { index, methodName ->
+            itemsIndexed(
+                items = VietnameseEngine.entries,
+                key = { _, engine -> engine.dataStoreValue },
+            ) { index, engine ->
+                val indexCount = index outOf VietnameseEngine.entries.size
+                val selected = preferences.vietnameseEngine == engine.dataStoreValue
+
                 SenMenu(
-                    selected = index == 0,
-                    shapes = SenMenuDefaults.segmentedShapes(index outOf 3),
-                    leadingContent = {
-                        RadioButton(
-                            selected = index == 0,
-                            onClick = null,
-                        )
+                    selected = selected,
+                    shapes = SenMenuDefaults.segmentedShapes(indexCount),
+                    leadingContent = { RadioButton(selected = selected, onClick = null) },
+                    onClick = { onVietnameseEngineUpdate(engine) },
+                    modifier = if (indexCount.isLast()) {
+                        Modifier.lastMenuPadding()
+                    } else {
+                        Modifier
                     },
-                    onClick = {},
                 ) {
-                    Text(methodName)
+                    Text(engine.engineName)
                 }
             }
 
-            item { SenColumnSpacer() }
-
-            item { SenHeader("Hỗ trợ") }
+            item { SenHeader("Gõ nhanh") }
 
             item {
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
                     trailingContent = {
                         Switch(
-                            checked = true,
+                            checked = preferences.autoCapitalizationEnabled,
                             onCheckedChange = null,
                         )
                     },
-                    onClick = {},
+                    onClick = {
+                        onAutoCapitalizationEnabledUpdate(
+                            !preferences.autoCapitalizationEnabled
+                        )
+                    },
                 ) {
                     Text("Tự động viết hoa")
                 }
@@ -108,11 +176,15 @@ fun SenInputMethodScreen() {
                     supportingContent = { Text("Ấn dấu cách hai lần sẽ thêm một dấu chấm") },
                     trailingContent = {
                         Switch(
-                            checked = true,
+                            checked = preferences.spaceBarShortcutEnabled,
                             onCheckedChange = null,
                         )
                     },
-                    onClick = {},
+                    onClick = {
+                        onSpaceBarShortcutEnabledUpdate(
+                            !preferences.spaceBarShortcutEnabled
+                        )
+                    },
                 ) {
                     Text("Phím tắt \".\"")
                 }
@@ -120,69 +192,68 @@ fun SenInputMethodScreen() {
 
             item {
                 SenMenu(
+                    enabled = false,
                     shapes = SenMenuDefaults.segmentedShapes(2 outOf 3),
+                    supportingContent = { Text("Tính năng chưa được hỗ trợ") },
                     trailingContent = {
                         Switch(
-                            checked = true,
+                            enabled = false,
+                            checked = false,
                             onCheckedChange = null,
                         )
                     },
-                    onClick = {},
+                    modifier = Modifier.lastMenuPadding(),
                 ) {
                     Text("Gợi ý từ kế tiếp")
                 }
             }
 
-            item { SenColumnSpacer() }
+            if (showEasterEggOptions == true) {
+                item { SenHeader("Easter egg") }
 
-            item { SenHeader("Easter egg") }
-
-            item {
-                SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
-                    trailingContent = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.height(40.dp),
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                                contentDescription = "Đến trang Giới thiệu ứng dụng",
-                            )
-                            VerticalDivider(
-                                color = MaterialTheme.colorScheme.outline,
-                                modifier = Modifier.padding(start = 6.dp, end = 12.dp),
-                            )
-                            Switch(
-                                checked = true,
-                                onCheckedChange = {},
-                            )
-                        }
-                    },
-                    onClick = {},
-                ) {
-                    Text("Chế độ aaaaa")
-                }
-            }
-
-            item { SenColumnSpacer() }
-
-            item {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                ) {
-                    CompositionLocalProvider(
-                        LocalTextStyle provides LocalTextStyle.current.merge(
-                            MaterialTheme.typography.bodyMedium
-                        ),
-                        LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+                item {
+                    SenMenu(
+                        shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
+                        supportingContent = { Text("Credit: dkter\nẤn để tải ứng dụng thông qua F-Droid!") },
+                        trailingContent = {
+                            SenMenuHasActionTrailingContent(actionDescription = "Đến trang Giới thiệu ứng dụng") {
+                                Switch(
+                                    checked = preferences.easterEggEnabled,
+                                    onCheckedChange = {
+                                        onEasterEggEnabledUpdate(
+                                            !preferences.easterEggEnabled
+                                        )
+                                    },
+                                )
+                            }
+                        },
+                        // TODO: Add F-Droid link for the aaaaa app
+                        onClick = {},
+                        modifier = Modifier.lastMenuPadding(),
                     ) {
+                        Text("Chế độ aaaaa")
+                    }
+                }
+
+                item {
+                    val goToAboutLinkListener = LinkInteractionListener {
+                        onNavigate(SenAbout)
+                    }
+
+                    val goToAboutLink = LinkAnnotation.Clickable(
+                        tag = "GO_TO_ABOUT",
+                        linkInteractionListener = goToAboutLinkListener,
+                    )
+
+                    SenDescription {
                         Icon(
                             imageVector = Icons.Outlined.Info,
-                            contentDescription = "Thông tin về easter egg",
+                            contentDescription = "Thông tin về Easter egg",
                         )
-                        Text("Bạn có thể bật lại easter egg tại Giới thiệu ứng dụng")
+                        Text(buildAnnotatedString {
+                            append("Bạn có thể bật lại Easter egg tại ")
+                            withLink(link = goToAboutLink) { append("Giới thiệu ứng dụng") }
+                        })
                     }
                 }
             }
@@ -194,6 +265,17 @@ fun SenInputMethodScreen() {
 @SenPreviewCommon
 fun SenInputMethodScreenPreview() {
     SenTheme {
-        SenInputMethodScreen()
+        SenInputMethodContent(
+            // Enable the Easter egg to show all options in preview
+            preferences = SenPreferences(
+                easterEggEnabled = true,
+            ),
+            onNavigate = {},
+            onNavigateBack = {},
+            onVietnameseEngineUpdate = {},
+            onAutoCapitalizationEnabledUpdate = {},
+            onSpaceBarShortcutEnabledUpdate = {},
+            onEasterEggEnabledUpdate = {},
+        )
     }
 }

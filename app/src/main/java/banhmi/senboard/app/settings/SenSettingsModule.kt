@@ -33,12 +33,13 @@ import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.IndexCount
 import banhmi.senboard.app.ui.SenColumn
-import banhmi.senboard.app.ui.SenColumnSpacer
 import banhmi.senboard.app.ui.SenIcon
 import banhmi.senboard.app.ui.SenIconDefaults
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
 import banhmi.senboard.app.ui.SenScaffold
+import banhmi.senboard.app.ui.isLast
+import banhmi.senboard.app.ui.lastMenuPadding
 import banhmi.senboard.app.ui.outOf
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
@@ -60,7 +61,7 @@ object SenSettingsModule {
     @IntoSet
     fun provideEntryProviderInstaller(navigator: SenNavigator): SenEntryProviderInstaller = {
         entry<SenSettings> {
-            SenSettingsScreen(onNavigate = { destination -> navigator.goTo(destination) })
+            SenSettingsScreen(onNavigate = navigator::goTo)
         }
     }
 }
@@ -175,9 +176,6 @@ fun SenSettingsScreen(onNavigate: (Any) -> Unit) {
                 .consumeWindowInsets(innerPadding),
         ) {
             itemsIndexed(Menus) { index, menu ->
-                val isLastShape = menu.indexCount.index == menu.indexCount.count - 1
-                val isLastMenu = index == Menus.lastIndex
-
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(menu.indexCount),
                     supportingContent = { Text(menu.supportingLabel) },
@@ -189,11 +187,14 @@ fun SenSettingsScreen(onNavigate: (Any) -> Unit) {
                         )
                     },
                     onClick = { onNavigate(menu.destination) },
+                    modifier = if (menu.indexCount.isLast() && index != Menus.lastIndex) {
+                        Modifier.lastMenuPadding()
+                    } else {
+                        Modifier
+                    },
                 ) {
                     Text(menu.label)
                 }
-
-                if (isLastShape and !isLastMenu) SenColumnSpacer()
             }
         }
     }

@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SenPreferencesViewModel @Inject constructor(private val repository: SenPreferencesRepository) : ViewModel() {
+class SenPreferencesViewModel @Inject constructor(
+    private val repository: SenPreferencesRepository,
+) : ViewModel() {
     val preferences: StateFlow<SenPreferences> = repository.preferencesFlow.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

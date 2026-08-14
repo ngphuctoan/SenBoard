@@ -7,7 +7,7 @@ data class SenPreferences(
     Input Method
     ====================*/
     // Can only accept an integer, so access the enum value directly
-    val vietnameseEngine: Int = VietnameseEngine.Cvnss40.value,
+    val vietnameseEngine: Int = VietnameseEngine.Cvss.dataStoreValue,
     val autoCapitalizationEnabled: Boolean = true,
     val spaceBarShortcutEnabled: Boolean = true,
     val easterEggEnabled: Boolean = false,
