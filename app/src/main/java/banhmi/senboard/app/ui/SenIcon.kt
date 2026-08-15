@@ -43,6 +43,9 @@ data class SenIconColors(
 object SenIconDefaults {
     val Shape = CircleShape
 
+    @Composable
+    fun shape() : Shape = appIconShape()
+
     val Sizes = SenIconSizes(
         size = 40.dp,
         contentSize = 24.dp,
@@ -69,7 +72,7 @@ fun SenIcon(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     description: String? = null,
-    shape: Shape = SenIconDefaults.Shape,
+    shape: Shape = SenIconDefaults.shape(),
     sizes: SenIconSizes = SenIconDefaults.Sizes,
     colors: SenIconColors = SenIconDefaults.colors(),
 ) {

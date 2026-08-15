@@ -29,7 +29,7 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
                 easterEggEnabled = preferences[easterEggEnabled] ?: false,
                 showKeyBackground = preferences[showKeyBackground] ?: false,
                 hapticsEnabled = preferences[hapticsEnabled] ?: true,
-                hapticsIntensity = preferences[hapticsIntensity] ?: 50,
+                hapticsIntensity = preferences[hapticsIntensity] ?: 66,
             )
         }
 

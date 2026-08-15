@@ -5,15 +5,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +33,7 @@ import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
 import banhmi.senboard.app.ui.SenMenuHasActionTrailingContent
 import banhmi.senboard.app.ui.SenScaffold
+import banhmi.senboard.app.ui.SenSwitch
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
 import banhmi.senboard.app.ui.isLast
@@ -52,7 +49,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.multibindings.IntoSet
-import kotlin.math.pow
 
 object SenInputMethod
 
@@ -63,26 +59,25 @@ object SenInputMethodModule {
     @IntoSet
     fun provideEntryProviderInstaller(navigator: SenNavigator): SenEntryProviderInstaller = {
         entry<SenInputMethod> {
-            SenInputMethodScreen(
-                onNavigate = navigator::goTo,
-                onNavigateBack = navigator::goBack,
-                preferencesViewModel = hiltViewModel(),
-            )
+            SenInputMethodScreen(navigator)
         }
     }
 }
 
 @Composable
 fun SenInputMethodScreen(
-    onNavigate: (Any) -> Unit,
-    onNavigateBack: () -> Unit,
-    preferencesViewModel: SenPreferencesViewModel,
+    navigator: SenNavigator,
+    preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
     val preferences by preferencesViewModel.preferences.collectAsState()
+
     SenInputMethodContent(
-        preferences = preferences,
-        onNavigate = onNavigate,
-        onNavigateBack = onNavigateBack,
+        onNavigate = navigator::goTo,
+        onNavigateBack = navigator::goBack,
+        vietnameseEngineDataStoreValue = preferences.vietnameseEngine,
+        autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
+        spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
+        easterEggEnabled = preferences.easterEggEnabled,
         onVietnameseEngineUpdate = preferencesViewModel::updateVietnameseEngine,
         onAutoCapitalizationEnabledUpdate = preferencesViewModel::updateAutoCapitalizationEnabled,
         onSpaceBarShortcutEnabledUpdate = preferencesViewModel::updateSpaceBarShortcutEnabled,
@@ -92,9 +87,12 @@ fun SenInputMethodScreen(
 
 @Composable
 fun SenInputMethodContent(
-    preferences: SenPreferences,
-    onNavigate: (Any) -> Unit,
-    onNavigateBack: () -> Unit,
+    onNavigate: (Any) -> Unit = {},
+    onNavigateBack: () -> Unit = {},
+    vietnameseEngineDataStoreValue: Int,
+    autoCapitalizationEnabled: Boolean,
+    spaceBarShortcutEnabled: Boolean,
+    easterEggEnabled: Boolean,
     onVietnameseEngineUpdate: (VietnameseEngine) -> Unit,
     onAutoCapitalizationEnabledUpdate: (Boolean) -> Unit,
     onSpaceBarShortcutEnabledUpdate: (Boolean) -> Unit,
@@ -104,7 +102,7 @@ fun SenInputMethodContent(
     var showEasterEggOptions by remember { mutableStateOf<Boolean?>(null) }
 
     // Kinda not need to launch an effect
-    if (showEasterEggOptions == null) showEasterEggOptions = preferences.easterEggEnabled
+    if (showEasterEggOptions == null) showEasterEggOptions = easterEggEnabled
 
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
@@ -132,7 +130,7 @@ fun SenInputMethodContent(
                 key = { _, engine -> engine.dataStoreValue },
             ) { index, engine ->
                 val indexCount = index outOf VietnameseEngine.entries.size
-                val selected = preferences.vietnameseEngine == engine.dataStoreValue
+                val selected = vietnameseEngineDataStoreValue == engine.dataStoreValue
 
                 SenMenu(
                     selected = selected,
@@ -149,22 +147,21 @@ fun SenInputMethodContent(
                 }
             }
 
+            item {
+                SenDescription(modifier = Modifier.lastMenuPadding()) {
+                    Text("Bạn có thể chuyển nhanh phương thức nhập tại thanh công cụ trên bàn phím")
+                }
+            }
+
             item { SenHeader("Gõ nhanh") }
 
             item {
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
                     trailingContent = {
-                        Switch(
-                            checked = preferences.autoCapitalizationEnabled,
-                            onCheckedChange = null,
-                        )
+                        SenSwitch(checked = autoCapitalizationEnabled, onCheckedChange = null)
                     },
-                    onClick = {
-                        onAutoCapitalizationEnabledUpdate(
-                            !preferences.autoCapitalizationEnabled
-                        )
-                    },
+                    onClick = { onAutoCapitalizationEnabledUpdate(!autoCapitalizationEnabled) },
                 ) {
                     Text("Tự động viết hoa")
                 }
@@ -175,16 +172,9 @@ fun SenInputMethodContent(
                     shapes = SenMenuDefaults.segmentedShapes(1 outOf 3),
                     supportingContent = { Text("Ấn dấu cách hai lần sẽ thêm một dấu chấm") },
                     trailingContent = {
-                        Switch(
-                            checked = preferences.spaceBarShortcutEnabled,
-                            onCheckedChange = null,
-                        )
+                        SenSwitch(checked = spaceBarShortcutEnabled, onCheckedChange = null)
                     },
-                    onClick = {
-                        onSpaceBarShortcutEnabledUpdate(
-                            !preferences.spaceBarShortcutEnabled
-                        )
-                    },
+                    onClick = { onSpaceBarShortcutEnabledUpdate(!spaceBarShortcutEnabled) },
                 ) {
                     Text("Phím tắt \".\"")
                 }
@@ -196,11 +186,7 @@ fun SenInputMethodContent(
                     shapes = SenMenuDefaults.segmentedShapes(2 outOf 3),
                     supportingContent = { Text("Tính năng chưa được hỗ trợ") },
                     trailingContent = {
-                        Switch(
-                            enabled = false,
-                            checked = false,
-                            onCheckedChange = null,
-                        )
+                        SenSwitch(enabled = false, checked = false, onCheckedChange = null)
                     },
                     modifier = Modifier.lastMenuPadding(),
                 ) {
@@ -214,16 +200,12 @@ fun SenInputMethodContent(
                 item {
                     SenMenu(
                         shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
-                        supportingContent = { Text("Credit: dkter\nẤn để tải ứng dụng thông qua F-Droid!") },
+                        supportingContent = { Text("Credit: dkter\nẤn để tải ứng dụng qua F-Droid!") },
                         trailingContent = {
                             SenMenuHasActionTrailingContent(actionDescription = "Đến trang Giới thiệu ứng dụng") {
-                                Switch(
-                                    checked = preferences.easterEggEnabled,
-                                    onCheckedChange = {
-                                        onEasterEggEnabledUpdate(
-                                            !preferences.easterEggEnabled
-                                        )
-                                    },
+                                SenSwitch(
+                                    checked = easterEggEnabled,
+                                    onCheckedChange = { onEasterEggEnabledUpdate(!easterEggEnabled) },
                                 )
                             }
                         },
@@ -264,18 +246,35 @@ fun SenInputMethodContent(
 @Composable
 @SenPreviewCommon
 fun SenInputMethodScreenPreview() {
+    // Enable the Easter egg to show all options in preview
+    var preferences by remember { mutableStateOf(SenPreferences(easterEggEnabled = true)) }
+
     SenTheme {
         SenInputMethodContent(
-            // Enable the Easter egg to show all options in preview
-            preferences = SenPreferences(
-                easterEggEnabled = true,
-            ),
-            onNavigate = {},
-            onNavigateBack = {},
-            onVietnameseEngineUpdate = {},
-            onAutoCapitalizationEnabledUpdate = {},
-            onSpaceBarShortcutEnabledUpdate = {},
-            onEasterEggEnabledUpdate = {},
+            vietnameseEngineDataStoreValue = preferences.vietnameseEngine,
+            autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
+            spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
+            easterEggEnabled = preferences.easterEggEnabled,
+            onVietnameseEngineUpdate = { vietnameseEngine ->
+                preferences = preferences.copy(
+                    vietnameseEngine = vietnameseEngine.dataStoreValue,
+                )
+            },
+            onAutoCapitalizationEnabledUpdate = { autoCapitalizationEnabled ->
+                preferences = preferences.copy(
+                    autoCapitalizationEnabled = autoCapitalizationEnabled,
+                )
+            },
+            onSpaceBarShortcutEnabledUpdate = { spaceBarShortcutEnabled ->
+                preferences = preferences.copy(
+                    spaceBarShortcutEnabled = spaceBarShortcutEnabled,
+                )
+            },
+            onEasterEggEnabledUpdate = { easterEggEnabled ->
+                preferences = preferences.copy(
+                    easterEggEnabled = easterEggEnabled,
+                )
+            },
         )
     }
 }

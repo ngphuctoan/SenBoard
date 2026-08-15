@@ -32,6 +32,11 @@ object SenAppearanceModule {
 
 @Composable
 fun SenAppearanceScreen() {
+    SenAppearanceContent()
+}
+
+@Composable
+fun SenAppearanceContent() {
     SenScaffold(
         topBar = {},
     ) { innerPadding ->
@@ -48,6 +53,6 @@ fun SenAppearanceScreen() {
 @SenPreviewCommon
 fun SenAppearanceScreenPreview() {
     SenTheme {
-        SenAppearanceScreen()
+        SenAppearanceContent()
     }
 }

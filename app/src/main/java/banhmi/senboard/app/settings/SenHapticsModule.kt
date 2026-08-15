@@ -4,20 +4,32 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSliderState
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import banhmi.senboard.app.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
+import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn
-import banhmi.senboard.app.ui.SenColumnSpacer
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
 import banhmi.senboard.app.ui.SenScaffold
+import banhmi.senboard.app.ui.SenSwitch
+import banhmi.senboard.app.ui.SenTopBar
+import banhmi.senboard.app.ui.SenTopBarBackButton
+import banhmi.senboard.app.ui.lastMenuPadding
 import banhmi.senboard.app.ui.outOf
+import banhmi.senboard.app.ui.rememberSenTopBarState
+import banhmi.senboard.data.preferences.SenPreferences
+import banhmi.senboard.data.preferences.SenPreferencesViewModel
 import banhmi.senboard.ui.theme.SenTheme
 import dagger.Module
 import dagger.Provides
@@ -32,17 +44,48 @@ object SenHaptics
 object SenHapticsModule {
     @Provides
     @IntoSet
-    fun provideEntryProviderInstaller(): SenEntryProviderInstaller = {
+    fun provideEntryProviderInstaller(navigator: SenNavigator): SenEntryProviderInstaller = {
         entry<SenHaptics> {
-            SenHapticsScreen()
+            SenHapticsScreen(navigator)
         }
     }
 }
 
 @Composable
-fun SenHapticsScreen() {
+fun SenHapticsScreen(
+    navigator: SenNavigator,
+    preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
+) {
+    val preferences by preferencesViewModel.preferences.collectAsState()
+
+    SenHapticsContent(
+        onNavigateBack = navigator::goBack,
+        hapticsEnabled = preferences.hapticsEnabled,
+        hapticsIntensity = preferences.hapticsIntensity,
+        onUpdateHapticsEnabled = preferencesViewModel::updateHapticsEnabled,
+        onUpdateHapticsIntensity = preferencesViewModel::updateHapticsIntensity,
+    )
+}
+
+@Composable
+fun SenHapticsContent(
+    onNavigateBack: () -> Unit = {},
+    hapticsEnabled: Boolean,
+    hapticsIntensity: Int,
+    onUpdateHapticsEnabled: (Boolean) -> Unit,
+    onUpdateHapticsIntensity: (Int) -> Unit,
+) {
+    val topAppBarState = rememberSenTopBarState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
     SenScaffold(
-        topBar = {},
+        topBar = {
+            SenTopBar(
+                title = { Text("Haptic") },
+                navigationIcon = { SenTopBarBackButton(onClick = onNavigateBack) },
+                scrollBehavior = scrollBehavior,
+            )
+        },
     ) { innerPadding ->
         SenColumn(
             modifier = Modifier
@@ -52,35 +95,33 @@ fun SenHapticsScreen() {
         ) {
             item {
                 SenMenu(
-                    checked = true,
-                    onCheckedChange = {},
+                    checked = hapticsEnabled,
+                    onCheckedChange = { onUpdateHapticsEnabled(!hapticsEnabled) },
                     shapes = SenMenuDefaults.circleShapes(),
                     trailingContent = {
-                        Switch(
-                            checked = true,
-                            onCheckedChange = null,
-                        )
+                        SenSwitch(checked = hapticsEnabled, onCheckedChange = null)
                     },
                     contentPadding = SenMenuDefaults.CircleContentPadding,
                     colors = SenMenuDefaults.primaryColors(),
-                    modifier = Modifier.padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .lastMenuPadding(),
                 ) {
-                    Text("Sử dụng haptic cho các phím")
+                    Text("Sử dụng haptic")
                 }
             }
 
-            item { SenColumnSpacer() }
-
             item {
                 SenMenu(
+                    enabled = hapticsEnabled,
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
                     supportingContent = {
                         Slider(
-                            state = rememberSliderState(
-                                value = 66f,
-                                steps = 2,
-                                valueRange = 0f..100f,
-                            ),
+                            enabled = hapticsEnabled,
+                            steps = 2,
+                            valueRange = 0f..100f,
+                            value = hapticsIntensity.toFloat(),
+                            onValueChange = { value -> onUpdateHapticsIntensity(value.toInt()) },
                             modifier = Modifier.padding(horizontal = 8.dp),
                         )
                     },
@@ -95,7 +136,22 @@ fun SenHapticsScreen() {
 @Composable
 @SenPreviewCommon
 fun SenHapticsScreenPreview() {
-    SenTheme(dynamicColor = false) {
-        SenHapticsScreen()
+    var preferences by remember { mutableStateOf(SenPreferences()) }
+
+    SenTheme {
+        SenHapticsContent(
+            hapticsEnabled = preferences.hapticsEnabled,
+            hapticsIntensity = preferences.hapticsIntensity,
+            onUpdateHapticsEnabled = { hapticsEnabled ->
+                preferences = preferences.copy(
+                    hapticsEnabled = hapticsEnabled,
+                )
+            },
+            onUpdateHapticsIntensity = { hapticsIntensity ->
+                preferences = preferences.copy(
+                    hapticsIntensity = hapticsIntensity,
+                )
+            },
+        )
     }
 }

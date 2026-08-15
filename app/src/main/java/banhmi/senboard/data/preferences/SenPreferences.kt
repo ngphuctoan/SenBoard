@@ -21,5 +21,5 @@ data class SenPreferences(
     Haptics
     ====================*/
     val hapticsEnabled: Boolean = true,
-    val hapticsIntensity: Int = 50,
+    val hapticsIntensity: Int = 66,
 )

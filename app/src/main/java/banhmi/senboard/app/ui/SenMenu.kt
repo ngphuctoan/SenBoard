@@ -49,9 +49,12 @@ object SenMenuDefaults {
     @Composable
     fun primaryColors(): ListItemColors = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
+        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
         disabledContainerColor = MaterialTheme.colorScheme.surfaceBright,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        selectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        selectedSupportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     )
 
     @Composable
@@ -71,6 +74,8 @@ object SenMenuDefaults {
     val ContentPadding: PaddingValues = PaddingValues(16.dp)
 
     val CircleContentPadding: PaddingValues = ContentPadding + PaddingValues(start = 16.dp)
+
+    val SupportingControlsPadding: PaddingValues = PaddingValues(horizontal = 8.dp)
 }
 
 object SenMenuHasActionTrailingContentDefaults {

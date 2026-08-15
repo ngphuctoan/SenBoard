@@ -11,10 +11,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PermDeviceInformation
+import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,7 +61,7 @@ object SenSettingsModule {
     @IntoSet
     fun provideEntryProviderInstaller(navigator: SenNavigator): SenEntryProviderInstaller = {
         entry<SenSettings> {
-            SenSettingsScreen(onNavigate = navigator::goTo)
+            SenSettingsScreen(navigator)
         }
     }
 }
@@ -81,7 +81,7 @@ val Menus = listOf(
         indexCount = 0 outOf 2,
         destination = SenHelp,
         label = "Hướng dẫn sử dụng",
-        supportingLabel = "Bộ gõ chữ Việt song song",
+        supportingLabel = "Chữ Việt song song",
         icon = Icons.AutoMirrored.Filled.MenuBook,
         iconPalette = m3RefPaletteCyan,
     ),
@@ -114,7 +114,7 @@ val Menus = listOf(
         destination = SenHaptics,
         label = "Haptic",
         supportingLabel = "Độ mạnh của haptic",
-        icon = Icons.AutoMirrored.Filled.VolumeUp,
+        icon = Icons.Filled.Vibration,
         iconPalette = m3RefPaletteYellow,
     ),
 )
@@ -153,7 +153,12 @@ fun SenInputTester(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SenSettingsScreen(onNavigate: (Any) -> Unit) {
+fun SenSettingsScreen(navigator: SenNavigator) {
+    SenSettingsContent(onNavigate = navigator::goTo)
+}
+
+@Composable
+fun SenSettingsContent(onNavigate: (Any) -> Unit = {}) {
     SenScaffold(
         topBar = {
             SenInputTester(
@@ -204,6 +209,6 @@ fun SenSettingsScreen(onNavigate: (Any) -> Unit) {
 @Composable
 fun SenSettingsScreenPreview() {
     SenTheme {
-        SenSettingsScreen(onNavigate = {})
+        SenSettingsContent()
     }
 }
