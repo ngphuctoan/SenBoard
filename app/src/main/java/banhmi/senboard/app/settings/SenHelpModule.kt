@@ -1,28 +1,29 @@
 package banhmi.senboard.app.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,24 +31,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import banhmi.senboard.app.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn
-import banhmi.senboard.app.ui.SenIcon
-import banhmi.senboard.app.ui.SenIconDefaults
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenScaffold
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
 import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.ui.theme.SenTheme
-import banhmi.senboard.ui.theme.m3RefPaletteCyan
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -76,12 +73,22 @@ private enum class HelpCategory(val label: String) {
     Vần56("56 Vần dài"),
 }
 
+/**
+ * Represents a rule or example conversion pair (CVNSS ➔ CQN).
+ */
+data class Conversion(
+    val cvnss: String,
+    val cqn: String,
+)
+
+infix fun String.convertsTo(cqn: String): Conversion = Conversion(this, cqn)
+
 private data class RuleItem(
     val category: HelpCategory,
     val title: String,
-    val rule: String,
-    val example: String,
-    val note: String? = null
+    val rule: Conversion,
+    val examples: List<Conversion>,
+    val note: String? = null,
 )
 
 @Composable
@@ -89,110 +96,21 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(HelpCategory.All) }
 
-    val allRules = remember {
-        listOf(
-            // A. 34 QUY TẮC RÚT GỌN CHỮ VIỆT NHANH (CVN)
-            // 1. Bỏ dấu sắc ở phụ âm cuối c, p, t
-            RuleItem(
-                HelpCategory.CVN,
-                "Bỏ dấu sắc đuôi C, P, T",
-                "c, p, t",
-                "các ➔ cac, úp ➔ up, hát ➔ hat"
-            ),
-
-            // 2. Quy tắc Y = I & UY = Y
-            RuleItem(
-                HelpCategory.CVN,
-                "Thay Y = I & UY = Y",
-                "Y=I, UY=Y",
-                "y tá ➔ i tá, thúy ➔ thú",
-                "AY, ÂY giữ nguyên (mây bay = mây bay)"
-            ),
-
-            // 3. Thay phụ âm đầu
-            RuleItem(HelpCategory.CVN, "Thay PH ➔ F", "PH = F", "phai ➔ fai"),
-            RuleItem(HelpCategory.CVN, "Thay Đ ➔ D", "Đ = D", "đi ➔ di"),
-            RuleItem(HelpCategory.CVN, "Thay QU ➔ Q", "QU = Q", "quay ➔ qay"),
-            RuleItem(HelpCategory.CVN, "Thay GI ➔ J", "GI = J", "giữ ➔ jữ"),
-            RuleItem(HelpCategory.CVN, "Thay K ➔ C", "K = C", "kín ➔ cín"),
-            RuleItem(HelpCategory.CVN, "Thay GH ➔ G", "GH = G", "ghê ➔ gê"),
-            RuleItem(HelpCategory.CVN, "Thay KH ➔ K", "KH = K", "khó ➔ kó"),
-            RuleItem(HelpCategory.CVN, "Thay D ➔ Z", "D = Z", "do dự ➔ zo zự"),
-            RuleItem(HelpCategory.CVN, "Thay NG, NGH ➔ W", "NG/NGH = W", "nga ➔ wa, nghĩ ➔ wĩ"),
-
-            // 4. Thay phụ âm cuối
-            RuleItem(HelpCategory.CVN, "Phụ âm cuối NG ➔ G", "NG = G", "mong ➔ mog"),
-            RuleItem(HelpCategory.CVN, "Phụ âm cuối NH ➔ H", "NH = H", "hoành ➔ hoàh"),
-            RuleItem(HelpCategory.CVN, "Phụ âm cuối CH ➔ K", "CH = K", "nguệch ➔ wuệk"),
-
-            // B. 18 KÝ HIỆU DẤU THAY DẤU CHO CVNSS
-            // 1. Nhóm nón ^ (â, ê, ô)
-            RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Â, Ê, Ô)", "Sắc = B", "cố ➔ cob"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Â, Ê, Ô)", "Huyền = D", "cồ ➔ cod"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Â, Ê, Ô)", "Hỏi = Q", "cổ ➔ coq"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Â, Ê, Ô)", "Ngã = G", "cỗ ➔ cog"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Â, Ê, Ô)", "Nặng = F", "cộ ➔ cof"),
-            RuleItem(HelpCategory.ToneMarks, "Thanh Ngang (Nhóm Â, Ê, Ô)", "Ngang = Y", "cô ➔ coy"),
-
-            // 2. Nhóm trăng ~ (ơ, ư, ă)
-            RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Ơ, Ư, Ă)", "Sắc = X", "lớ ➔ lox"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Ơ, Ư, Ă)", "Huyền = K", "lờ ➔ lok"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Ơ, Ư, Ă)", "Hỏi = V", "lở ➔ lov"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Ơ, Ư, Ă)", "Ngã = W", "lỡ ➔ low"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Ơ, Ư, Ă)", "Nặng = H", "lợ ➔ loh"),
-            RuleItem(HelpCategory.ToneMarks, "Thanh Ngang (Nhóm Ơ, Ư, Ă)", "Ngang = O", "lơ ➔ loo"),
-
-            // 3. Nhóm Không dấu phụ (a, e, i, o, u, y)
-            RuleItem(
-                HelpCategory.ToneMarks,
-                "Dấu Sắc (Không dấu phụ)",
-                "Sắc = J",
-                "vó ➔ voj",
-                "Chữ có phụ âm cuối C, P, T thì bỏ J (khác ➔ kac, áp ➔ ap, phút ➔ fut)"
-            ),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Không dấu phụ)", "Huyền = L", "vò ➔ vol"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Không dấu phụ)", "Hỏi = Z", "vỏ ➔ voz"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Không dấu phụ)", "Ngã = S", "võ ➔ vos"),
-            RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Không dấu phụ)", "Nặng = R", "vọ ➔ vor"),
-
-            // 4. Ký hiệu P (Chữ đệm câm)
-            RuleItem(
-                HelpCategory.PWord,
-                "Chữ đệm câm P",
-                "Suffix P",
-                "long ➔ logp (tránh hiểu lầm với lỗ = log)",
-                "P đặt sau vần rút gọn ở thanh ngang không dấu phụ: ag, ah, aj, eg, el, ev, ew, ez, ih, oah, og, oj, ol, ov, ow, oz, ug, yh"
-            ),
-
-            // 5. 56 Vần dài
-            RuleItem(HelpCategory.Vần56, "Vần UYÊT", "uyêt ➔ yd", "tuyết ➔ tyd"),
-            RuleItem(HelpCategory.Vần56, "Vần UYÊN", "uyên ➔ yl", "huyện ➔ hylf"),
-            RuleItem(HelpCategory.Vần56, "Vần IÊT / YÊT", "iêt ➔ id", "tiết ➔ tidb"),
-            RuleItem(HelpCategory.Vần56, "Vần IÊP / YÊP", "iêp ➔ if", "tiếp ➔ tifb, hiệp ➔ hịf"),
-            RuleItem(HelpCategory.Vần56, "Vần UÔC", "uôc ➔ us", "thuốc ➔ thus"),
-            RuleItem(HelpCategory.Vần56, "Vần UÂT", "uât ➔ âd", "suất ➔ sâd"),
-            RuleItem(HelpCategory.Vần56, "Vần ƯƠM", "ươm ➔ ưv", "cườm ➔ cuvk"),
-            RuleItem(HelpCategory.Vần56, "Vần ƯƠNG", "ương ➔ ưz", "thường ➔ thuzk"),
-            RuleItem(HelpCategory.Vần56, "Vần OANG", "oang ➔ oz", "hoang ➔ hozp"),
-            RuleItem(HelpCategory.Vần56, "Vần OAY", "oay ➔ aj", "loay hoay ➔ lajp hajp"),
-            RuleItem(HelpCategory.Vần56, "Vần ƯƠU", "ươu ➔ ưw", "rượu ➔ ruwh"),
-            RuleItem(HelpCategory.Vần56, "Vần ƯƠN", "ươn ➔ ưl", "lượn ➔ lulh"),
-            RuleItem(HelpCategory.Vần56, "Vần OĂT, OĂP, OĂC", "oăt➔ăd, oăp➔ăf", "xoắn ➔ xăl")
-        )
-    }
-
     val filteredRules = remember(searchQuery, selectedCategory) {
-        allRules.filter { item ->
+        CvnssHelpRules.filter { item ->
             (selectedCategory == HelpCategory.All || item.category == selectedCategory) &&
                     (searchQuery.isBlank() ||
                             item.title.contains(searchQuery, ignoreCase = true) ||
-                            item.rule.contains(searchQuery, ignoreCase = true) ||
-                            item.example.contains(searchQuery, ignoreCase = true))
+                            item.rule.cvnss.contains(searchQuery, ignoreCase = true) ||
+                            item.rule.cqn.contains(searchQuery, ignoreCase = true) ||
+                            item.examples.any { ex ->
+                                ex.cvnss.contains(searchQuery, ignoreCase = true) ||
+                                ex.cqn.contains(searchQuery, ignoreCase = true)
+                            })
         }
     }
 
-    val topAppBarState = rememberSenTopBarState()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberSenTopBarState())
 
     SenScaffold(
         topBar = {
@@ -209,11 +127,10 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding)
         ) {
-            // FIXED TOP HEADER (Search Bar & Filter Chips)
+            // Header: Search Bar & Filter Chips
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface)
                     .padding(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -237,7 +154,7 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
                     )
                 }
 
-                // Filter Chips Row
+                // Filter Chips
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -253,51 +170,90 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
                 }
             }
 
-            // SCROLLABLE RULES LIST
+            // Rules List
             SenColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
             ) {
-                items(filteredRules) { ruleItem ->
+                itemsIndexed(filteredRules) { index, ruleItem ->
                     SenMenu(
-                        shapes = ListItemDefaults.segmentedShapes(index = 0, count = 1),
+                        shapes = ListItemDefaults.segmentedShapes(index = index, count = filteredRules.size),
                         supportingContent = {
-                            Column(modifier = Modifier.padding(top = 2.dp)) {
-                                Text("Ví dụ: ${ruleItem.example}")
-                                if (ruleItem.note != null) {
+                            Column(
+                                modifier = Modifier.padding(top = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                // Formula
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
                                     Text(
-                                        text = "💡 ${ruleItem.note}",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.tertiary,
-                                        fontSize = 11.sp,
-                                        modifier = Modifier.padding(top = 4.dp)
+                                        text = ruleItem.rule.cvnss,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(13.dp),
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                    Text(
+                                        text = ruleItem.rule.cqn,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
                                     )
                                 }
-                            }
-                        },
-                        leadingContent = {
-                            SenIcon(
-                                icon = if (ruleItem.category == HelpCategory.ToneMarks) Icons.Filled.Edit else Icons.Filled.Code,
-                                colors = SenIconDefaults.vibrantColors(m3RefPaletteCyan),
-                            )
-                        },
-                        trailingContent = {
-                            Surface(
-                                shape = RoundedCornerShape(6.dp),
-                                color = MaterialTheme.colorScheme.secondaryContainer,
-                                modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                Text(
-                                    text = ruleItem.rule,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.Monospace,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    maxLines = 1,
-                                    softWrap = false,
-                                )
+
+                                // Examples
+                                ruleItem.examples.forEach { ex ->
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Text(
+                                            text = ex.cvnss,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(13.dp),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = ex.cqn,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+
+                                // Note
+                                if (ruleItem.note != null) {
+                                    Row(
+                                        modifier = Modifier.padding(top = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Lightbulb,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(14.dp),
+                                            tint = MaterialTheme.colorScheme.tertiary
+                                        )
+                                        Text(
+                                            text = ruleItem.note,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.tertiary
+                                        )
+                                    }
+                                }
                             }
                         },
                         onClick = {},
@@ -309,6 +265,78 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
         }
     }
 }
+
+private val CvnssHelpRules = listOf(
+    // A. 34 QUY TẮC RÚT GỌN CHỮ VIỆT NHANH (CVN)
+    // 1. Bỏ dấu sắc ở phụ âm cuối c, p, t
+    RuleItem(
+        HelpCategory.CVN,
+        "Bỏ dấu sắc đuôi C, P, T",
+        "c, p, t" convertsTo "không dấu sắc",
+        listOf("cac" convertsTo "các", "up" convertsTo "úp", "hat" convertsTo "hát"),
+    ),
+
+    // 2. Quy tắc Y = I & UY = Y
+    RuleItem(
+        HelpCategory.CVN,
+        "Y = I & UY = Y",
+        "i / y" convertsTo "y / uy",
+        listOf("i tá" convertsTo "y tá", "thú" convertsTo "thúy", "byt" convertsTo "buýt"),
+        "AY, ÂY giữ nguyên (mây bay = mây bay)",
+    ),
+
+    // 3. Phụ âm đầu (CVNSS ➔ CQN)
+    RuleItem(HelpCategory.CVN, "Phụ âm F ➔ PH", "f" convertsTo "ph", listOf("fai" convertsTo "phai")),
+    RuleItem(HelpCategory.CVN, "Phụ âm D ➔ Đ", "d" convertsTo "đ", listOf("di" convertsTo "đi", "di dâu dó" convertsTo "đi đâu đó")),
+    RuleItem(HelpCategory.CVN, "Phụ âm Q ➔ QU", "q" convertsTo "qu", listOf("qa" convertsTo "qua", "qi" convertsTo "quy", "qy" convertsTo "quy")),
+    RuleItem(HelpCategory.CVN, "Phụ âm J ➔ GI", "j" convertsTo "gi", listOf("já jì" convertsTo "giá gì", "jữ jìn" convertsTo "giữ gìn")),
+    RuleItem(HelpCategory.CVN, "Phụ âm C ➔ K", "c" convertsTo "k", listOf("cín" convertsTo "kín", "cê" convertsTo "kê", "cẻ" convertsTo "kẻ")),
+    RuleItem(HelpCategory.CVN, "Phụ âm G ➔ GH", "g" convertsTo "gh", listOf("gì" convertsTo "ghì", "gê" convertsTo "ghê", "ge" convertsTo "ghe")),
+    RuleItem(HelpCategory.CVN, "Phụ âm K ➔ KH", "k" convertsTo "kh", listOf("ki kó kăn" convertsTo "khi khó khăn")),
+    RuleItem(HelpCategory.CVN, "Phụ âm Z ➔ D", "z" convertsTo "d", listOf("zì" convertsTo "dì", "zo zự" convertsTo "do dự")),
+    RuleItem(HelpCategory.CVN, "Phụ âm W ➔ NG, NGH", "w" convertsTo "ng/ngh", listOf("wa" convertsTo "nga", "wĩ" convertsTo "nghĩ", "wề" convertsTo "nghề")),
+
+    // 4. Thay phụ âm cuối
+    RuleItem(HelpCategory.CVN, "Phụ âm cuối G ➔ NG", "g" convertsTo "ng", listOf("mog" convertsTo "mong")),
+    RuleItem(HelpCategory.CVN, "Phụ âm cuối H ➔ NH", "h" convertsTo "nh", listOf("bah" convertsTo "banh", "hoàh" convertsTo "hoành", "huêh" convertsTo "huênh")),
+    RuleItem(HelpCategory.CVN, "Phụ âm cuối K ➔ CH", "k" convertsTo "ch", listOf("sạk" convertsTo "sạch", "hoạk" convertsTo "hoạch", "wuệk" convertsTo "nguệch")),
+
+    // B. 18 KÝ HIỆU DẤU THAY DẤU CHO CVNSS
+    // 1. Nhóm nón ^ (â, ê, ô)
+    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Â, Ê, Ô)", "b" convertsTo "sắc ^", listOf("anb" convertsTo "ấn", "eb" convertsTo "ế", "ekb" convertsTo "ếch", "bidb" convertsTo "biết", "totb" convertsTo "tốt")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Â, Ê, Ô)", "d" convertsTo "huyền ^", listOf("amd" convertsTo "ầm", "qand" convertsTo "quần", "ved" convertsTo "về", "tild" convertsTo "tiền")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Â, Ê, Ô)", "q" convertsTo "hỏi ^", listOf("anq" convertsTo "ẩn", "deq" convertsTo "để", "divq" convertsTo "điểm", "oq" convertsTo "ổ", "tujq" convertsTo "tuổi")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Â, Ê, Ô)", "g" convertsTo "ngã ^", listOf("vayg" convertsTo "vẫy", "reg" convertsTo "rễ", "wylg" convertsTo "nguyễn", "log" convertsTo "lỗ")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Â, Ê, Ô)", "f" convertsTo "nặng ^", listOf("vayf" convertsTo "vậy", "hiff" convertsTo "hiệp", "lof" convertsTo "lộ", "ruzf" convertsTo "ruộng")),
+
+    // 2. Nhóm trăng ~ (ơ, ư, ă)
+    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Ơ, Ư, Ă)", "x" convertsTo "sắc ~", listOf("lamx" convertsTo "lắm", "ox" convertsTo "ớ", "otx" convertsTo "ớt", "ux" convertsTo "ứ", "cujx" convertsTo "cưới")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Ơ, Ư, Ă)", "k" convertsTo "huyền ~", listOf("qank" convertsTo "quằn", "cok" convertsTo "cờ", "tuk" convertsTo "từ", "tuzk" convertsTo "tường")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Ơ, Ư, Ă)", "v" convertsTo "hỏi ~", listOf("hanv" convertsTo "hẳn", "fov" convertsTo "phở", "xuv" convertsTo "xử", "bujv" convertsTo "bưởi")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Ơ, Ư, Ă)", "w" convertsTo "ngã ~", listOf("sanw" convertsTo "sẵn", "jonw" convertsTo "giỡn", "luw" convertsTo "lữ", "lujw" convertsTo "lưỡi")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Ơ, Ư, Ă)", "h" convertsTo "nặng ~", listOf("hash" convertsTo "hoặc", "doih" convertsTo "đợi", "tuh" convertsTo "tự", "fuzh" convertsTo "phượng")),
+
+    // 3. Nhóm Không dấu phụ (a, e, i, o, u, y)
+    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Không dấu phụ)", "j" convertsTo "sắc", listOf("aj" convertsTo "á", "sakj" convertsTo "sách", "ej" convertsTo "é", "ij" convertsTo "í", "uj" convertsTo "ú", "yj" convertsTo "úy"), "Các chữ có phụ âm cuối C, P, T thì không thêm J (ac ➔ ác, ep ➔ ép, at ➔ át)"),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Không dấu phụ)", "l" convertsTo "huyền", listOf("al" convertsTo "à", "hel" convertsTo "hè", "vil" convertsTo "vì", "conl" convertsTo "còn", "ul" convertsTo "ù", "tyl" convertsTo "tùy")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Không dấu phụ)", "z" convertsTo "hỏi", listOf("az" convertsTo "ả", "rez" convertsTo "rẻ", "tiz" convertsTo "tỉ", "coz" convertsTo "cỏ", "uz" convertsTo "ủ", "qyz" convertsTo "quỷ")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Không dấu phụ)", "s" convertsTo "ngã", listOf("das" convertsTo "đã", "ves" convertsTo "vẽ", "mis" convertsTo "mỹ", "vos" convertsTo "võ", "cugs" convertsTo "cũng")),
+    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Không dấu phụ)", "r" convertsTo "nặng", listOf("ar" convertsTo "ạ", "mer" convertsTo "mẹ", "wir" convertsTo "nghị", "vur" convertsTo "vụ", "tyr" convertsTo "tụy")),
+
+    // 4. Ký hiệu P (Chữ đệm câm)
+    RuleItem(HelpCategory.PWord, "Chữ đệm câm P", "suffix p" convertsTo "thanh ngang", listOf("logp" convertsTo "long", "xajp" convertsTo "xoay", "regp" convertsTo "reng"), "Đệm P sau vần rút gọn ở thanh ngang không dấu phụ để tránh trùng với lỗ = log, xá = xaj, rễ = reg"),
+
+    // 5. 56 Vần dài
+    RuleItem(HelpCategory.Vần56, "Vần UYÊT / UYÊN", "yd / yl" convertsTo "uyêt / uyên", listOf("tydb" convertsTo "tuyết", "wylg" convertsTo "nguyễn")),
+    RuleItem(HelpCategory.Vần56, "Vần IÊT / YÊT / IÊP / IÊC / IÊN / IÊM / IÊNG / IÊU", "id / if / is / il / iv / iz / iw" convertsTo "vần iê/yê", listOf("vidb" convertsTo "viết", "hiff" convertsTo "hiệp", "visf" convertsTo "việc", "tild" convertsTo "tiền", "hivq" convertsTo "hiểm", "wizy" convertsTo "nghiêng", "liwg" convertsTo "liễu", "idb" convertsTo "yết", "ily" convertsTo "yên")),
+    RuleItem(HelpCategory.Vần56, "Vần UÔT / UÔC / UÔN / UÔM / UÔNG / UÔI", "ud / us / ul / uv / uz / uj" convertsTo "vần uô", listOf("nudb" convertsTo "nuốt", "cusf" convertsTo "cuộc", "luly" convertsTo "luôn", "nhuvf" convertsTo "nhuộm", "uzq" convertsTo "uổng", "rujd" convertsTo "ruồi")),
+    RuleItem(HelpCategory.Vần56, "Vần ƯƠT / ƯƠP / ƯƠC / ƯƠN / ƯƠM / ƯƠNG / ƯƠU / ƯƠI", "ưd / ưf / ưs / ưl / ưv / ưz / ưw / ưj" convertsTo "vần ươ", listOf("ludh" convertsTo "lượt", "cufx" convertsTo "cướp", "busx" convertsTo "bước", "mulx" convertsTo "mướn", "cuvk" convertsTo "cườm", "tuzv" convertsTo "tưởng", "ruwh" convertsTo "rượu", "lujw" convertsTo "lưỡi")),
+    RuleItem(HelpCategory.Vần56, "Vần UÂT / UÂN / UÂNG / UÂY", "âd / âl / âz / âj" convertsTo "vần uâ", listOf("ladf" convertsTo "luật", "kalq" convertsTo "khuẩn", "kazy" convertsTo "khuâng", "kajy" convertsTo "khuây")),
+    RuleItem(HelpCategory.Vần56, "Vần UƠT / UƠN / UƠI", "ơd / ơl / ơj" convertsTo "vần uơ", listOf("hodx" convertsTo "huớt", "holw" convertsTo "huỡn", "ojo" convertsTo "uơi")),
+    RuleItem(HelpCategory.Vần56, "Vần OĂT / OĂP / OĂC / OĂN / OĂM / OĂNG", "ăd / ăf / ăs / ăl / ăv / ăz" convertsTo "vần oă", listOf("wadx" convertsTo "ngoắt", "wafh" convertsTo "ngoặp", "hash" convertsTo "hoặc", "xalx" convertsTo "xoắn", "avo" convertsTo "oăm", "hazw" convertsTo "hoẵng")),
+    RuleItem(HelpCategory.Vần56, "Vần OET / OEC / OEN / OEM / OENG / OEO", "ed / es / el / ev / ez / ew" convertsTo "vần oe", listOf("tedj" convertsTo "toét", "xesr" convertsTo "xoẹc", "kelp" convertsTo "khoen", "wevj" convertsTo "ngoém", "nhezp" convertsTo "nhoeng", "wewz" convertsTo "ngoẻo")),
+    RuleItem(HelpCategory.Vần56, "Vần OAT / OAP / OAC / OAN / OAM / OANG / OAO / OAI / OAY", "od / of / os / ol / ov / oz / ow / oj / aj" convertsTo "vần oa", listOf("lodr" convertsTo "loạt", "wofj" convertsTo "ngoáp", "kosj" convertsTo "khoác", "tolj" convertsTo "toán", "wovr" convertsTo "ngoạm", "kozz" convertsTo "khoảng", "wowj" convertsTo "ngoáo", "xojl" convertsTo "xoài", "xajp" convertsTo "xoay")),
+)
 
 @Composable
 @SenPreviewCommon
