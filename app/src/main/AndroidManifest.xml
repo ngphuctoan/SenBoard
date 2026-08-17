@@ -26,7 +26,7 @@
         </activity>
         <!-- Declares the input method service. -->
         <service
-            android:name=".ime.SenImService"
+            android:name=".keyboard.SenImService"
             android:exported="true"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>

@@ -24,18 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
-/* Index tells the settings the current position of the menu in the group,
-and the count indicates the number of menus in the group */
-data class IndexCount(
-    val index: Int,
-    val count: Int,
-)
-
-// I guess a more "written language" way of defining IndexCount :b
-infix fun Int.outOf(count: Int): IndexCount = IndexCount(this, count)
-
-fun IndexCount.isLast(): Boolean = index == count - 1
+import banhmi.senboard.shared.utils.IndexCount
 
 object SenMenuDefaults {
     internal val MinHeight: Dp = 72.dp
@@ -74,8 +63,6 @@ object SenMenuDefaults {
     val ContentPadding: PaddingValues = PaddingValues(16.dp)
 
     val CircleContentPadding: PaddingValues = ContentPadding + PaddingValues(start = 16.dp)
-
-    val SupportingControlsPadding: PaddingValues = PaddingValues(horizontal = 8.dp)
 }
 
 object SenMenuHasActionTrailingContentDefaults {
@@ -89,11 +76,17 @@ object SenMenuHasActionTrailingContentDefaults {
     internal fun dividerColor(): Color = MaterialTheme.colorScheme.outline
 }
 
-val LocalLastMenuPadding: ProvidableCompositionLocal<PaddingValues> =
+val LocalSegmentedPadding: ProvidableCompositionLocal<PaddingValues> =
+    compositionLocalOf { PaddingValues(bottom = ListItemDefaults.SegmentedGap) }
+
+val LocalLastSegmentedPadding: ProvidableCompositionLocal<PaddingValues> =
     compositionLocalOf { PaddingValues(bottom = 16.dp) }
 
 @Composable
-fun Modifier.lastMenuPadding(): Modifier = padding(LocalLastMenuPadding.current)
+fun Modifier.segmentedPadding(): Modifier = padding(LocalSegmentedPadding.current)
+
+@Composable
+fun Modifier.lastSegmentedPadding(): Modifier = padding(LocalLastSegmentedPadding.current)
 
 @Composable
 fun SenMenu(

@@ -36,13 +36,14 @@ import banhmi.senboard.app.ui.SenScaffold
 import banhmi.senboard.app.ui.SenSwitch
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
-import banhmi.senboard.app.ui.isLast
-import banhmi.senboard.app.ui.lastMenuPadding
-import banhmi.senboard.app.ui.outOf
+import banhmi.senboard.app.ui.lastSegmentedPadding
 import banhmi.senboard.app.ui.rememberSenTopBarState
+import banhmi.senboard.app.ui.segmentedPadding
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.ime.engine.VietnameseEngine
+import banhmi.senboard.engine.VietnameseEngineType
+
+import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.SenTheme
 import dagger.Module
 import dagger.Provides
@@ -74,11 +75,11 @@ fun SenInputMethodScreen(
     SenInputMethodContent(
         onNavigate = navigator::goTo,
         onNavigateBack = navigator::goBack,
-        vietnameseEngineDataStoreValue = preferences.vietnameseEngine,
+        vietnameseEngineType = preferences.vietnameseEngineType,
         autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
         spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
         easterEggEnabled = preferences.easterEggEnabled,
-        onVietnameseEngineUpdate = preferencesViewModel::updateVietnameseEngine,
+        onVietnameseEngineTypeUpdate = preferencesViewModel::updateVietnameseEngineType,
         onAutoCapitalizationEnabledUpdate = preferencesViewModel::updateAutoCapitalizationEnabled,
         onSpaceBarShortcutEnabledUpdate = preferencesViewModel::updateSpaceBarShortcutEnabled,
         onEasterEggEnabledUpdate = preferencesViewModel::updateEasterEggEnabled,
@@ -89,11 +90,11 @@ fun SenInputMethodScreen(
 fun SenInputMethodContent(
     onNavigate: (Any) -> Unit = {},
     onNavigateBack: () -> Unit = {},
-    vietnameseEngineDataStoreValue: Int,
+    vietnameseEngineType: VietnameseEngineType,
     autoCapitalizationEnabled: Boolean,
     spaceBarShortcutEnabled: Boolean,
     easterEggEnabled: Boolean,
-    onVietnameseEngineUpdate: (VietnameseEngine) -> Unit,
+    onVietnameseEngineTypeUpdate: (VietnameseEngineType) -> Unit,
     onAutoCapitalizationEnabledUpdate: (Boolean) -> Unit,
     onSpaceBarShortcutEnabledUpdate: (Boolean) -> Unit,
     onEasterEggEnabledUpdate: (Boolean) -> Unit,
@@ -126,29 +127,29 @@ fun SenInputMethodContent(
             item { SenHeader("Phương thức gõ") }
 
             itemsIndexed(
-                items = VietnameseEngine.entries,
-                key = { _, engine -> engine.dataStoreValue },
+                items = VietnameseEngineType.entries,
+                key = { _, engine -> engine.id },
             ) { index, engine ->
-                val indexCount = index outOf VietnameseEngine.entries.size
-                val selected = vietnameseEngineDataStoreValue == engine.dataStoreValue
+                val indexCount = index outOf VietnameseEngineType.entries.size
+                val selected = vietnameseEngineType == engine
 
                 SenMenu(
                     selected = selected,
                     shapes = SenMenuDefaults.segmentedShapes(indexCount),
                     leadingContent = { RadioButton(selected = selected, onClick = null) },
-                    onClick = { onVietnameseEngineUpdate(engine) },
+                    onClick = { onVietnameseEngineTypeUpdate(engine) },
                     modifier = if (indexCount.isLast()) {
-                        Modifier.lastMenuPadding()
+                        Modifier.lastSegmentedPadding()
                     } else {
-                        Modifier
+                        Modifier.segmentedPadding()
                     },
                 ) {
-                    Text(engine.engineName)
+                    Text(engine.description)
                 }
             }
 
             item {
-                SenDescription(modifier = Modifier.lastMenuPadding()) {
+                SenDescription(modifier = Modifier.lastSegmentedPadding()) {
                     Text("Bạn có thể chuyển nhanh phương thức nhập tại thanh công cụ trên bàn phím")
                 }
             }
@@ -162,6 +163,7 @@ fun SenInputMethodContent(
                         SenSwitch(checked = autoCapitalizationEnabled, onCheckedChange = null)
                     },
                     onClick = { onAutoCapitalizationEnabledUpdate(!autoCapitalizationEnabled) },
+                    modifier = Modifier.segmentedPadding(),
                 ) {
                     Text("Tự động viết hoa")
                 }
@@ -175,6 +177,7 @@ fun SenInputMethodContent(
                         SenSwitch(checked = spaceBarShortcutEnabled, onCheckedChange = null)
                     },
                     onClick = { onSpaceBarShortcutEnabledUpdate(!spaceBarShortcutEnabled) },
+                    modifier = Modifier.segmentedPadding(),
                 ) {
                     Text("Phím tắt \".\"")
                 }
@@ -188,7 +191,7 @@ fun SenInputMethodContent(
                     trailingContent = {
                         SenSwitch(enabled = false, checked = false, onCheckedChange = null)
                     },
-                    modifier = Modifier.lastMenuPadding(),
+                    modifier = Modifier.lastSegmentedPadding(),
                 ) {
                     Text("Gợi ý từ kế tiếp")
                 }
@@ -211,7 +214,7 @@ fun SenInputMethodContent(
                         },
                         // TODO: Add F-Droid link for the aaaaa app
                         onClick = {},
-                        modifier = Modifier.lastMenuPadding(),
+                        modifier = Modifier.lastSegmentedPadding(),
                     ) {
                         Text("Chế độ aaaaa")
                     }
@@ -251,13 +254,13 @@ fun SenInputMethodScreenPreview() {
 
     SenTheme {
         SenInputMethodContent(
-            vietnameseEngineDataStoreValue = preferences.vietnameseEngine,
+            vietnameseEngineType = preferences.vietnameseEngineType,
             autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
             spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
             easterEggEnabled = preferences.easterEggEnabled,
-            onVietnameseEngineUpdate = { vietnameseEngine ->
+            onVietnameseEngineTypeUpdate = { vietnameseEngine ->
                 preferences = preferences.copy(
-                    vietnameseEngine = vietnameseEngine.dataStoreValue,
+                    vietnameseEngineType = vietnameseEngine,
                 )
             },
             onAutoCapitalizationEnabledUpdate = { autoCapitalizationEnabled ->

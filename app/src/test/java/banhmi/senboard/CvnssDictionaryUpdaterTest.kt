@@ -1,9 +1,8 @@
 package banhmi.senboard
 
-import banhmi.senboard.ime.engine.CvnssEngine
+import banhmi.senboard.engine.impl.CvnssEngine
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
 import org.junit.jupiter.api.Test
 import java.io.File
 
@@ -32,7 +31,7 @@ class CvnssDictionaryUpdaterTest {
         }
 
         val content = dictFile.readText(Charsets.UTF_8)
-        val json = Json { 
+        val json = Json {
             ignoreUnknownKeys = true
             prettyPrint = true
         }
@@ -45,13 +44,13 @@ class CvnssDictionaryUpdaterTest {
             val officialCode = CvnssEngine.encodeWord(entry.key)
             // Chuẩn hóa từ tiếng Việt gốc sang chính tả mới (ví dụ: qùa -> quà)
             val normalizedCqn = java.text.Normalizer.normalize(
-                CvnssEngine.convertWord(officialCode), 
+                CvnssEngine.convertWord(officialCode),
                 java.text.Normalizer.Form.NFC
             )
-            
+
             // Đưa vào map (nếu trùng từ sau khi chuẩn hóa sẽ tự ghi đè để loại bỏ trùng lặp)
             updatedMap[normalizedCqn] = DictEntry(
-                cvnss = officialCode, 
+                cvnss = officialCode,
                 definition = entry.value.definition
             )
         }

@@ -1,8 +1,8 @@
 package banhmi.senboard
 
-import banhmi.senboard.ime.engine.BigramEntry
-import banhmi.senboard.ime.engine.PredictionEngine
-import banhmi.senboard.ime.engine.UserBigramStore
+import banhmi.senboard.engine.bigram.BigramEngine
+import banhmi.senboard.engine.bigram.BigramEntry
+import banhmi.senboard.engine.bigram.UserBigramStore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +12,7 @@ class UserBigramStoreTest {
 
     @BeforeEach
     fun setUp() {
-        PredictionEngine.clear()
+        BigramEngine.clear()
         UserBigramStore.clear()
 
         val staticData = mapOf(
@@ -22,19 +22,19 @@ class UserBigramStoreTest {
                 BigramEntry("nay", 80)
             )
         )
-        PredictionEngine.loadBigramsFromMap(staticData)
+        BigramEngine.loadBigramsFromMap(staticData)
     }
 
     @AfterEach
     fun tearDown() {
-        PredictionEngine.clear()
+        BigramEngine.clear()
         UserBigramStore.clear()
     }
 
     @Test
     fun testUserBigramRecordingAndPrediction() {
         // Initially static prediction
-        var predictions = PredictionEngine.predict("ngày")
+        var predictions = BigramEngine.predict("ngày")
         assertEquals(listOf("mai", "hôm", "nay"), predictions)
 
         // User types "ngày" -> "gặp" twice
@@ -42,7 +42,7 @@ class UserBigramStoreTest {
         UserBigramStore.recordBigram(null, "ngày", "gặp")
 
         // User prediction "gặp" should be prioritized at top slot
-        predictions = PredictionEngine.predict("ngày")
+        predictions = BigramEngine.predict("ngày")
         assertEquals("gặp", predictions[0])
         assertEquals("mai", predictions[1])
         assertEquals("hôm", predictions[2])
@@ -64,7 +64,7 @@ class UserBigramStoreTest {
         // User records "mai" for "ngày" (which is also in static)
         UserBigramStore.recordBigram(null, "ngày", "mai")
 
-        val predictions = PredictionEngine.predict("ngày")
+        val predictions = BigramEngine.predict("ngày")
         // "mai" should not appear twice in the result
         assertEquals(3, predictions.size)
         assertEquals("mai", predictions[0])

@@ -1,22 +1,41 @@
 package banhmi.senboard.data.preferences
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import banhmi.senboard.ime.engine.VietnameseEngine
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import banhmi.senboard.engine.VietnameseEngineType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SenPreferencesViewModel @Inject constructor(
     private val repository: SenPreferencesRepository,
 ) : ViewModel() {
+    // Manual construction using Factory for classes not supported by Hilt
+    companion object {
+        val REPOSITORY_KEY = CreationExtras.Key<SenPreferencesRepository>()
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                // Repository is required to be passed to the factory
+                val repository = requireNotNull(this[REPOSITORY_KEY])
+                SenPreferencesViewModel(repository)
+            }
+        }
+    }
+
     val preferences: StateFlow<SenPreferences> = repository.preferencesFlow.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(5.seconds),
         initialValue = SenPreferences(),
     )
 
@@ -26,9 +45,10 @@ class SenPreferencesViewModel @Inject constructor(
     }
 
     // No need to worry about direct enum value access!
-    fun updateVietnameseEngine(newVietnameseEngine: VietnameseEngine) = updatePreferences(
-        repository::updateVietnameseEngine, newVietnameseEngine,
-    )
+    fun updateVietnameseEngineType(newVietnameseEngineType: VietnameseEngineType) =
+        updatePreferences(
+            repository::updateVietnameseEngineType, newVietnameseEngineType,
+        )
 
     fun updateAutoCapitalizationEnabled(newAutoCapitalizationEnabled: Boolean) = updatePreferences(
         repository::updateAutoCapitalizationEnabled, newAutoCapitalizationEnabled,

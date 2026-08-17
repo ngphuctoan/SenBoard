@@ -5,33 +5,32 @@ import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import banhmi.senboard.ime.engine.VietnameseEngine
+import banhmi.senboard.engine.VietnameseEngineType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SenPreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
-    val preferencesFlow: Flow<SenPreferences> = dataStore.data
-        .catch { exception ->
-            when (exception) {
-                // Tell the consumer that the settings are empty/default when failed to get the data store
-                is IOException -> emit(emptyPreferences())
-                else -> throw exception
-            }
+    val preferencesFlow: Flow<SenPreferences> = dataStore.data.catch { exception ->
+        when (exception) {
+            // Tell the consumer that the settings are empty/default when failed to get the data store
+            is IOException -> emit(emptyPreferences())
+            else -> throw exception
         }
-        .map { preferences ->
-            SenPreferences(
-                vietnameseEngine = preferences[vietnameseEngine]
-                    ?: VietnameseEngine.Cvss.dataStoreValue,
-                autoCapitalizationEnabled = preferences[autoCapitalizationEnabled] ?: true,
-                spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
-                easterEggEnabled = preferences[easterEggEnabled] ?: false,
-                showKeyBackground = preferences[showKeyBackground] ?: false,
-                hapticsEnabled = preferences[hapticsEnabled] ?: true,
-                hapticsIntensity = preferences[hapticsIntensity] ?: 66,
-            )
-        }
+    }.map { preferences ->
+        SenPreferences(
+            vietnameseEngineType = VietnameseEngineType.entries.firstOrNull { type ->
+                type.id == preferences[vietnameseEngineType]
+            } ?: VietnameseEngineType.Cvss,
+            autoCapitalizationEnabled = preferences[autoCapitalizationEnabled] ?: true,
+            spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
+            easterEggEnabled = preferences[easterEggEnabled] ?: false,
+            showKeyBackground = preferences[showKeyBackground] ?: false,
+            hapticsEnabled = preferences[hapticsEnabled] ?: true,
+            hapticsIntensity = preferences[hapticsIntensity] ?: 66,
+        )
+    }
 
     // Helper function since there are a lot of settings @~@
     private suspend fun <T> updatePreferences(key: Preferences.Key<T>, value: T) {
@@ -39,9 +38,10 @@ class SenPreferencesRepository @Inject constructor(private val dataStore: DataSt
     }
 
     // Pass in the enum instead, inside we do the value access for convenience
-    suspend fun updateVietnameseEngine(newVietnameseEngine: VietnameseEngine) = updatePreferences(
-        vietnameseEngine, newVietnameseEngine.dataStoreValue,
-    )
+    suspend fun updateVietnameseEngineType(newVietnameseEngineType: VietnameseEngineType) =
+        updatePreferences(
+            vietnameseEngineType, newVietnameseEngineType.id,
+        )
 
     suspend fun updateAutoCapitalizationEnabled(newAutoCapitalizationEnabled: Boolean) =
         updatePreferences(

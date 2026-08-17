@@ -1,6 +1,6 @@
 package banhmi.senboard
 
-import banhmi.senboard.ime.engine.VniEngine
+import banhmi.senboard.engine.impl.VniEngine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -14,7 +14,7 @@ class VniEngineTest {
         assertEquals("tiếng", VniEngine.convertWord("tieng61"))
         assertEquals("việt", VniEngine.convertWord("viet65"))
         assertEquals("đông", VniEngine.convertWord("dong96"))
-        
+
         // Capitalization
         assertEquals("Đường", VniEngine.convertWord("Duong972"))
         assertEquals("Đông", VniEngine.convertWord("Dong96"))

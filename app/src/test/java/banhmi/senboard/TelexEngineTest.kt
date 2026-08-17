@@ -1,6 +1,6 @@
 package banhmi.senboard
 
-import banhmi.senboard.ime.engine.TelexEngine
+import banhmi.senboard.engine.impl.TelexEngine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -15,7 +15,7 @@ class TelexEngineTest {
         assertEquals("chuyển", TelexEngine.convertWord("chuyeern"))
         assertEquals("đổi", TelexEngine.convertWord("ddooir"))
         assertEquals("tuyết", TelexEngine.convertWord("tuyeets"))
-        
+
         // Standalone 'w' rules
         assertEquals("hương", TelexEngine.convertWord("huongw"))
         assertEquals("tư", TelexEngine.convertWord("tuw"))
@@ -27,7 +27,7 @@ class TelexEngineTest {
         assertEquals("ữ", TelexEngine.convertWord("wx"))
         assertEquals("ự", TelexEngine.convertWord("wj"))
         assertEquals("Ư", TelexEngine.convertWord("W"))
-        
+
         // Capitalization
         assertEquals("Đường", TelexEngine.convertWord("Dduowngf"))
         assertEquals("Đông", TelexEngine.convertWord("Ddoong"))

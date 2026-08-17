@@ -25,11 +25,11 @@ import banhmi.senboard.app.ui.SenScaffold
 import banhmi.senboard.app.ui.SenSwitch
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
-import banhmi.senboard.app.ui.lastMenuPadding
-import banhmi.senboard.app.ui.outOf
+import banhmi.senboard.app.ui.lastSegmentedPadding
 import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
+import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.SenTheme
 import dagger.Module
 import dagger.Provides
@@ -105,7 +105,7 @@ fun SenHapticsContent(
                     colors = SenMenuDefaults.primaryColors(),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
-                        .lastMenuPadding(),
+                        .lastSegmentedPadding(),
                 ) {
                     Text("Sử dụng haptic")
                 }

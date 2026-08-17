@@ -31,16 +31,17 @@ import banhmi.senboard.BuildConfig
 import banhmi.senboard.app.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
-import banhmi.senboard.app.ui.IndexCount
 import banhmi.senboard.app.ui.SenColumn
 import banhmi.senboard.app.ui.SenIcon
 import banhmi.senboard.app.ui.SenIconDefaults
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
 import banhmi.senboard.app.ui.SenScaffold
-import banhmi.senboard.app.ui.isLast
-import banhmi.senboard.app.ui.lastMenuPadding
-import banhmi.senboard.app.ui.outOf
+import banhmi.senboard.app.ui.lastSegmentedPadding
+import banhmi.senboard.app.ui.segmentedPadding
+import banhmi.senboard.shared.utils.IndexCount
+
+import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteCyan
@@ -193,9 +194,9 @@ fun SenSettingsContent(onNavigate: (Any) -> Unit = {}) {
                     },
                     onClick = { onNavigate(menu.destination) },
                     modifier = if (menu.indexCount.isLast() && index != Menus.lastIndex) {
-                        Modifier.lastMenuPadding()
+                        Modifier.lastSegmentedPadding()
                     } else {
-                        Modifier
+                        Modifier.segmentedPadding()
                     },
                 ) {
                     Text(menu.label)

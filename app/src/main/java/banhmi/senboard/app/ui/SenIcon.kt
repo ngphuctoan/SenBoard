@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.app.icon.senAppIconShape
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteBlue
@@ -41,10 +42,10 @@ data class SenIconColors(
 )
 
 object SenIconDefaults {
-    val Shape = CircleShape
+    val FallbackShape = CircleShape
 
     @Composable
-    fun shape() : Shape = appIconShape()
+    fun appIconShape() : Shape = senAppIconShape(FallbackShape)
 
     val Sizes = SenIconSizes(
         size = 40.dp,
@@ -72,7 +73,7 @@ fun SenIcon(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     description: String? = null,
-    shape: Shape = SenIconDefaults.shape(),
+    shape: Shape = SenIconDefaults.appIconShape(),
     sizes: SenIconSizes = SenIconDefaults.Sizes,
     colors: SenIconColors = SenIconDefaults.colors(),
 ) {
