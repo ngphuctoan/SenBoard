@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 
 object SenScaffoldDefaults {
     @Composable
-    fun containerColor(): Color = MaterialTheme.colorScheme.surfaceContainer
+    fun containerColor() = MaterialTheme.colorScheme.surfaceContainer
 }
 
 @Composable

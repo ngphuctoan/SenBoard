@@ -16,15 +16,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 object SenDescriptionDefaults {
-    val VerticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp)
+    val VerticalArrangement = Arrangement.spacedBy(12.dp)
 
-    val ContentPadding: PaddingValues = PaddingValues(horizontal = 8.dp)
-
-    @Composable
-    fun textStyle(): TextStyle = MaterialTheme.typography.bodyMedium
+    val ContentPadding = PaddingValues(horizontal = 8.dp)
 
     @Composable
-    fun contentColor(): Color = MaterialTheme.colorScheme.onSurfaceVariant
+    fun textStyle() = MaterialTheme.typography.bodyMedium
+
+    @Composable
+    fun contentColor() = MaterialTheme.colorScheme.onSurfaceVariant
 }
 
 @Composable

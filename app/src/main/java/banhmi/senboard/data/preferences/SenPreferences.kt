@@ -1,25 +1,37 @@
 package banhmi.senboard.data.preferences
 
-import banhmi.senboard.ime.engine.VietnameseEngine
+import banhmi.senboard.engine.VietnameseEngineType
 
 data class SenPreferences(
     /*====================
     Input Method
     ====================*/
-    // Can only accept an integer, so access the enum value directly
-    val vietnameseEngine: Int = VietnameseEngine.Cvss.dataStoreValue,
+    // The repository will handle the ID to type conversion
+    val vietnameseEngineType: VietnameseEngineType = VietnameseEngineType.Cvss,
     val autoCapitalizationEnabled: Boolean = true,
     val spaceBarShortcutEnabled: Boolean = true,
-    val easterEggEnabled: Boolean = false,
+    val wordSuggestionsEnabled: Boolean = true,
 
     /*====================
     Appearance
     ====================*/
-    val showKeyBackground: Boolean = false,
+    val keyBackgroundEnabled: Boolean = true,
+    val keyBackgroundShadowEnabled: Boolean = true,
 
     /*====================
     Haptics
     ====================*/
     val hapticsEnabled: Boolean = true,
     val hapticsIntensity: Int = 66,
+
+    /*====================
+    Easter Eggs
+    ====================*/
+    val easterEggsEnabled: Boolean = false,
+    val aaaaaModeEnabled: Boolean = false,
+
+    /*====================
+    Developer Options
+    ====================*/
+    val developerOptionsEnabled: Boolean = false,
 )

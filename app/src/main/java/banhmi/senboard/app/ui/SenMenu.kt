@@ -17,37 +17,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
-/* Index tells the settings the current position of the menu in the group,
-and the count indicates the number of menus in the group */
-data class IndexCount(
-    val index: Int,
-    val count: Int,
-)
-
-// I guess a more "written language" way of defining IndexCount :b
-infix fun Int.outOf(count: Int): IndexCount = IndexCount(this, count)
-
-fun IndexCount.isLast(): Boolean = index == count - 1
+import banhmi.senboard.shared.utils.IndexCount
 
 object SenMenuDefaults {
-    internal val MinHeight: Dp = 72.dp
+    internal val MinHeight = 72.dp
 
     @Composable
-    fun colors(): ListItemColors = ListItemDefaults.colors(
+    fun colors() = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.surfaceBright,
         disabledContainerColor = MaterialTheme.colorScheme.surfaceBright,
     )
 
     @Composable
-    fun primaryColors(): ListItemColors = ListItemDefaults.colors(
+    fun primaryColors() = ListItemDefaults.colors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
         disabledContainerColor = MaterialTheme.colorScheme.surfaceBright,
@@ -58,11 +44,12 @@ object SenMenuDefaults {
     )
 
     @Composable
-    fun segmentedShapes(indexCount: IndexCount): ListItemShapes =
-        ListItemDefaults.segmentedShapes(indexCount.index, indexCount.count)
+    fun segmentedShapes(
+        indexCount: IndexCount,
+    ) = ListItemDefaults.segmentedShapes(indexCount.index, indexCount.count)
 
     @Composable
-    fun circleShapes(): ListItemShapes = ListItemDefaults.shapes(
+    fun circleShapes() = ListItemDefaults.shapes(
         shape = CircleShape,
         selectedShape = CircleShape,
         pressedShape = CircleShape,
@@ -71,29 +58,26 @@ object SenMenuDefaults {
         draggedShape = CircleShape,
     )
 
-    val ContentPadding: PaddingValues = PaddingValues(16.dp)
+    val ContentPadding = PaddingValues(16.dp)
 
-    val CircleContentPadding: PaddingValues = ContentPadding + PaddingValues(start = 16.dp)
+    val CircleContentPadding = ContentPadding + PaddingValues(start = 16.dp)
 
-    val SupportingControlsPadding: PaddingValues = PaddingValues(horizontal = 8.dp)
+    val CirclePadding = PaddingValues(vertical = 8.dp)
 }
 
-object SenMenuHasActionTrailingContentDefaults {
-    internal val VerticalAlignment: Alignment.Vertical = Alignment.CenterVertically
-
-    internal val DividerHeight: Dp = 40.dp
-
-    internal val DividerPadding: PaddingValues = PaddingValues(start = 6.dp, end = 12.dp)
-
-    @Composable
-    internal fun dividerColor(): Color = MaterialTheme.colorScheme.outline
+val LocalSegmentedPadding = compositionLocalOf {
+    PaddingValues(bottom = ListItemDefaults.SegmentedGap)
 }
 
-val LocalLastMenuPadding: ProvidableCompositionLocal<PaddingValues> =
-    compositionLocalOf { PaddingValues(bottom = 16.dp) }
+val LocalLastSegmentedPadding = compositionLocalOf {
+    PaddingValues(bottom = 16.dp)
+}
 
 @Composable
-fun Modifier.lastMenuPadding(): Modifier = padding(LocalLastMenuPadding.current)
+fun Modifier.segmentedPadding(): Modifier = padding(LocalSegmentedPadding.current)
+
+@Composable
+fun Modifier.lastSegmentedPadding(): Modifier = padding(LocalLastSegmentedPadding.current)
 
 @Composable
 fun SenMenu(
@@ -215,6 +199,17 @@ fun SenMenu(
     ) {
         content()
     }
+}
+
+object SenMenuHasActionTrailingContentDefaults {
+    internal val VerticalAlignment = Alignment.CenterVertically
+
+    internal val DividerHeight = 40.dp
+
+    internal val DividerPadding = PaddingValues(start = 6.dp, end = 12.dp)
+
+    @Composable
+    internal fun dividerColor() = MaterialTheme.colorScheme.outline
 }
 
 @Composable

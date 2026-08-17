@@ -26,11 +26,12 @@ private const val SEN_SETTINGS_NAME = "sen_settings"
 object SenPreferencesModule {
     @Provides
     @Singleton
-    fun providesSenPreferencesDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
-            migrations = listOf(SharedPreferencesMigration(context, SEN_SETTINGS_NAME)),
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(SEN_SETTINGS_NAME) },
-        )
+    fun providesSenPreferencesDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> = PreferenceDataStoreFactory.create(
+        corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
+        migrations = listOf(SharedPreferencesMigration(context, SEN_SETTINGS_NAME)),
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+        produceFile = { context.preferencesDataStoreFile(SEN_SETTINGS_NAME) },
+    )
 }

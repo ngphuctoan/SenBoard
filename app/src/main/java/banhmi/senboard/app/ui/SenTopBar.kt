@@ -16,42 +16,40 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.ui.theme.SenTheme
 
 object SenTopBarDefaults {
     @Composable
-    fun colors(): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer
+    fun colors() = TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     )
 
     // Use MIN_VALUE because 0f is hardcoded so that expanded fraction is always 0f
     @JvmStatic
-    val initialStateHeightOffsetLimit: Float = -Float.MIN_VALUE
+    val initialStateHeightOffsetLimit = -Float.MIN_VALUE
 
     // Assuming the distance to scroll is equal to the expanded height
     @Composable
-    fun initialStateHeightOffset(): Float = with(LocalDensity.current) {
+    fun initialStateHeightOffset() = with(LocalDensity.current) {
         initialStateHeightOffsetLimit - TopAppBarDefaults.LargeAppBarExpandedHeight.toPx()
     }
 }
 
 object SenTopBarBackButtonDefaults {
-    internal val Width: Dp = 76.dp
+    internal val Width = 76.dp
 
-    internal val Padding: PaddingValues = PaddingValues(start = 20.dp, end = 16.dp)
+    internal val Padding = PaddingValues(start = 20.dp, end = 16.dp)
 }
 
 // Make height offset a lot higher than its limit so that the top bar is collapsed at the beginning until we scroll back up
 @Composable
-fun rememberSenTopBarState(): TopAppBarState = rememberTopAppBarState(
+fun rememberSenTopBarState() = rememberTopAppBarState(
     initialHeightOffsetLimit = SenTopBarDefaults.initialStateHeightOffsetLimit,
     initialHeightOffset = SenTopBarDefaults.initialStateHeightOffset(),
 )

@@ -1,6 +1,6 @@
 package banhmi.senboard
 
-import banhmi.senboard.ime.engine.CvnssEngine
+import banhmi.senboard.engine.impl.CvnssEngine
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,20 +34,33 @@ class CvnssEngineTest {
             val content = file.readText(Charsets.UTF_8)
             val json = Json { ignoreUnknownKeys = true }
             val root = json.decodeFromString<DictionaryRoot>(content)
-            
-            return root.dictionary.entries.stream().map { entry ->
-                Arguments.of(entry.value.cvnss, entry.key)
-            }
+
+            return root.dictionary.entries
+                .stream()
+                .map { entry ->
+                    Arguments.of(entry.value.cvnss, entry.key)
+                }
         }
     }
 
     @ParameterizedTest(name = "{index} => Chữ Việt Nhanh: {0} -> Quốc Ngữ: {1}")
     @MethodSource("provideDictionaryEntries")
     fun testConversion(cvnssInput: String, expectedCqn: String) {
-        val actual = java.text.Normalizer.normalize(CvnssEngine.convertWord(cvnssInput), java.text.Normalizer.Form.NFC)
+        val actual = java.text.Normalizer.normalize(
+            CvnssEngine.convertWord(cvnssInput),
+            java.text.Normalizer.Form.NFC
+        )
         val expected = java.text.Normalizer.normalize(expectedCqn, java.text.Normalizer.Form.NFC)
         if (actual != expected) {
-            println("MISMATCH: Code: '$cvnssInput' -> Actual: '$actual' (${actual.map { it.code.toString(16) }}), Expected: '$expected' (${expected.map { it.code.toString(16) }})")
+            println(
+                "MISMATCH: Code: '$cvnssInput' -> Actual: '$actual' (${
+                    actual.map {
+                        it.code.toString(
+                            16
+                        )
+                    }
+                }), Expected: '$expected' (${expected.map { it.code.toString(16) }})"
+            )
         }
         assertEquals(expected, actual)
     }

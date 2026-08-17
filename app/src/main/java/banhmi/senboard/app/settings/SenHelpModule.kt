@@ -44,6 +44,7 @@ import banhmi.senboard.app.ui.SenScaffold
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
 import banhmi.senboard.app.ui.rememberSenTopBarState
+import banhmi.senboard.app.ui.segmentedPadding
 import banhmi.senboard.ui.theme.SenTheme
 import dagger.Module
 import dagger.Provides
@@ -105,7 +106,7 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
                             item.rule.cqn.contains(searchQuery, ignoreCase = true) ||
                             item.examples.any { ex ->
                                 ex.cvnss.contains(searchQuery, ignoreCase = true) ||
-                                ex.cqn.contains(searchQuery, ignoreCase = true)
+                                        ex.cqn.contains(searchQuery, ignoreCase = true)
                             })
         }
     }
@@ -178,7 +179,10 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
             ) {
                 itemsIndexed(filteredRules) { index, ruleItem ->
                     SenMenu(
-                        shapes = ListItemDefaults.segmentedShapes(index = index, count = filteredRules.size),
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = index,
+                            count = filteredRules.size
+                        ),
                         supportingContent = {
                             Column(
                                 modifier = Modifier.padding(top = 4.dp),
@@ -256,7 +260,11 @@ fun SenHelpScreen(onNavigateBack: () -> Unit) {
                                 }
                             }
                         },
-                        onClick = {},
+                        modifier = if (index != filteredRules.lastIndex) {
+                            Modifier.segmentedPadding()
+                        } else {
+                            Modifier
+                        }
                     ) {
                         Text(ruleItem.title)
                     }
@@ -286,56 +294,384 @@ private val CvnssHelpRules = listOf(
     ),
 
     // 3. Phụ âm đầu (CVNSS ➔ CQN)
-    RuleItem(HelpCategory.CVN, "Phụ âm F ➔ PH", "f" convertsTo "ph", listOf("fai" convertsTo "phai")),
-    RuleItem(HelpCategory.CVN, "Phụ âm D ➔ Đ", "d" convertsTo "đ", listOf("di" convertsTo "đi", "di dâu dó" convertsTo "đi đâu đó")),
-    RuleItem(HelpCategory.CVN, "Phụ âm Q ➔ QU", "q" convertsTo "qu", listOf("qa" convertsTo "qua", "qi" convertsTo "quy", "qy" convertsTo "quy")),
-    RuleItem(HelpCategory.CVN, "Phụ âm J ➔ GI", "j" convertsTo "gi", listOf("já jì" convertsTo "giá gì", "jữ jìn" convertsTo "giữ gìn")),
-    RuleItem(HelpCategory.CVN, "Phụ âm C ➔ K", "c" convertsTo "k", listOf("cín" convertsTo "kín", "cê" convertsTo "kê", "cẻ" convertsTo "kẻ")),
-    RuleItem(HelpCategory.CVN, "Phụ âm G ➔ GH", "g" convertsTo "gh", listOf("gì" convertsTo "ghì", "gê" convertsTo "ghê", "ge" convertsTo "ghe")),
-    RuleItem(HelpCategory.CVN, "Phụ âm K ➔ KH", "k" convertsTo "kh", listOf("ki kó kăn" convertsTo "khi khó khăn")),
-    RuleItem(HelpCategory.CVN, "Phụ âm Z ➔ D", "z" convertsTo "d", listOf("zì" convertsTo "dì", "zo zự" convertsTo "do dự")),
-    RuleItem(HelpCategory.CVN, "Phụ âm W ➔ NG, NGH", "w" convertsTo "ng/ngh", listOf("wa" convertsTo "nga", "wĩ" convertsTo "nghĩ", "wề" convertsTo "nghề")),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm F ➔ PH",
+        "f" convertsTo "ph",
+        listOf("fai" convertsTo "phai")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm D ➔ Đ",
+        "d" convertsTo "đ",
+        listOf("di" convertsTo "đi", "di dâu dó" convertsTo "đi đâu đó")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm Q ➔ QU",
+        "q" convertsTo "qu",
+        listOf("qa" convertsTo "qua", "qi" convertsTo "quy", "qy" convertsTo "quy")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm J ➔ GI",
+        "j" convertsTo "gi",
+        listOf("já jì" convertsTo "giá gì", "jữ jìn" convertsTo "giữ gìn")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm C ➔ K",
+        "c" convertsTo "k",
+        listOf("cín" convertsTo "kín", "cê" convertsTo "kê", "cẻ" convertsTo "kẻ")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm G ➔ GH",
+        "g" convertsTo "gh",
+        listOf("gì" convertsTo "ghì", "gê" convertsTo "ghê", "ge" convertsTo "ghe")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm K ➔ KH",
+        "k" convertsTo "kh",
+        listOf("ki kó kăn" convertsTo "khi khó khăn")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm Z ➔ D",
+        "z" convertsTo "d",
+        listOf("zì" convertsTo "dì", "zo zự" convertsTo "do dự")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm W ➔ NG, NGH",
+        "w" convertsTo "ng/ngh",
+        listOf("wa" convertsTo "nga", "wĩ" convertsTo "nghĩ", "wề" convertsTo "nghề")
+    ),
 
     // 4. Thay phụ âm cuối
-    RuleItem(HelpCategory.CVN, "Phụ âm cuối G ➔ NG", "g" convertsTo "ng", listOf("mog" convertsTo "mong")),
-    RuleItem(HelpCategory.CVN, "Phụ âm cuối H ➔ NH", "h" convertsTo "nh", listOf("bah" convertsTo "banh", "hoàh" convertsTo "hoành", "huêh" convertsTo "huênh")),
-    RuleItem(HelpCategory.CVN, "Phụ âm cuối K ➔ CH", "k" convertsTo "ch", listOf("sạk" convertsTo "sạch", "hoạk" convertsTo "hoạch", "wuệk" convertsTo "nguệch")),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm cuối G ➔ NG",
+        "g" convertsTo "ng",
+        listOf("mog" convertsTo "mong")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm cuối H ➔ NH",
+        "h" convertsTo "nh",
+        listOf("bah" convertsTo "banh", "hoàh" convertsTo "hoành", "huêh" convertsTo "huênh")
+    ),
+    RuleItem(
+        HelpCategory.CVN,
+        "Phụ âm cuối K ➔ CH",
+        "k" convertsTo "ch",
+        listOf("sạk" convertsTo "sạch", "hoạk" convertsTo "hoạch", "wuệk" convertsTo "nguệch")
+    ),
 
     // B. 18 KÝ HIỆU DẤU THAY DẤU CHO CVNSS
     // 1. Nhóm nón ^ (â, ê, ô)
-    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Â, Ê, Ô)", "b" convertsTo "sắc ^", listOf("anb" convertsTo "ấn", "eb" convertsTo "ế", "ekb" convertsTo "ếch", "bidb" convertsTo "biết", "totb" convertsTo "tốt")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Â, Ê, Ô)", "d" convertsTo "huyền ^", listOf("amd" convertsTo "ầm", "qand" convertsTo "quần", "ved" convertsTo "về", "tild" convertsTo "tiền")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Â, Ê, Ô)", "q" convertsTo "hỏi ^", listOf("anq" convertsTo "ẩn", "deq" convertsTo "để", "divq" convertsTo "điểm", "oq" convertsTo "ổ", "tujq" convertsTo "tuổi")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Â, Ê, Ô)", "g" convertsTo "ngã ^", listOf("vayg" convertsTo "vẫy", "reg" convertsTo "rễ", "wylg" convertsTo "nguyễn", "log" convertsTo "lỗ")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Â, Ê, Ô)", "f" convertsTo "nặng ^", listOf("vayf" convertsTo "vậy", "hiff" convertsTo "hiệp", "lof" convertsTo "lộ", "ruzf" convertsTo "ruộng")),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Sắc (Nhóm Â, Ê, Ô)",
+        "b" convertsTo "sắc ^",
+        listOf(
+            "anb" convertsTo "ấn",
+            "eb" convertsTo "ế",
+            "ekb" convertsTo "ếch",
+            "bidb" convertsTo "biết",
+            "totb" convertsTo "tốt"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Huyền (Nhóm Â, Ê, Ô)",
+        "d" convertsTo "huyền ^",
+        listOf(
+            "amd" convertsTo "ầm",
+            "qand" convertsTo "quần",
+            "ved" convertsTo "về",
+            "tild" convertsTo "tiền"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Hỏi (Nhóm Â, Ê, Ô)",
+        "q" convertsTo "hỏi ^",
+        listOf(
+            "anq" convertsTo "ẩn",
+            "deq" convertsTo "để",
+            "divq" convertsTo "điểm",
+            "oq" convertsTo "ổ",
+            "tujq" convertsTo "tuổi"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Ngã (Nhóm Â, Ê, Ô)",
+        "g" convertsTo "ngã ^",
+        listOf(
+            "vayg" convertsTo "vẫy",
+            "reg" convertsTo "rễ",
+            "wylg" convertsTo "nguyễn",
+            "log" convertsTo "lỗ"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Nặng (Nhóm Â, Ê, Ô)",
+        "f" convertsTo "nặng ^",
+        listOf(
+            "vayf" convertsTo "vậy",
+            "hiff" convertsTo "hiệp",
+            "lof" convertsTo "lộ",
+            "ruzf" convertsTo "ruộng"
+        )
+    ),
 
     // 2. Nhóm trăng ~ (ơ, ư, ă)
-    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Nhóm Ơ, Ư, Ă)", "x" convertsTo "sắc ~", listOf("lamx" convertsTo "lắm", "ox" convertsTo "ớ", "otx" convertsTo "ớt", "ux" convertsTo "ứ", "cujx" convertsTo "cưới")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Nhóm Ơ, Ư, Ă)", "k" convertsTo "huyền ~", listOf("qank" convertsTo "quằn", "cok" convertsTo "cờ", "tuk" convertsTo "từ", "tuzk" convertsTo "tường")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Nhóm Ơ, Ư, Ă)", "v" convertsTo "hỏi ~", listOf("hanv" convertsTo "hẳn", "fov" convertsTo "phở", "xuv" convertsTo "xử", "bujv" convertsTo "bưởi")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Nhóm Ơ, Ư, Ă)", "w" convertsTo "ngã ~", listOf("sanw" convertsTo "sẵn", "jonw" convertsTo "giỡn", "luw" convertsTo "lữ", "lujw" convertsTo "lưỡi")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Nhóm Ơ, Ư, Ă)", "h" convertsTo "nặng ~", listOf("hash" convertsTo "hoặc", "doih" convertsTo "đợi", "tuh" convertsTo "tự", "fuzh" convertsTo "phượng")),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Sắc (Nhóm Ơ, Ư, Ă)",
+        "x" convertsTo "sắc ~",
+        listOf(
+            "lamx" convertsTo "lắm",
+            "ox" convertsTo "ớ",
+            "otx" convertsTo "ớt",
+            "ux" convertsTo "ứ",
+            "cujx" convertsTo "cưới"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Huyền (Nhóm Ơ, Ư, Ă)",
+        "k" convertsTo "huyền ~",
+        listOf(
+            "qank" convertsTo "quằn",
+            "cok" convertsTo "cờ",
+            "tuk" convertsTo "từ",
+            "tuzk" convertsTo "tường"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Hỏi (Nhóm Ơ, Ư, Ă)",
+        "v" convertsTo "hỏi ~",
+        listOf(
+            "hanv" convertsTo "hẳn",
+            "fov" convertsTo "phở",
+            "xuv" convertsTo "xử",
+            "bujv" convertsTo "bưởi"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Ngã (Nhóm Ơ, Ư, Ă)",
+        "w" convertsTo "ngã ~",
+        listOf(
+            "sanw" convertsTo "sẵn",
+            "jonw" convertsTo "giỡn",
+            "luw" convertsTo "lữ",
+            "lujw" convertsTo "lưỡi"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Nặng (Nhóm Ơ, Ư, Ă)",
+        "h" convertsTo "nặng ~",
+        listOf(
+            "hash" convertsTo "hoặc",
+            "doih" convertsTo "đợi",
+            "tuh" convertsTo "tự",
+            "fuzh" convertsTo "phượng"
+        )
+    ),
 
     // 3. Nhóm Không dấu phụ (a, e, i, o, u, y)
-    RuleItem(HelpCategory.ToneMarks, "Dấu Sắc (Không dấu phụ)", "j" convertsTo "sắc", listOf("aj" convertsTo "á", "sakj" convertsTo "sách", "ej" convertsTo "é", "ij" convertsTo "í", "uj" convertsTo "ú", "yj" convertsTo "úy"), "Các chữ có phụ âm cuối C, P, T thì không thêm J (ac ➔ ác, ep ➔ ép, at ➔ át)"),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Huyền (Không dấu phụ)", "l" convertsTo "huyền", listOf("al" convertsTo "à", "hel" convertsTo "hè", "vil" convertsTo "vì", "conl" convertsTo "còn", "ul" convertsTo "ù", "tyl" convertsTo "tùy")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Hỏi (Không dấu phụ)", "z" convertsTo "hỏi", listOf("az" convertsTo "ả", "rez" convertsTo "rẻ", "tiz" convertsTo "tỉ", "coz" convertsTo "cỏ", "uz" convertsTo "ủ", "qyz" convertsTo "quỷ")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Ngã (Không dấu phụ)", "s" convertsTo "ngã", listOf("das" convertsTo "đã", "ves" convertsTo "vẽ", "mis" convertsTo "mỹ", "vos" convertsTo "võ", "cugs" convertsTo "cũng")),
-    RuleItem(HelpCategory.ToneMarks, "Dấu Nặng (Không dấu phụ)", "r" convertsTo "nặng", listOf("ar" convertsTo "ạ", "mer" convertsTo "mẹ", "wir" convertsTo "nghị", "vur" convertsTo "vụ", "tyr" convertsTo "tụy")),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Sắc (Không dấu phụ)",
+        "j" convertsTo "sắc",
+        listOf(
+            "aj" convertsTo "á",
+            "sakj" convertsTo "sách",
+            "ej" convertsTo "é",
+            "ij" convertsTo "í",
+            "uj" convertsTo "ú",
+            "yj" convertsTo "úy"
+        ),
+        "Các chữ có phụ âm cuối C, P, T thì không thêm J (ac ➔ ác, ep ➔ ép, at ➔ át)"
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Huyền (Không dấu phụ)",
+        "l" convertsTo "huyền",
+        listOf(
+            "al" convertsTo "à",
+            "hel" convertsTo "hè",
+            "vil" convertsTo "vì",
+            "conl" convertsTo "còn",
+            "ul" convertsTo "ù",
+            "tyl" convertsTo "tùy"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Hỏi (Không dấu phụ)",
+        "z" convertsTo "hỏi",
+        listOf(
+            "az" convertsTo "ả",
+            "rez" convertsTo "rẻ",
+            "tiz" convertsTo "tỉ",
+            "coz" convertsTo "cỏ",
+            "uz" convertsTo "ủ",
+            "qyz" convertsTo "quỷ"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Ngã (Không dấu phụ)",
+        "s" convertsTo "ngã",
+        listOf(
+            "das" convertsTo "đã",
+            "ves" convertsTo "vẽ",
+            "mis" convertsTo "mỹ",
+            "vos" convertsTo "võ",
+            "cugs" convertsTo "cũng"
+        )
+    ),
+    RuleItem(
+        HelpCategory.ToneMarks,
+        "Dấu Nặng (Không dấu phụ)",
+        "r" convertsTo "nặng",
+        listOf(
+            "ar" convertsTo "ạ",
+            "mer" convertsTo "mẹ",
+            "wir" convertsTo "nghị",
+            "vur" convertsTo "vụ",
+            "tyr" convertsTo "tụy"
+        )
+    ),
 
     // 4. Ký hiệu P (Chữ đệm câm)
-    RuleItem(HelpCategory.PWord, "Chữ đệm câm P", "suffix p" convertsTo "thanh ngang", listOf("logp" convertsTo "long", "xajp" convertsTo "xoay", "regp" convertsTo "reng"), "Đệm P sau vần rút gọn ở thanh ngang không dấu phụ để tránh trùng với lỗ = log, xá = xaj, rễ = reg"),
+    RuleItem(
+        HelpCategory.PWord,
+        "Chữ đệm câm P",
+        "suffix p" convertsTo "thanh ngang",
+        listOf("logp" convertsTo "long", "xajp" convertsTo "xoay", "regp" convertsTo "reng"),
+        "Đệm P sau vần rút gọn ở thanh ngang không dấu phụ để tránh trùng với lỗ = log, xá = xaj, rễ = reg"
+    ),
 
     // 5. 56 Vần dài
-    RuleItem(HelpCategory.Vần56, "Vần UYÊT / UYÊN", "yd / yl" convertsTo "uyêt / uyên", listOf("tydb" convertsTo "tuyết", "wylg" convertsTo "nguyễn")),
-    RuleItem(HelpCategory.Vần56, "Vần IÊT / YÊT / IÊP / IÊC / IÊN / IÊM / IÊNG / IÊU", "id / if / is / il / iv / iz / iw" convertsTo "vần iê/yê", listOf("vidb" convertsTo "viết", "hiff" convertsTo "hiệp", "visf" convertsTo "việc", "tild" convertsTo "tiền", "hivq" convertsTo "hiểm", "wizy" convertsTo "nghiêng", "liwg" convertsTo "liễu", "idb" convertsTo "yết", "ily" convertsTo "yên")),
-    RuleItem(HelpCategory.Vần56, "Vần UÔT / UÔC / UÔN / UÔM / UÔNG / UÔI", "ud / us / ul / uv / uz / uj" convertsTo "vần uô", listOf("nudb" convertsTo "nuốt", "cusf" convertsTo "cuộc", "luly" convertsTo "luôn", "nhuvf" convertsTo "nhuộm", "uzq" convertsTo "uổng", "rujd" convertsTo "ruồi")),
-    RuleItem(HelpCategory.Vần56, "Vần ƯƠT / ƯƠP / ƯƠC / ƯƠN / ƯƠM / ƯƠNG / ƯƠU / ƯƠI", "ưd / ưf / ưs / ưl / ưv / ưz / ưw / ưj" convertsTo "vần ươ", listOf("ludh" convertsTo "lượt", "cufx" convertsTo "cướp", "busx" convertsTo "bước", "mulx" convertsTo "mướn", "cuvk" convertsTo "cườm", "tuzv" convertsTo "tưởng", "ruwh" convertsTo "rượu", "lujw" convertsTo "lưỡi")),
-    RuleItem(HelpCategory.Vần56, "Vần UÂT / UÂN / UÂNG / UÂY", "âd / âl / âz / âj" convertsTo "vần uâ", listOf("ladf" convertsTo "luật", "kalq" convertsTo "khuẩn", "kazy" convertsTo "khuâng", "kajy" convertsTo "khuây")),
-    RuleItem(HelpCategory.Vần56, "Vần UƠT / UƠN / UƠI", "ơd / ơl / ơj" convertsTo "vần uơ", listOf("hodx" convertsTo "huớt", "holw" convertsTo "huỡn", "ojo" convertsTo "uơi")),
-    RuleItem(HelpCategory.Vần56, "Vần OĂT / OĂP / OĂC / OĂN / OĂM / OĂNG", "ăd / ăf / ăs / ăl / ăv / ăz" convertsTo "vần oă", listOf("wadx" convertsTo "ngoắt", "wafh" convertsTo "ngoặp", "hash" convertsTo "hoặc", "xalx" convertsTo "xoắn", "avo" convertsTo "oăm", "hazw" convertsTo "hoẵng")),
-    RuleItem(HelpCategory.Vần56, "Vần OET / OEC / OEN / OEM / OENG / OEO", "ed / es / el / ev / ez / ew" convertsTo "vần oe", listOf("tedj" convertsTo "toét", "xesr" convertsTo "xoẹc", "kelp" convertsTo "khoen", "wevj" convertsTo "ngoém", "nhezp" convertsTo "nhoeng", "wewz" convertsTo "ngoẻo")),
-    RuleItem(HelpCategory.Vần56, "Vần OAT / OAP / OAC / OAN / OAM / OANG / OAO / OAI / OAY", "od / of / os / ol / ov / oz / ow / oj / aj" convertsTo "vần oa", listOf("lodr" convertsTo "loạt", "wofj" convertsTo "ngoáp", "kosj" convertsTo "khoác", "tolj" convertsTo "toán", "wovr" convertsTo "ngoạm", "kozz" convertsTo "khoảng", "wowj" convertsTo "ngoáo", "xojl" convertsTo "xoài", "xajp" convertsTo "xoay")),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần UYÊT / UYÊN",
+        "yd / yl" convertsTo "uyêt / uyên",
+        listOf("tydb" convertsTo "tuyết", "wylg" convertsTo "nguyễn")
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần IÊT / YÊT / IÊP / IÊC / IÊN / IÊM / IÊNG / IÊU",
+        "id / if / is / il / iv / iz / iw" convertsTo "vần iê/yê",
+        listOf(
+            "vidb" convertsTo "viết",
+            "hiff" convertsTo "hiệp",
+            "visf" convertsTo "việc",
+            "tild" convertsTo "tiền",
+            "hivq" convertsTo "hiểm",
+            "wizy" convertsTo "nghiêng",
+            "liwg" convertsTo "liễu",
+            "idb" convertsTo "yết",
+            "ily" convertsTo "yên"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần UÔT / UÔC / UÔN / UÔM / UÔNG / UÔI",
+        "ud / us / ul / uv / uz / uj" convertsTo "vần uô",
+        listOf(
+            "nudb" convertsTo "nuốt",
+            "cusf" convertsTo "cuộc",
+            "luly" convertsTo "luôn",
+            "nhuvf" convertsTo "nhuộm",
+            "uzq" convertsTo "uổng",
+            "rujd" convertsTo "ruồi"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần ƯƠT / ƯƠP / ƯƠC / ƯƠN / ƯƠM / ƯƠNG / ƯƠU / ƯƠI",
+        "ưd / ưf / ưs / ưl / ưv / ưz / ưw / ưj" convertsTo "vần ươ",
+        listOf(
+            "ludh" convertsTo "lượt",
+            "cufx" convertsTo "cướp",
+            "busx" convertsTo "bước",
+            "mulx" convertsTo "mướn",
+            "cuvk" convertsTo "cườm",
+            "tuzv" convertsTo "tưởng",
+            "ruwh" convertsTo "rượu",
+            "lujw" convertsTo "lưỡi"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần UÂT / UÂN / UÂNG / UÂY",
+        "âd / âl / âz / âj" convertsTo "vần uâ",
+        listOf(
+            "ladf" convertsTo "luật",
+            "kalq" convertsTo "khuẩn",
+            "kazy" convertsTo "khuâng",
+            "kajy" convertsTo "khuây"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần UƠT / UƠN / UƠI",
+        "ơd / ơl / ơj" convertsTo "vần uơ",
+        listOf("hodx" convertsTo "huớt", "holw" convertsTo "huỡn", "ojo" convertsTo "uơi")
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần OĂT / OĂP / OĂC / OĂN / OĂM / OĂNG",
+        "ăd / ăf / ăs / ăl / ăv / ăz" convertsTo "vần oă",
+        listOf(
+            "wadx" convertsTo "ngoắt",
+            "wafh" convertsTo "ngoặp",
+            "hash" convertsTo "hoặc",
+            "xalx" convertsTo "xoắn",
+            "avo" convertsTo "oăm",
+            "hazw" convertsTo "hoẵng"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần OET / OEC / OEN / OEM / OENG / OEO",
+        "ed / es / el / ev / ez / ew" convertsTo "vần oe",
+        listOf(
+            "tedj" convertsTo "toét",
+            "xesr" convertsTo "xoẹc",
+            "kelp" convertsTo "khoen",
+            "wevj" convertsTo "ngoém",
+            "nhezp" convertsTo "nhoeng",
+            "wewz" convertsTo "ngoẻo"
+        )
+    ),
+    RuleItem(
+        HelpCategory.Vần56,
+        "Vần OAT / OAP / OAC / OAN / OAM / OANG / OAO / OAI / OAY",
+        "od / of / os / ol / ov / oz / ow / oj / aj" convertsTo "vần oa",
+        listOf(
+            "lodr" convertsTo "loạt",
+            "wofj" convertsTo "ngoáp",
+            "kosj" convertsTo "khoác",
+            "tolj" convertsTo "toán",
+            "wovr" convertsTo "ngoạm",
+            "kozz" convertsTo "khoảng",
+            "wowj" convertsTo "ngoáo",
+            "xojl" convertsTo "xoài",
+            "xajp" convertsTo "xoay"
+        )
+    ),
 )
 
 @Composable

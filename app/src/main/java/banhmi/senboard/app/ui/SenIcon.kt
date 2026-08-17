@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import banhmi.senboard.app.icon.senAppIconShape
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteBlue
@@ -41,10 +42,10 @@ data class SenIconColors(
 )
 
 object SenIconDefaults {
-    val Shape = CircleShape
+    val FallbackShape = CircleShape
 
     @Composable
-    fun shape() : Shape = appIconShape()
+    fun appIconShape() = senAppIconShape(FallbackShape)
 
     val Sizes = SenIconSizes(
         size = 40.dp,
@@ -59,12 +60,13 @@ object SenIconDefaults {
 
     // Vibrant colors based on the Material 3 reference palette and scales from AOSP settings
     @Composable
-    fun vibrantColors(palette: M3RefPalette, darkTheme: Boolean = isSystemInDarkTheme()) =
-        SenIconColors(
-            color = if (darkTheme) palette.color80 else palette.color90,
-            contentColor = palette.color30,
-        )
-
+    fun vibrantColors(
+        palette: M3RefPalette,
+        darkTheme: Boolean = isSystemInDarkTheme(),
+    ) = SenIconColors(
+        color = if (darkTheme) palette.color80 else palette.color90,
+        contentColor = palette.color30,
+    )
 }
 
 @Composable
@@ -72,17 +74,13 @@ fun SenIcon(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     description: String? = null,
-    shape: Shape = SenIconDefaults.shape(),
+    shape: Shape = SenIconDefaults.appIconShape(),
     sizes: SenIconSizes = SenIconDefaults.Sizes,
     colors: SenIconColors = SenIconDefaults.colors(),
 ) {
     val paddingValues = remember(sizes) {
         // Prevents shape size being smaller than icon size
-        PaddingValues(
-            (sizes.size - sizes.contentSize)
-                .div(2)
-                .coerceAtLeast(0.dp)
-        )
+        PaddingValues((sizes.size - sizes.contentSize).div(2).coerceAtLeast(0.dp))
     }
 
     Icon(
@@ -102,7 +100,7 @@ fun SenIcon(
 @Composable
 @PreviewLightDark
 fun SenIconPreview() {
-    val icons: Map<ImageVector, M3RefPalette> = mapOf(
+    val icons = mapOf(
         Icons.Filled.Home to m3RefPaletteBlue,
         Icons.Filled.Explore to m3RefPaletteGreen,
         Icons.Filled.Settings to m3RefPaletteYellow,
@@ -116,7 +114,10 @@ fun SenIconPreview() {
                 .padding(8.dp),
         ) {
             icons.forEach { (icon, palette) ->
-                SenIcon(icon = icon, colors = SenIconDefaults.vibrantColors(palette))
+                SenIcon(
+                    icon = icon,
+                    colors = SenIconDefaults.vibrantColors(palette),
+                )
             }
         }
     }
