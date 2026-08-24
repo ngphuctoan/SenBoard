@@ -8,15 +8,45 @@ object VniEngine : VietnameseEngine {
     override fun convertWord(rawWord: String): String {
         if (rawWord.isEmpty()) return rawWord
 
-        var word = rawWord.lowercase()
-        // If a digit is followed by letters (e.g. a1b, h2o, page1a, mp3player), treat as literal alphanumeric text
-        val lastDigitIndex = word.indexOfLast { it.isDigit() }
-        if (lastDigitIndex != -1 && lastDigitIndex < word.length - 1) {
-            val hasLettersAfterDigit = word
-                .substring(lastDigitIndex + 1)
-                .any { it.isLetter() }
-            if (hasLettersAfterDigit) {
-                return rawWord
+        val normalizedRaw = Normalizer.normalize(rawWord, Normalizer.Form.NFC)
+        var word = normalizedRaw.lowercase()
+
+        // Handle double digit escape (e.g. a11 -> a1, a22 -> a2, a33 -> a3, a66 -> a6, a99 -> d9)
+        val digits = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0')
+        for (digit in digits) {
+            val doubleDigit = "$digit$digit"
+            if (word.endsWith(doubleDigit) && word.length >= 3) {
+                val stem = word.dropLast(2)
+                val cleanStem = convertWord(stem)
+                val (pureStem, _) = stripTone(cleanStem)
+                val unaccentedStem = stripAccents(pureStem)
+                return restoreCapitalization(rawWord, unaccentedStem + digit)
+            }
+        }
+
+        // Handle single digit escape on already accented word (e.g. á1 -> a1, à2 -> a2, â6 -> a6, đ9 -> d9)
+        if (word.length >= 2 && word.last().isDigit()) {
+            val lastDigit = word.last()
+            val stem = word.dropLast(1)
+            val (cleanStem, existingTone) = stripTone(stem)
+            val hasAccents = stem != cleanStem || cleanStem != stripAccents(cleanStem)
+            
+            // Map digits to their corresponding accent/tone
+            val toneForDigit = mapOf(
+                '1' to "sac", '2' to "huyen", '3' to "hoi", '4' to "nga", '5' to "nang"
+            )
+            
+            if (hasAccents) {
+                // If pressing same tone digit again on already accented stem (e.g. á + 1 -> a1, â + 6 -> a6)
+                val isToneDigit = toneForDigit[lastDigit] == existingTone
+                val isModifierDigit = (lastDigit == '6' && stem.containsAny("â", "ê", "ô")) ||
+                                      (lastDigit == '7' && stem.containsAny("ơ", "ư")) ||
+                                      (lastDigit == '8' && stem.containsAny("ă")) ||
+                                      (lastDigit == '9' && stem.contains("đ"))
+                if (isToneDigit || isModifierDigit) {
+                    val unaccentedStem = stripAccents(cleanStem)
+                    return restoreCapitalization(rawWord, unaccentedStem + lastDigit)
+                }
             }
         }
 
@@ -43,7 +73,18 @@ object VniEngine : VietnameseEngine {
                 cleanedWordBuilder.append(c)
             }
         }
-        word = cleanedWordBuilder.toString()
+        val cleanStem = cleanedWordBuilder.toString()
+
+        // If a digit is followed by letters (e.g. d9uong72, mp3player, page1a), check if cleanStem is valid Vietnamese
+        val lastDigitIndex = word.indexOfLast { it.isDigit() }
+        if (lastDigitIndex != -1 && lastDigitIndex < word.length - 1) {
+            val hasLettersAfterDigit = word.substring(lastDigitIndex + 1).any { it.isLetter() }
+            if (hasLettersAfterDigit && !isValidSyllableStem(cleanStem)) {
+                return rawWord
+            }
+        }
+
+        word = cleanStem
 
         // 1. Consonant modifier (9 -> đ)
         if (modifiers.contains('9')) {
@@ -52,10 +93,9 @@ object VniEngine : VietnameseEngine {
 
         // 2. Vowel modifier (6 -> â, ê, ô)
         if (modifiers.contains('6')) {
-            word = word
-                .replace("a", "â")
-                .replace("e", "ê")
-                .replace("o", "ô")
+            word = word.replace("a", "â")
+                       .replace("e", "ê")
+                       .replace("o", "ô")
         }
 
         // 3. Vowel modifier (8 -> ă)
@@ -68,30 +108,92 @@ object VniEngine : VietnameseEngine {
             if (word.contains("u") && word.contains("o")) {
                 word = word.replace("uo", "ươ")
             } else {
-                word = word
-                    .replace("u", "ư")
-                    .replace("o", "ơ")
+                word = word.replace("u", "ư")
+                           .replace("o", "ơ")
             }
         }
 
         // 5. Apply Tone Accent if present
-        val tone = if (newTone.isNotEmpty()) newTone else existingTone
+        var tone = existingTone
+        if (newTone.isNotEmpty()) {
+            if (existingTone.isNotEmpty() && existingTone == newTone && newTone != "none") {
+                // Pressing same digit tone key again cancels tone
+                tone = "none"
+            } else {
+                tone = newTone
+            }
+        }
+
         if (tone.isNotEmpty() && tone != "none") {
             word = applyToneMark(word, tone)
         }
 
-        // Restore capitalization
-        val lettersOnly = rawWord.filter { it.isLetter() }
-        if (lettersOnly.isNotEmpty() && lettersOnly.all { it.isUpperCase() }) {
-            word = word.uppercase()
-        } else if (rawWord
-                .firstOrNull()
-                ?.isUpperCase() == true
-        ) {
-            word = word.capitalizeFirstLetter()
+        return restoreCapitalization(rawWord, word)
+    }
+
+    private fun isValidSyllableStem(stem: String): Boolean {
+        if (stem.isEmpty()) return false
+        val lower = Normalizer.normalize(stem.lowercase(), Normalizer.Form.NFC)
+
+        val validInitialConsonants = listOf(
+            "ngh", "ch", "tr", "nh", "ng", "ph", "th", "kh", "gh", "gi", "qu", "đ",
+            "b", "c", "d", "g", "h", "k", "l", "m", "n", "p", "r", "s", "t", "v", "x"
+        )
+        var initialLen = 0
+        if (!isVowel(lower[0])) {
+            val matchedInitial = validInitialConsonants.firstOrNull { lower.startsWith(it) }
+            if (matchedInitial == null) return false
+            initialLen = matchedInitial.length
         }
 
-        return word
+        val rest = lower.substring(initialLen)
+        if (rest.isEmpty() || !isVowel(rest[0])) return false
+
+        val validFinalConsonants = listOf("ng", "nh", "ch", "c", "m", "n", "p", "t")
+        val validVowelChars = setOf('a', 'e', 'o', 'u', 'i', 'y', 'w', 'â', 'ê', 'ô', 'ă', 'ơ', 'ư')
+
+        var workRest = rest
+        for (fc in validFinalConsonants) {
+            if (workRest.contains(fc)) {
+                workRest = workRest.replaceFirst(fc, "")
+                break
+            }
+        }
+
+        if (workRest.isEmpty()) return false
+        for (c in workRest) {
+            if (!validVowelChars.contains(c)) return false
+        }
+
+        return true
+    }
+
+    private fun stripAccents(str: String): String {
+        return str.replace("â", "a").replace("ă", "a")
+                  .replace("ê", "e")
+                  .replace("ô", "o").replace("ơ", "o")
+                  .replace("ư", "u")
+                  .replace("đ", "d")
+                  .replace("Â", "A").replace("Ă", "A")
+                  .replace("Ê", "E")
+                  .replace("Ô", "O").replace("Ơ", "O")
+                  .replace("Ư", "U")
+                  .replace("Đ", "D")
+    }
+
+    private fun String.containsAny(vararg vowels: String): Boolean {
+        return vowels.any { this.contains(it) }
+    }
+
+    private fun restoreCapitalization(rawWord: String, convertedWord: String): String {
+        val lettersOnly = rawWord.filter { it.isLetter() }
+        return if (lettersOnly.isNotEmpty() && lettersOnly.all { it.isUpperCase() }) {
+            convertedWord.uppercase()
+        } else if (rawWord.firstOrNull()?.isUpperCase() == true) {
+            convertedWord.capitalizeFirstLetter()
+        } else {
+            convertedWord
+        }
     }
 
     private fun isVowel(c: Char) = "aeiouyâêôăơư".contains(c.lowercaseChar())
@@ -120,24 +222,23 @@ object VniEngine : VietnameseEngine {
 
         if (vowelIndices.isEmpty()) return normWord
 
+        val primaryVowelsPriority = listOf('ê', 'ơ', 'ô', 'â', 'ă', 'e', 'ư')
+
         // Special handling for gi + vowel (e.g. giá, giao, gián) -> tone goes to vowel after i
         if (normWord.startsWith("gi") && normWord.length > 2 && isVowel(normWord[2])) {
             val vIndices = vowelIndices.filter { it >= 2 }
             if (vIndices.isNotEmpty()) {
                 var targetIdx = vIndices.first()
-                val primaryVowels = "êơôâăe"
-                for (idx in vIndices) {
-                    if (primaryVowels.contains(normWord[idx])) {
+                for (pChar in primaryVowelsPriority) {
+                    val idx = vIndices.firstOrNull { normWord[it] == pChar }
+                    if (idx != null) {
                         targetIdx = idx
                         break
                     }
                 }
                 val targetChar = normWord[targetIdx]
                 val markedChar = toneMap[targetChar]?.get(tone) ?: targetChar
-                return normWord.substring(
-                    0,
-                    targetIdx
-                ) + markedChar + normWord.substring(targetIdx + 1)
+                return normWord.substring(0, targetIdx) + markedChar + normWord.substring(targetIdx + 1)
             }
         }
 
@@ -146,28 +247,25 @@ object VniEngine : VietnameseEngine {
             val vIndices = vowelIndices.filter { it >= 2 }
             if (vIndices.isNotEmpty()) {
                 var targetIdx = vIndices.first()
-                val primaryVowels = "êơôâăe"
-                for (idx in vIndices) {
-                    if (primaryVowels.contains(normWord[idx])) {
+                for (pChar in primaryVowelsPriority) {
+                    val idx = vIndices.firstOrNull { normWord[it] == pChar }
+                    if (idx != null) {
                         targetIdx = idx
                         break
                     }
                 }
                 val targetChar = normWord[targetIdx]
                 val markedChar = toneMap[targetChar]?.get(tone) ?: targetChar
-                return normWord.substring(
-                    0,
-                    targetIdx
-                ) + markedChar + normWord.substring(targetIdx + 1)
+                return normWord.substring(0, targetIdx) + markedChar + normWord.substring(targetIdx + 1)
             }
         }
 
         var targetIndex = vowelIndices.last()
-        val primaryVowels = "êơôâăe"
         var foundPrimary = false
 
-        for (idx in vowelIndices) {
-            if (primaryVowels.contains(normWord[idx])) {
+        for (pChar in primaryVowelsPriority) {
+            val idx = vowelIndices.firstOrNull { normWord[it] == pChar }
+            if (idx != null) {
                 targetIndex = idx
                 foundPrimary = true
                 break
@@ -175,17 +273,10 @@ object VniEngine : VietnameseEngine {
         }
 
         if (!foundPrimary && vowelIndices.size >= 2) {
-            if (normWord.endsWith("c") || normWord.endsWith("p") || normWord.endsWith("t") || normWord.endsWith(
-                    "n"
-                ) || normWord.endsWith("m") || normWord.endsWith("ng") || normWord.endsWith("nh") || normWord.endsWith(
-                    "ch"
-                )
-            ) {
+            if (normWord.endsWith("c") || normWord.endsWith("p") || normWord.endsWith("t") || normWord.endsWith("n") || normWord.endsWith("m") || normWord.endsWith("ng") || normWord.endsWith("nh") || normWord.endsWith("ch")) {
                 targetIndex = vowelIndices[vowelIndices.size - 1]
             } else {
-                val vowelStr = vowelIndices
-                    .map { normWord[it] }
-                    .joinToString("")
+                val vowelStr = vowelIndices.map { normWord[it] }.joinToString("")
                 if (vowelStr == "oa" || vowelStr == "uy") {
                     targetIndex = vowelIndices[vowelIndices.size - 1]
                 } else {
@@ -202,66 +293,18 @@ object VniEngine : VietnameseEngine {
 
     private fun stripTone(word: String): Pair<String, String> {
         val toneMap = mapOf(
-            'á' to ('a' to "sac"),
-            'à' to ('a' to "huyen"),
-            'ả' to ('a' to "hoi"),
-            'ã' to ('a' to "nga"),
-            'ạ' to ('a' to "nang"),
-            'ấ' to ('â' to "sac"),
-            'ầ' to ('â' to "huyen"),
-            'ẩ' to ('â' to "hoi"),
-            'ẫ' to ('â' to "nga"),
-            'ậ' to ('â' to "nang"),
-            'ắ' to ('ă' to "sac"),
-            'ằ' to ('ă' to "huyen"),
-            'ẳ' to ('ă' to "hoi"),
-            'ẵ' to ('ă' to "nga"),
-            'ặ' to ('ă' to "nang"),
-            'é' to ('e' to "sac"),
-            'è' to ('e' to "huyen"),
-            'ẻ' to ('e' to "hoi"),
-            'ẽ' to ('e' to "nga"),
-            'ẹ' to ('e' to "nang"),
-            'ế' to ('ê' to "sac"),
-            'ề' to ('ê' to "huyen"),
-            'ể' to ('ê' to "hoi"),
-            'ễ' to ('ê' to "nga"),
-            'ệ' to ('ê' to "nang"),
-            'í' to ('i' to "sac"),
-            'ì' to ('i' to "huyen"),
-            'ỉ' to ('i' to "hoi"),
-            'ĩ' to ('i' to "nga"),
-            'ị' to ('i' to "nang"),
-            'ó' to ('o' to "sac"),
-            'ò' to ('o' to "huyen"),
-            'ỏ' to ('o' to "hoi"),
-            'õ' to ('o' to "nga"),
-            'ọ' to ('o' to "nang"),
-            'ố' to ('ô' to "sac"),
-            'ồ' to ('ô' to "huyen"),
-            'ổ' to ('ô' to "hoi"),
-            'ỗ' to ('ô' to "nga"),
-            'ộ' to ('ô' to "nang"),
-            'ớ' to ('ơ' to "sac"),
-            'ờ' to ('ơ' to "huyen"),
-            'ở' to ('ơ' to "hoi"),
-            'ỡ' to ('ơ' to "nga"),
-            'ợ' to ('ơ' to "nang"),
-            'ú' to ('u' to "sac"),
-            'ù' to ('u' to "huyen"),
-            'ủ' to ('u' to "hoi"),
-            'ũ' to ('u' to "nga"),
-            'ụ' to ('u' to "nang"),
-            'ứ' to ('ư' to "sac"),
-            'ừ' to ('ư' to "huyen"),
-            'ử' to ('ư' to "hoi"),
-            'ữ' to ('ư' to "nga"),
-            'ự' to ('ư' to "nang"),
-            'ý' to ('y' to "sac"),
-            'ỳ' to ('y' to "huyen"),
-            'ỷ' to ('y' to "hoi"),
-            'ỹ' to ('y' to "nga"),
-            'ỵ' to ('y' to "nang")
+            'á' to ('a' to "sac"), 'à' to ('a' to "huyen"), 'ả' to ('a' to "hoi"), 'ã' to ('a' to "nga"), 'ạ' to ('a' to "nang"),
+            'ấ' to ('â' to "sac"), 'ầ' to ('â' to "huyen"), 'ẩ' to ('â' to "hoi"), 'ẫ' to ('â' to "nga"), 'ậ' to ('â' to "nang"),
+            'ắ' to ('ă' to "sac"), 'ằ' to ('ă' to "huyen"), 'ẳ' to ('ă' to "hoi"), 'ẵ' to ('ă' to "nga"), 'ặ' to ('ă' to "nang"),
+            'é' to ('e' to "sac"), 'è' to ('e' to "huyen"), 'ẻ' to ('e' to "hoi"), 'ẽ' to ('e' to "nga"), 'ẹ' to ('e' to "nang"),
+            'ế' to ('ê' to "sac"), 'ề' to ('ê' to "huyen"), 'ể' to ('ê' to "hoi"), 'ễ' to ('ê' to "nga"), 'ệ' to ('ê' to "nang"),
+            'í' to ('i' to "sac"), 'ì' to ('i' to "huyen"), 'ỉ' to ('i' to "hoi"), 'ĩ' to ('i' to "nga"), 'ị' to ('i' to "nang"),
+            'ó' to ('o' to "sac"), 'ò' to ('o' to "huyen"), 'ỏ' to ('o' to "hoi"), 'õ' to ('o' to "nga"), 'ọ' to ('o' to "nang"),
+            'ố' to ('ô' to "sac"), 'ồ' to ('ô' to "huyen"), 'ổ' to ('ô' to "hoi"), 'ỗ' to ('ô' to "nga"), 'ộ' to ('ô' to "nang"),
+            'ớ' to ('ơ' to "sac"), 'ờ' to ('ơ' to "huyen"), 'ở' to ('ơ' to "hoi"), 'ỡ' to ('ơ' to "nga"), 'ợ' to ('ơ' to "nang"),
+            'ú' to ('u' to "sac"), 'ù' to ('u' to "huyen"), 'ủ' to ('u' to "hoi"), 'ũ' to ('u' to "nga"), 'ụ' to ('u' to "nang"),
+            'ứ' to ('ư' to "sac"), 'ừ' to ('ư' to "huyen"), 'ử' to ('ư' to "hoi"), 'ữ' to ('ư' to "nga"), 'ự' to ('ư' to "nang"),
+            'ý' to ('y' to "sac"), 'ỳ' to ('y' to "huyen"), 'ỷ' to ('y' to "hoi"), 'ỹ' to ('y' to "nang"), 'ỵ' to ('y' to "nang")
         )
 
         val norm = Normalizer.normalize(word, Normalizer.Form.NFC)

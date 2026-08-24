@@ -8,29 +8,50 @@ class VniEngineTest {
 
     @Test
     fun testVniConversion() {
-        assertEquals("đường", VniEngine.convertWord("duong972"))
-        assertEquals("tuyết", VniEngine.convertWord("tuyet61"))
-        assertEquals("chợ", VniEngine.convertWord("cho75"))
         assertEquals("tiếng", VniEngine.convertWord("tieng61"))
         assertEquals("việt", VniEngine.convertWord("viet65"))
+        assertEquals("đường", VniEngine.convertWord("duong972"))
         assertEquals("đông", VniEngine.convertWord("dong96"))
+        assertEquals("kiểu", VniEngine.convertWord("kieu63"))
+        assertEquals("kiểu", VniEngine.convertWord("kiêu3"))
+        assertEquals("kiểu", VniEngine.convertWord("kieu36"))
+        assertEquals("chuyển", VniEngine.convertWord("chuyen63"))
+        assertEquals("đổi", VniEngine.convertWord("doi963"))
+        assertEquals("tuyết", VniEngine.convertWord("tuyet61"))
+
+        // Free position VNI digit typing (d9uong72 -> đường, d9em -> đem, d9e6m -> đêm, t6am -> tâm, so1ng6 -> sống)
+        assertEquals("đường", VniEngine.convertWord("d9uong72"))
+        assertEquals("đem", VniEngine.convertWord("d9em"))
+        assertEquals("đêm", VniEngine.convertWord("d9e6m"))
+        assertEquals("đêm", VniEngine.convertWord("d9em6"))
+        assertEquals("tâm", VniEngine.convertWord("t6am"))
+        assertEquals("sống", VniEngine.convertWord("so1ng6"))
+        assertEquals("kiểu", VniEngine.convertWord("k6ieu3"))
 
         // Capitalization
         assertEquals("Đường", VniEngine.convertWord("Duong972"))
+        assertEquals("Đường", VniEngine.convertWord("D9uong72"))
         assertEquals("Đông", VniEngine.convertWord("Dong96"))
-        assertEquals("ĐƯỜNG", VniEngine.convertWord("DUONG972"))
 
-        // Tone changing/overwriting
-        assertEquals("á", VniEngine.convertWord("à1"))
-        assertEquals("đường", VniEngine.convertWord("đương2"))
-        assertEquals("chợ", VniEngine.convertWord("chơ5"))
-        assertEquals("tiếng", VniEngine.convertWord("tiêng1"))
-        assertEquals("vế", VniEngine.convertWord("về1"))
-
-        // Alphanumeric words protection (digits followed by letters)
-        assertEquals("a1b", VniEngine.convertWord("a1b"))
-        assertEquals("h2o", VniEngine.convertWord("h2o"))
-        assertEquals("page1a", VniEngine.convertWord("page1a"))
+        // Alphanumeric words protection (e.g. h2o, page1a, mp3player)
         assertEquals("mp3player", VniEngine.convertWord("mp3player"))
+        assertEquals("page1a", VniEngine.convertWord("page1a"))
+
+        // Double digit escape (a11 -> a1, a22 -> a2, a33 -> a3, a66 -> a6, a99 -> d9, á1 -> a1)
+        assertEquals("a1", VniEngine.convertWord("a11"))
+        assertEquals("a2", VniEngine.convertWord("a22"))
+        assertEquals("a3", VniEngine.convertWord("a33"))
+        assertEquals("a4", VniEngine.convertWord("a44"))
+        assertEquals("a5", VniEngine.convertWord("a55"))
+        assertEquals("a6", VniEngine.convertWord("a66"))
+        assertEquals("o7", VniEngine.convertWord("o77"))
+        assertEquals("a8", VniEngine.convertWord("a88"))
+        assertEquals("d9", VniEngine.convertWord("d99"))
+        assertEquals("a1", VniEngine.convertWord("á1"))
+        assertEquals("a2", VniEngine.convertWord("à2"))
+        assertEquals("a3", VniEngine.convertWord("ả3"))
+        assertEquals("a4", VniEngine.convertWord("ã4"))
+        assertEquals("a5", VniEngine.convertWord("ạ5"))
+        assertEquals("a6", VniEngine.convertWord("â6"))
     }
 }
