@@ -63,8 +63,8 @@ import banhmi.senboard.keyboard.ui.SenKeyDefaults
 import banhmi.senboard.keyboard.ui.SenKeyIndication
 import banhmi.senboard.keyboard.ui.SenKeyIndicationDefaults
 import banhmi.senboard.keyboard.ui.SenSuggestions
-import banhmi.senboard.shared.utils.toIntOffset
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.toIntOffset
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -160,7 +160,7 @@ class SenImService : SenLifecycleImService() {
                                         engineType = preferences.vietnameseEngineType,
                                         onEngineSwitch = { engineType ->
                                             preferencesViewModel.updateVietnameseEngineType(
-                                                engineType
+                                                engineType,
                                             )
                                             currentInputConnection.finishComposingText()
                                             stateViewModel.setState(state.copy(composingText = SenBoardStateDefaults.EmptyComposingText))
@@ -204,10 +204,11 @@ class SenImService : SenLifecycleImService() {
                                         onClick = {
                                             startActivity(
                                                 Intent(
-                                                    this@SenImService, SenActivity::class.java
+                                                    this@SenImService, SenActivity::class.java,
                                                 ).apply {
                                                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                })
+                                                },
+                                            )
                                         },
                                     ) {
                                         Icon(

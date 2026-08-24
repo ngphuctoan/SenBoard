@@ -31,8 +31,8 @@ import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.app.ui.segmentedPadding
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.outOf
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

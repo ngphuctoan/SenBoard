@@ -1,6 +1,5 @@
 package banhmi.senboard.app.settings
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,9 +46,9 @@ import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.app.ui.segmentedPadding
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.shared.utils.ToastManager
-import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.outOf
+import banhmi.senboard.utils.rememberToaster
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import dagger.Module
 import dagger.Provides
@@ -73,6 +72,14 @@ object SenAboutModule {
     }
 }
 
+object SenAboutDefaults {
+    @JvmStatic
+    internal val DeveloperOptionsMaxCount = 6
+
+    @JvmStatic
+    internal val DeveloperOptionsRevealCount = 3
+}
+
 @Composable
 fun SenAboutScreen(
     navigator: SenNavigator,
@@ -89,32 +96,55 @@ fun SenAboutScreen(
     )
 }
 
-object SenAboutDefaults {
-    @JvmStatic
-    val DeveloperOptionsMaxTapCount = 6
+object SenAppIconImageDefaults {
+    internal val ImageSize = 72.dp
 
-    // Show the toast after a certain number of clicks
-    @JvmStatic
-    val DeveloperOptionsRevealTapCount = 3
+    // Not sure if this is the correct shadow/elevation
+    @Composable
+    internal fun elevation() = with(LocalDensity.current) { 2.dp.toPx() }
+}
+
+@Composable
+fun SenAppIconImage(modifier: Modifier = Modifier) {
+    when (val appIcon = LocalSenAppIcon.current) {
+        is SenAppIconResult.Success -> {
+            // Can't use @Composable function in graphicsLayer, so define the shape here instead
+            val appIconShape = senAppIconShape()
+            val elevation = SenAppIconImageDefaults.elevation()
+
+            Image(
+                painter = rememberDrawablePainter(appIcon.drawable),
+                contentDescription = "Biểu tượng của ứng dụng",
+                modifier = modifier
+                    .size(SenAppIconImageDefaults.ImageSize)
+                    .graphicsLayer {
+                        shape = appIconShape
+                        clip = true
+                        shadowElevation = elevation
+                    },
+            )
+        }
+
+        SenAppIconResult.Failed, SenAppIconResult.NotLoaded -> {}
+    }
 }
 
 @Composable
 fun SenAboutContent(
     onNavigateBack: () -> Unit = {},
     easterEggsEnabled: Boolean,
-    @Suppress("UNUSED") developerOptionsEnabled: Boolean,
+    developerOptionsEnabled: Boolean,
     onEasterEggsEnabledUpdate: (Boolean) -> Unit,
     onDeveloperOptionsEnabledUpdate: (Boolean) -> Unit,
 ) {
+    val context = LocalContext.current
+
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
 
-    val context = LocalContext.current
-    val appIcon = LocalSenAppIcon.current
+    val toaster = rememberToaster()
 
-    var developerOptionsCounter by remember {
-        mutableIntStateOf(0)
-    }
+    var developerOptionsCounter by remember { mutableIntStateOf(0) }
 
     SenScaffold(
         topBar = {
@@ -139,34 +169,15 @@ fun SenAboutContent(
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
                 ) {
-                    if (appIcon is SenAppIconResult.Success) {
-                        // Can't use @Composable function in graphicsLayer, so define the shape here instead
-                        val appIconShape = senAppIconShape()
-                        // Not sure if this is the correct shadow/elevation
-                        val elevation = with(LocalDensity.current) { 2.dp.toPx() }
-
-                        Image(
-                            painter = rememberDrawablePainter(appIcon.drawable),
-                            contentDescription = "Biểu tượng của ứng dụng",
-                            modifier = Modifier
-                                .size(72.dp)
-                                .graphicsLayer {
-                                    shape = appIconShape
-                                    clip = true
-                                    shadowElevation = elevation
-                                }
-                                .combinedClickable(
-                                    onClick = {},
-                                    onLongClick = {
-                                        onEasterEggsEnabledUpdate(true)
-
-                                        ToastManager.show(context) { context ->
-                                            Toast.makeText(context, "Easter egg đã được bật!", Toast.LENGTH_SHORT)
-                                        }
-                                    },
-                                ),
-                        )
-                    }
+                    SenAppIconImage(
+                        modifier = Modifier.combinedClickable(
+                            onClick = {},
+                            onLongClick = {
+                                if (!easterEggsEnabled) onEasterEggsEnabledUpdate(true)
+                                toaster.bake(context, "Easter egg đã được bật!")
+                            },
+                        ),
+                    )
                     Text(
                         text = "SenBoard",
                         style = MaterialTheme.typography.titleLarge,
@@ -179,39 +190,18 @@ fun SenAboutContent(
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 2),
                     supportingContent = { Text(BuildConfig.VERSION_NAME) },
                     onClick = {
-                        when {
-                            easterEggsEnabled -> {
-                                developerOptionsCounter =
-                                    SenAboutDefaults.DeveloperOptionsMaxTapCount
-                            }
-
-                            developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsMaxTapCount -> {
-                                onDeveloperOptionsEnabledUpdate(true)
-                            }
-
-                            else -> {
-                                developerOptionsCounter++
-                            }
-                        }
-
-                        val message = when {
-                            developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsMaxTapCount -> {
-                                "Chế độ nhà phát triển đã được bật!"
-                            }
-
-                            developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsRevealTapCount -> {
-                                val remainingCounter =
-                                    SenAboutDefaults.DeveloperOptionsMaxTapCount - developerOptionsCounter
-                                "Ấn thêm $remainingCounter lượt để bật chế độ nhà phát triển"
-                            }
-
-                            else -> null
-                        }
-
-                        message?.let { message ->
-                            ToastManager.show(context) { context ->
-                                Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                            }
+                        if (developerOptionsEnabled) {
+                            toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
+                        } else if (developerOptionsCounter == SenAboutDefaults.DeveloperOptionsMaxCount) {
+                            onDeveloperOptionsEnabledUpdate(true)
+                            toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
+                        } else if (developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsRevealCount) {
+                            developerOptionsCounter++
+                            val developerOptionsRemainingCounter =
+                                SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter
+                            toaster.bake(context, "Cần $developerOptionsRemainingCounter lần chạm nữa để chế độ nhà phát triển")
+                        } else {
+                            developerOptionsCounter++
                         }
                     },
                     modifier = Modifier.segmentedPadding(),

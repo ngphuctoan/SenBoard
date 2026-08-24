@@ -63,9 +63,9 @@ import banhmi.senboard.keyboard.impl.mode.SenCharactersMode
 import banhmi.senboard.keyboard.model.SenKeyDisplay
 import banhmi.senboard.keyboard.model.SenLayout
 import banhmi.senboard.keyboard.model.SenLayoutKey
-import banhmi.senboard.shared.utils.IndexCount
-import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.IndexCount
+import banhmi.senboard.utils.outOf
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

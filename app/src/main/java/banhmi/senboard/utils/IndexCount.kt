@@ -1,4 +1,4 @@
-package banhmi.senboard.shared.utils
+package banhmi.senboard.utils
 
 /* This has 2 use cases:
 1. For settings menu - index tells the settings the current position of the menu in the group,
@@ -8,10 +8,12 @@ data class IndexCount(
     val index: Int,
     val count: Int,
 ) {
-    fun isFirst(): Boolean = index == 0
+    fun isFirst() = index == 0
 
-    fun isLast(): Boolean = index == count - 1
+    fun isLast() = index == count - 1
 }
 
 // I guess a more "written language" way of defining IndexCount :b
-infix fun Int.outOf(count: Int): IndexCount = IndexCount(this, count)
+infix fun Int.outOf(
+    count: Int,
+) = IndexCount(this, count)

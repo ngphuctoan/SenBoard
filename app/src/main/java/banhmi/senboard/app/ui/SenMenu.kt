@@ -21,7 +21,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import banhmi.senboard.shared.utils.IndexCount
+import banhmi.senboard.utils.IndexCount
 
 object SenMenuDefaults {
     internal val MinHeight = 72.dp

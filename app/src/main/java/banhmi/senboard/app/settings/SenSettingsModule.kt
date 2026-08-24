@@ -57,14 +57,14 @@ import banhmi.senboard.app.ui.lastSegmentedPadding
 import banhmi.senboard.app.ui.segmentedPadding
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.shared.utils.IndexCount
-import banhmi.senboard.shared.utils.outOf
 import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteCyan
 import banhmi.senboard.ui.theme.m3RefPaletteGreen
 import banhmi.senboard.ui.theme.m3RefPalettePink
 import banhmi.senboard.ui.theme.m3RefPaletteYellow
+import banhmi.senboard.utils.IndexCount
+import banhmi.senboard.utils.outOf
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -93,16 +93,18 @@ data class SenInputTesterColors(
 )
 
 object SenInputTesterDefaults {
-    @JvmStatic
-    internal val PlaceholderText = "Nhấp để gõ thử"
-
     internal val BorderWidth = 1.dp
 
     internal val IndicatorColor = Color.Transparent
 
     val Shape = RoundedCornerShape(72.dp)
 
-    val ContentPadding = PaddingValues(24.dp)
+    val ContentPadding = PaddingValues(
+        top = 24.dp,
+        bottom = 24.dp,
+        start = 20.dp,
+        end = 16.dp,
+    )
 
     @Composable
     fun textStyle() = LocalTextStyle.current.copy(fontSize = 20.sp)
@@ -129,7 +131,7 @@ fun SenInputTester(
         lineLimits = TextFieldLineLimits.SingleLine,
         placeholder = {
             Text(
-                text = SenInputTesterDefaults.PlaceholderText,
+                text = "Nhấp để gõ thử",
                 style = textStyle,
             )
         },
@@ -153,6 +155,26 @@ fun SenInputTester(
             shape = shape,
         ),
     )
+}
+
+object SenKeyboardSwitcherDefaults {
+    internal val Padding = PaddingValues(start = 12.dp)
+}
+
+@Composable
+fun SenKeyboardSwitcher(
+    modifier: Modifier = Modifier,
+    onKeyboardSwitching: () -> Unit,
+) {
+    IconButton(
+        onClick = onKeyboardSwitching,
+        modifier = modifier,
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.MoreVert,
+            contentDescription = "Đổi phương thức nhập",
+        )
+    }
 }
 
 data class SenSettingsMenu(
@@ -235,7 +257,7 @@ object SenSettingsDefaults {
             )
         }
         senSettingsMenu(
-            indexCount = 0 outOf if (developerOptionsEnabled) 4 else 3,
+            indexCount = 0 outOf if (easterEggsEnabled) 4 else 3,
             destination = SenInputMethod,
             label = "Phương thức nhập",
             supportingLabel = "Tự động viết hoa, phím tắt, gợi ý",
@@ -243,7 +265,7 @@ object SenSettingsDefaults {
             iconPalette = m3RefPalettePink,
         )
         senSettingsMenu(
-            indexCount = 1 outOf if (developerOptionsEnabled) 4 else 3,
+            indexCount = 1 outOf if (easterEggsEnabled) 4 else 3,
             destination = SenAppearance,
             label = "Giao diện",
             supportingLabel = "Nền phím, đổ bóng nền",
@@ -251,7 +273,7 @@ object SenSettingsDefaults {
             iconPalette = m3RefPalettePink,
         )
         senSettingsMenu(
-            indexCount = 2 outOf if (developerOptionsEnabled) 4 else 3,
+            indexCount = 2 outOf if (easterEggsEnabled) 4 else 3,
             destination = SenHaptics,
             label = "Haptic",
             supportingLabel = "Độ mạnh của haptic",
@@ -301,12 +323,10 @@ fun SenSettingsContent(
         topBar = {
             SenInputTester(
                 leadingContent = {
-                    IconButton(onClick = { imService?.showInputMethodPicker() }) {
-                        Icon(
-                            imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "Đổi phương thức nhập",
-                        )
-                    }
+                    SenKeyboardSwitcher(
+                        onKeyboardSwitching = { imService?.showInputMethodPicker() },
+                        modifier = Modifier.padding(SenKeyboardSwitcherDefaults.Padding),
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
