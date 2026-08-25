@@ -44,7 +44,6 @@ import banhmi.senboard.SenActivity
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesRepository
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.engine.provideVietnameseEngine
 import banhmi.senboard.keyboard.data.SenBoardState
 import banhmi.senboard.keyboard.data.SenBoardStateDefaults
 import banhmi.senboard.keyboard.data.SenBoardStateViewModel
@@ -109,98 +108,13 @@ class SenImService : SenLifecycleImService() {
         }
     }
 
-    // =========================================================================
-    // FOCUS & BLUR LIFECYCLE MANAGEMENT
-    // =========================================================================
-
-    /**
-     * Case 1: Focus In Event (onStartInput)
-     * Triggered when an input target field receives focus from the OS.
-     */
-    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
-        super.onStartInput(attribute, restarting)
-        handleInputFocusIn(attribute, restarting)
-    }
-
-    /**
-     * Case 2: Input View Active Focus Event (onStartInputView)
-     * Triggered when the keyboard UI is about to be displayed for an active input target.
-     */
     override fun onStartInputView(editorInfo: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(editorInfo, restarting)
-        handleInputViewFocusActive(editorInfo, restarting)
-    }
-
-    /**
-     * Case 3: Input View Blur Event (onFinishInputView)
-     * Triggered when the user hides the keyboard or the keyboard view loses active focus.
-     */
-    override fun onFinishInputView(finishingInput: Boolean) {
-        super.onFinishInputView(finishingInput)
-        handleInputViewBlur(finishingInput)
-    }
-
-    /**
-     * Case 4: Complete Target Unfocus Blur Event (onFinishInput)
-     * Triggered when the input target field completely loses focus.
-     */
-    override fun onFinishInput() {
-        super.onFinishInput()
-        handleInputUnfocusBlur()
-    }
-
-    /**
-     * Case 5: IME Window Hidden Blur Event (onWindowHidden)
-     * Triggered when the IME window is hidden (e.g. app switch, screen lock, dialog open).
-     */
-    override fun onWindowHidden() {
-        super.onWindowHidden()
-        handleWindowHiddenBlur()
-    }
-
-    /**
-     * Case 6: Cursor Touch / Selection Move Blur Event (onUpdateSelection)
-     * Triggered when the user manually taps a new position or highlights text in the target field.
-     */
-    override fun onUpdateSelection(
-        oldSelStart: Int,
-        oldSelEnd: Int,
-        newSelStart: Int,
-        newSelEnd: Int,
-        candidatesStart: Int,
-        candidatesEnd: Int,
-    ) {
-        super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd)
-        handleSelectionChangeBlur(newSelStart, newSelEnd, candidatesStart, candidatesEnd)
-    }
-
-    // -------------------------------------------------------------------------
-    // CLEAN HELPER FUNCTIONS FOR EACH FOCUS / BLUR CASE
-    // -------------------------------------------------------------------------
-
-    private fun commitAndFinishComposingText() {
-        val state = stateViewModel.uiState.value
-        val currentConnection = currentInputConnection
-        if (currentConnection != null && state.composingText.isNotEmpty()) {
-            val preferences = preferencesViewModel.preferences.value
-            val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-            val converted = engine.convertWord(state.composingText)
-            currentConnection.commitText(converted, 1)
-            currentConnection.finishComposingText()
-        } else {
-            currentConnection?.finishComposingText()
-        }
-    }
-
-    private fun handleInputFocusIn(attribute: EditorInfo?, restarting: Boolean) {
-        // Initialize or prepare keyboard state when an input field gains focus
-    }
-
-    private fun handleInputViewFocusActive(editorInfo: EditorInfo?, restarting: Boolean) {
-        commitAndFinishComposingText()
 
         val state = stateViewModel.uiState.value
         val preferences = preferencesViewModel.preferences.value
+
+        currentInputConnection.finishComposingText()
 
         stateViewModel.setState(
             state.copy(
@@ -208,63 +122,6 @@ class SenImService : SenLifecycleImService() {
                 composingText = SenBoardStateDefaults.EmptyComposingText,
             ),
         )
-    }
-
-    private fun handleInputViewBlur(finishingInput: Boolean) {
-        commitAndFinishComposingText()
-
-        val state = stateViewModel.uiState.value
-        stateViewModel.setState(
-            state.copy(
-                composingText = SenBoardStateDefaults.EmptyComposingText,
-            ),
-        )
-    }
-
-    private fun handleInputUnfocusBlur() {
-        commitAndFinishComposingText()
-
-        val state = stateViewModel.uiState.value
-        stateViewModel.setState(
-            state.copy(
-                composingText = SenBoardStateDefaults.EmptyComposingText,
-            ),
-        )
-    }
-
-    private fun handleWindowHiddenBlur() {
-        commitAndFinishComposingText()
-
-        val state = stateViewModel.uiState.value
-        stateViewModel.setState(
-            state.copy(
-                composingText = SenBoardStateDefaults.EmptyComposingText,
-            ),
-        )
-    }
-
-    private fun handleSelectionChangeBlur(
-        newSelStart: Int,
-        newSelEnd: Int,
-        candidatesStart: Int,
-        candidatesEnd: Int,
-    ) {
-        val state = stateViewModel.uiState.value
-        if (state.composingText.isEmpty()) return
-
-        // If selection moved outside candidate composing region, finish composing text and reset buffer
-        val isOutsideCandidates = candidatesStart >= 0 && candidatesEnd >= 0 &&
-            (newSelStart < candidatesStart || newSelEnd > candidatesEnd)
-        val isCursorShifted = newSelStart != newSelEnd
-
-        if (isOutsideCandidates || isCursorShifted) {
-            commitAndFinishComposingText()
-            stateViewModel.setState(
-                state.copy(
-                    composingText = SenBoardStateDefaults.EmptyComposingText,
-                ),
-            )
-        }
     }
 
     override fun onCreateInputView(): View {
@@ -305,7 +162,7 @@ class SenImService : SenLifecycleImService() {
                                             preferencesViewModel.updateVietnameseEngineType(
                                                 engineType,
                                             )
-                                            commitAndFinishComposingText()
+                                            currentInputConnection.finishComposingText()
                                             stateViewModel.setState(state.copy(composingText = SenBoardStateDefaults.EmptyComposingText))
                                         },
                                     ) { engineType ->
@@ -338,15 +195,8 @@ class SenImService : SenLifecycleImService() {
                                         }
                                     }
 
-                                    val suggestions = if (state.composingText.isNotEmpty()) {
-                                        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-                                        listOf(engine.convertWord(state.composingText))
-                                    } else {
-                                        emptyList()
-                                    }
-
                                     SenSuggestions(
-                                        suggestions = suggestions,
+                                        suggestions = listOf(),
                                         modifier = Modifier.weight(1f),
                                     )
 
