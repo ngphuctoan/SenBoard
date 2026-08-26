@@ -20,6 +20,7 @@ data class SenBoardState(
     val mode: SenMode,
     val shiftMode: ShiftMode,
     val composingText: String,
+    val previousWord: String,
 ) {
     val isShifted: Boolean
         get() = shiftMode == ShiftMode.Shifted || shiftMode == ShiftMode.CapsLocked
@@ -36,6 +37,9 @@ object SenBoardStateDefaults {
 
     @JvmStatic
     val EmptyComposingText: String = ""
+
+    @JvmStatic
+    val EmptyPreviousWord: String = ""
 }
 
 class SenBoardStateViewModel(mode: SenMode, shiftMode: ShiftMode) : ViewModel() {
@@ -59,6 +63,7 @@ class SenBoardStateViewModel(mode: SenMode, shiftMode: ShiftMode) : ViewModel() 
             mode = mode,
             shiftMode = shiftMode,
             composingText = SenBoardStateDefaults.EmptyComposingText,
+            previousWord = SenBoardStateDefaults.EmptyPreviousWord,
         ),
     )
 

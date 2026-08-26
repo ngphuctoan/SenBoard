@@ -1,11 +1,9 @@
 package banhmi.senboard.data.preferences
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
@@ -28,8 +26,10 @@ object SenPreferencesModule {
     @Singleton
     fun providesSenPreferencesDataStore(
         @ApplicationContext context: Context,
-    ): DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
+    ) = PreferenceDataStoreFactory.create(
+        corruptionHandler = ReplaceFileCorruptionHandler(
+            produceNewData = { emptyPreferences() },
+        ),
         migrations = listOf(SharedPreferencesMigration(context, SEN_SETTINGS_NAME)),
         scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
         produceFile = { context.preferencesDataStoreFile(SEN_SETTINGS_NAME) },

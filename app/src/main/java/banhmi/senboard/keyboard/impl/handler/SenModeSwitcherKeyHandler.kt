@@ -13,6 +13,7 @@ class SenModeSwitcherKeyHandler(private val modeType: SenModeType) : SenKeyHandl
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
         onSetState(state.copy(mode = provideMode(modeType)))
     }

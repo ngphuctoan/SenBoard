@@ -25,6 +25,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -41,9 +42,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import banhmi.senboard.SenActivity
+import banhmi.senboard.data.bigram.UserBigramRepository
+import banhmi.senboard.data.bigram.UserBigramViewModel
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesRepository
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
+import banhmi.senboard.engine.bigram.BigramEngine
+import banhmi.senboard.engine.provideVietnameseEngine
 import banhmi.senboard.keyboard.data.SenBoardState
 import banhmi.senboard.keyboard.data.SenBoardStateDefaults
 import banhmi.senboard.keyboard.data.SenBoardStateViewModel
@@ -73,6 +78,12 @@ class SenImService : SenLifecycleImService() {
     @Inject
     lateinit var preferencesRepository: SenPreferencesRepository
 
+    @Inject
+    lateinit var bigramEngine: BigramEngine
+
+    @Inject
+    lateinit var userBigramRepository: UserBigramRepository
+
     /* @HiltViewModel only works with Activity class, so we have to construct the view model manually
     using the Factory. Thankfully, we can use the injected repository to set the key value */
     private val preferencesViewModel: SenPreferencesViewModel by lazy {
@@ -92,6 +103,25 @@ class SenImService : SenLifecycleImService() {
             store = this.viewModelStore,
             factory = SenBoardStateViewModel.Factory,
         )[SenBoardStateViewModel::class.java]
+    }
+
+    private val userBigramViewModel: UserBigramViewModel by lazy {
+        val extras = MutableCreationExtras().apply {
+            set(UserBigramViewModel.REPOSITORY_KEY, userBigramRepository)
+        }
+
+        ViewModelProvider(
+            store = this.viewModelStore,
+            factory = UserBigramViewModel.Factory,
+            defaultCreationExtras = extras,
+        )[UserBigramViewModel::class.java]
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        // We load the dataset only when the keyboard is created, and never afterward
+        bigramEngine.clearDataset().loadDataset()
     }
 
     // The keyboard's dimensions for setting touchable region (see onComputeInsets)
@@ -114,12 +144,18 @@ class SenImService : SenLifecycleImService() {
         val state = stateViewModel.uiState.value
         val preferences = preferencesViewModel.preferences.value
 
+        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
+        val composedText = engine.convertWord(state.composingText)
+
         currentInputConnection.finishComposingText()
+
+        if (composedText.isNotBlank() && state.previousWord.isNotBlank()) userBigramViewModel.saveBigram(state.previousWord, composedText)
 
         stateViewModel.setState(
             state.copy(
                 shiftMode = SenBoardStateDefaults.shiftMode(preferences.autoCapitalizationEnabled),
                 composingText = SenBoardStateDefaults.EmptyComposingText,
+                previousWord = composedText,
             ),
         )
     }
@@ -142,11 +178,27 @@ class SenImService : SenLifecycleImService() {
             setContent {
                 val preferences: SenPreferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
                 val state: SenBoardState by stateViewModel.uiState.collectAsStateWithLifecycle()
+                val userBigramDataset by userBigramViewModel.bigramDataset.collectAsStateWithLifecycle()
 
                 val isCapsLocked = state.shiftMode == ShiftMode.CapsLocked
 
                 val mode = state.mode
                 val layout = mode.layout
+
+                val candidates = remember(
+                    bigramEngine,
+                    userBigramDataset,
+                    preferences.vietnameseEngineType,
+                    state.composingText,
+                ) {
+                    val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
+                    val composedText = engine.convertWord(state.composingText)
+
+                    bigramEngine.getBestCandidates(
+                        entryText = composedText.ifBlank { state.previousWord },
+                        userProvidedBigramDataset = userBigramDataset,
+                    )
+                }
 
                 SenTheme {
                     Box(
@@ -196,7 +248,7 @@ class SenImService : SenLifecycleImService() {
                                     }
 
                                     SenSuggestions(
-                                        suggestions = listOf(),
+                                        suggestions = candidates,
                                         modifier = Modifier.weight(1f),
                                     )
 
@@ -246,6 +298,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
+                                        onSaveBigram = userBigramViewModel::saveBigram,
                                     )
                                 },
                                 onKeyDoubleTap = { index ->
@@ -254,6 +307,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
+                                        onSaveBigram = userBigramViewModel::saveBigram,
                                     )
                                 },
                                 onKeyLongTap = { index ->
@@ -262,6 +316,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
+                                        onSaveBigram = userBigramViewModel::saveBigram,
                                     )
                                 },
                                 modifier = Modifier.fillMaxWidth(),

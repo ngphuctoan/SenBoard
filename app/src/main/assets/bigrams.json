@@ -1,2056 +1,2056 @@
 {
   "ngày": [
-    {"word": "mai", "freq": 100},
-    {"word": "hôm", "freq": 85},
-    {"word": "nay", "freq": 80},
-    {"word": "mốt", "freq": 70},
-    {"word": "kia", "freq": 60},
-    {"word": "xưa", "freq": 50},
-    {"word": "tháng", "freq": 45},
-    {"word": "đầu", "freq": 40},
-    {"word": "cuối", "freq": 35},
-    {"word": "sinh", "freq": 30}
+    {"word": "mai", "freq": 1.00},
+    {"word": "hôm", "freq": 0.85},
+    {"word": "nay", "freq": 0.80},
+    {"word": "mốt", "freq": 0.70},
+    {"word": "kia", "freq": 0.60},
+    {"word": "xưa", "freq": 0.50},
+    {"word": "tháng", "freq": 0.45},
+    {"word": "đầu", "freq": 0.40},
+    {"word": "cuối", "freq": 0.35},
+    {"word": "sinh", "freq": 0.30}
   ],
   "hôm": [
-    {"word": "nay", "freq": 100},
-    {"word": "qua", "freq": 90},
-    {"word": "trước", "freq": 70},
-    {"word": "sau", "freq": 50},
-    {"word": "đó", "freq": 40}
+    {"word": "nay", "freq": 1.00},
+    {"word": "qua", "freq": 0.90},
+    {"word": "trước", "freq": 0.70},
+    {"word": "sau", "freq": 0.50},
+    {"word": "đó", "freq": 0.40}
   ],
   "tôi": [
-    {"word": "đã", "freq": 100},
-    {"word": "không", "freq": 95},
-    {"word": "muốn", "freq": 85},
-    {"word": "có", "freq": 80},
-    {"word": "sẽ", "freq": 75},
-    {"word": "đang", "freq": 70},
-    {"word": "cũng", "freq": 65},
-    {"word": "là", "freq": 60},
-    {"word": "biết", "freq": 55},
-    {"word": "nghĩ", "freq": 50},
-    {"word": "thấy", "freq": 45},
-    {"word": "cần", "freq": 40},
-    {"word": "yêu", "freq": 35}
+    {"word": "đã", "freq": 1.00},
+    {"word": "không", "freq": 0.95},
+    {"word": "muốn", "freq": 0.85},
+    {"word": "có", "freq": 0.80},
+    {"word": "sẽ", "freq": 0.75},
+    {"word": "đang", "freq": 0.70},
+    {"word": "cũng", "freq": 0.65},
+    {"word": "là", "freq": 0.60},
+    {"word": "biết", "freq": 0.55},
+    {"word": "nghĩ", "freq": 0.50},
+    {"word": "thấy", "freq": 0.45},
+    {"word": "cần", "freq": 0.40},
+    {"word": "yêu", "freq": 0.35}
   ],
   "bạn": [
-    {"word": "có", "freq": 100},
-    {"word": "ấy", "freq": 85},
-    {"word": "bè", "freq": 80},
-    {"word": "đã", "freq": 70},
-    {"word": "muốn", "freq": 65},
-    {"word": "không", "freq": 60},
-    {"word": "sẽ", "freq": 55},
-    {"word": "đang", "freq": 50},
-    {"word": "thân", "freq": 45},
-    {"word": "gái", "freq": 40},
-    {"word": "trai", "freq": 35}
+    {"word": "có", "freq": 1.00},
+    {"word": "ấy", "freq": 0.85},
+    {"word": "bè", "freq": 0.80},
+    {"word": "đã", "freq": 0.70},
+    {"word": "muốn", "freq": 0.65},
+    {"word": "không", "freq": 0.60},
+    {"word": "sẽ", "freq": 0.55},
+    {"word": "đang", "freq": 0.50},
+    {"word": "thân", "freq": 0.45},
+    {"word": "gái", "freq": 0.40},
+    {"word": "trai", "freq": 0.35}
   ],
   "không": [
-    {"word": "có", "freq": 100},
-    {"word": "biết", "freq": 90},
-    {"word": "được", "freq": 85},
-    {"word": "phải", "freq": 80},
-    {"word": "thể", "freq": 75},
-    {"word": "nên", "freq": 65},
-    {"word": "còn", "freq": 60},
-    {"word": "cần", "freq": 55},
-    {"word": "muốn", "freq": 50},
-    {"word": "khí", "freq": 45},
-    {"word": "gian", "freq": 40},
-    {"word": "sao", "freq": 35},
-    {"word": "bao", "freq": 30}
+    {"word": "có", "freq": 1.00},
+    {"word": "biết", "freq": 0.90},
+    {"word": "được", "freq": 0.85},
+    {"word": "phải", "freq": 0.80},
+    {"word": "thể", "freq": 0.75},
+    {"word": "nên", "freq": 0.65},
+    {"word": "còn", "freq": 0.60},
+    {"word": "cần", "freq": 0.55},
+    {"word": "muốn", "freq": 0.50},
+    {"word": "khí", "freq": 0.45},
+    {"word": "gian", "freq": 0.40},
+    {"word": "sao", "freq": 0.35},
+    {"word": "bao", "freq": 0.30}
   ],
   "có": [
-    {"word": "thể", "freq": 100},
-    {"word": "được", "freq": 85},
-    {"word": "người", "freq": 70},
-    {"word": "nhiều", "freq": 65},
-    {"word": "lẽ", "freq": 60},
-    {"word": "một", "freq": 55},
-    {"word": "ai", "freq": 50},
-    {"word": "gì", "freq": 45},
-    {"word": "phải", "freq": 40}
+    {"word": "thể", "freq": 1.00},
+    {"word": "được", "freq": 0.85},
+    {"word": "người", "freq": 0.70},
+    {"word": "nhiều", "freq": 0.65},
+    {"word": "lẽ", "freq": 0.60},
+    {"word": "một", "freq": 0.55},
+    {"word": "ai", "freq": 0.50},
+    {"word": "gì", "freq": 0.45},
+    {"word": "phải", "freq": 0.40}
   ],
   "và": [
-    {"word": "các", "freq": 80},
-    {"word": "những", "freq": 75},
-    {"word": "cũng", "freq": 65},
-    {"word": "không", "freq": 60},
-    {"word": "có", "freq": 55},
-    {"word": "là", "freq": 50},
-    {"word": "đã", "freq": 45},
-    {"word": "sẽ", "freq": 40}
+    {"word": "các", "freq": 0.80},
+    {"word": "những", "freq": 0.75},
+    {"word": "cũng", "freq": 0.65},
+    {"word": "không", "freq": 0.60},
+    {"word": "có", "freq": 0.55},
+    {"word": "là", "freq": 0.50},
+    {"word": "đã", "freq": 0.45},
+    {"word": "sẽ", "freq": 0.40}
   ],
   "của": [
-    {"word": "tôi", "freq": 100},
-    {"word": "bạn", "freq": 85},
-    {"word": "chúng", "freq": 75},
-    {"word": "mình", "freq": 70},
-    {"word": "anh", "freq": 65},
-    {"word": "em", "freq": 60},
-    {"word": "họ", "freq": 55},
-    {"word": "nó", "freq": 50},
-    {"word": "cô", "freq": 45},
-    {"word": "con", "freq": 40}
+    {"word": "tôi", "freq": 1.00},
+    {"word": "bạn", "freq": 0.85},
+    {"word": "chúng", "freq": 0.75},
+    {"word": "mình", "freq": 0.70},
+    {"word": "anh", "freq": 0.65},
+    {"word": "em", "freq": 0.60},
+    {"word": "họ", "freq": 0.55},
+    {"word": "nó", "freq": 0.50},
+    {"word": "cô", "freq": 0.45},
+    {"word": "con", "freq": 0.40}
   ],
   "là": [
-    {"word": "một", "freq": 100},
-    {"word": "người", "freq": 85},
-    {"word": "do", "freq": 70},
-    {"word": "vì", "freq": 65},
-    {"word": "điều", "freq": 60},
-    {"word": "gì", "freq": 55},
-    {"word": "nơi", "freq": 50},
-    {"word": "ai", "freq": 45},
-    {"word": "cái", "freq": 40}
+    {"word": "một", "freq": 1.00},
+    {"word": "người", "freq": 0.85},
+    {"word": "do", "freq": 0.70},
+    {"word": "vì", "freq": 0.65},
+    {"word": "điều", "freq": 0.60},
+    {"word": "gì", "freq": 0.55},
+    {"word": "nơi", "freq": 0.50},
+    {"word": "ai", "freq": 0.45},
+    {"word": "cái", "freq": 0.40}
   ],
   "được": [
-    {"word": "không", "freq": 100},
-    {"word": "nhiều", "freq": 80},
-    {"word": "biết", "freq": 70},
-    {"word": "rồi", "freq": 60},
-    {"word": "cho", "freq": 55},
-    {"word": "làm", "freq": 50},
-    {"word": "mời", "freq": 45}
+    {"word": "không", "freq": 1.00},
+    {"word": "nhiều", "freq": 0.80},
+    {"word": "biết", "freq": 0.70},
+    {"word": "rồi", "freq": 0.60},
+    {"word": "cho", "freq": 0.55},
+    {"word": "làm", "freq": 0.50},
+    {"word": "mời", "freq": 0.45}
   ],
   "cho": [
-    {"word": "tôi", "freq": 100},
-    {"word": "nên", "freq": 80},
-    {"word": "đến", "freq": 70},
-    {"word": "bạn", "freq": 65},
-    {"word": "rằng", "freq": 55},
-    {"word": "biết", "freq": 50},
-    {"word": "em", "freq": 45},
-    {"word": "anh", "freq": 40},
-    {"word": "mình", "freq": 35}
+    {"word": "tôi", "freq": 1.00},
+    {"word": "nên", "freq": 0.80},
+    {"word": "đến", "freq": 0.70},
+    {"word": "bạn", "freq": 0.65},
+    {"word": "rằng", "freq": 0.55},
+    {"word": "biết", "freq": 0.50},
+    {"word": "em", "freq": 0.45},
+    {"word": "anh", "freq": 0.40},
+    {"word": "mình", "freq": 0.35}
   ],
   "đã": [
-    {"word": "có", "freq": 90},
-    {"word": "được", "freq": 85},
-    {"word": "làm", "freq": 75},
-    {"word": "đến", "freq": 65},
-    {"word": "từng", "freq": 55},
-    {"word": "biết", "freq": 50},
-    {"word": "nói", "freq": 45},
-    {"word": "xong", "freq": 40}
+    {"word": "có", "freq": 0.90},
+    {"word": "được", "freq": 0.85},
+    {"word": "làm", "freq": 0.75},
+    {"word": "đến", "freq": 0.65},
+    {"word": "từng", "freq": 0.55},
+    {"word": "biết", "freq": 0.50},
+    {"word": "nói", "freq": 0.45},
+    {"word": "xong", "freq": 0.40}
   ],
   "sẽ": [
-    {"word": "có", "freq": 90},
-    {"word": "được", "freq": 85},
-    {"word": "là", "freq": 75},
-    {"word": "không", "freq": 70},
-    {"word": "làm", "freq": 60},
-    {"word": "đến", "freq": 50},
-    {"word": "đi", "freq": 45},
-    {"word": "về", "freq": 40}
+    {"word": "có", "freq": 0.90},
+    {"word": "được", "freq": 0.85},
+    {"word": "là", "freq": 0.75},
+    {"word": "không", "freq": 0.70},
+    {"word": "làm", "freq": 0.60},
+    {"word": "đến", "freq": 0.50},
+    {"word": "đi", "freq": 0.45},
+    {"word": "về", "freq": 0.40}
   ],
   "đang": [
-    {"word": "làm", "freq": 100},
-    {"word": "có", "freq": 75},
-    {"word": "ở", "freq": 70},
-    {"word": "được", "freq": 60},
-    {"word": "đi", "freq": 55},
-    {"word": "chờ", "freq": 50},
-    {"word": "học", "freq": 45},
-    {"word": "nghe", "freq": 40}
+    {"word": "làm", "freq": 1.00},
+    {"word": "có", "freq": 0.75},
+    {"word": "ở", "freq": 0.70},
+    {"word": "được", "freq": 0.60},
+    {"word": "đi", "freq": 0.55},
+    {"word": "chờ", "freq": 0.50},
+    {"word": "học", "freq": 0.45},
+    {"word": "nghe", "freq": 0.40}
   ],
   "trong": [
-    {"word": "đó", "freq": 100},
-    {"word": "khi", "freq": 90},
-    {"word": "này", "freq": 75},
-    {"word": "một", "freq": 60},
-    {"word": "những", "freq": 55},
-    {"word": "ngày", "freq": 50},
-    {"word": "lúc", "freq": 45},
-    {"word": "nước", "freq": 40},
-    {"word": "nhà", "freq": 35},
-    {"word": "tuần", "freq": 30}
+    {"word": "đó", "freq": 1.00},
+    {"word": "khi", "freq": 0.90},
+    {"word": "này", "freq": 0.75},
+    {"word": "một", "freq": 0.60},
+    {"word": "những", "freq": 0.55},
+    {"word": "ngày", "freq": 0.50},
+    {"word": "lúc", "freq": 0.45},
+    {"word": "nước", "freq": 0.40},
+    {"word": "nhà", "freq": 0.35},
+    {"word": "tuần", "freq": 0.30}
   ],
   "với": [
-    {"word": "nhau", "freq": 100},
-    {"word": "các", "freq": 75},
-    {"word": "những", "freq": 70},
-    {"word": "người", "freq": 60},
-    {"word": "tôi", "freq": 55},
-    {"word": "bạn", "freq": 50},
-    {"word": "anh", "freq": 45},
-    {"word": "em", "freq": 40}
+    {"word": "nhau", "freq": 1.00},
+    {"word": "các", "freq": 0.75},
+    {"word": "những", "freq": 0.70},
+    {"word": "người", "freq": 0.60},
+    {"word": "tôi", "freq": 0.55},
+    {"word": "bạn", "freq": 0.50},
+    {"word": "anh", "freq": 0.45},
+    {"word": "em", "freq": 0.40}
   ],
   "này": [
-    {"word": "là", "freq": 90},
-    {"word": "có", "freq": 75},
-    {"word": "không", "freq": 65},
-    {"word": "đã", "freq": 55},
-    {"word": "sẽ", "freq": 50},
-    {"word": "rất", "freq": 45},
-    {"word": "thì", "freq": 40}
+    {"word": "là", "freq": 0.90},
+    {"word": "có", "freq": 0.75},
+    {"word": "không", "freq": 0.65},
+    {"word": "đã", "freq": 0.55},
+    {"word": "sẽ", "freq": 0.50},
+    {"word": "rất", "freq": 0.45},
+    {"word": "thì", "freq": 0.40}
   ],
   "để": [
-    {"word": "làm", "freq": 100},
-    {"word": "cho", "freq": 85},
-    {"word": "có", "freq": 70},
-    {"word": "được", "freq": 65},
-    {"word": "tôi", "freq": 55},
-    {"word": "lại", "freq": 50},
-    {"word": "mua", "freq": 45},
-    {"word": "xem", "freq": 40}
+    {"word": "làm", "freq": 1.00},
+    {"word": "cho", "freq": 0.85},
+    {"word": "có", "freq": 0.70},
+    {"word": "được", "freq": 0.65},
+    {"word": "tôi", "freq": 0.55},
+    {"word": "lại", "freq": 0.50},
+    {"word": "mua", "freq": 0.45},
+    {"word": "xem", "freq": 0.40}
   ],
   "một": [
-    {"word": "số", "freq": 100},
-    {"word": "cách", "freq": 85},
-    {"word": "người", "freq": 80},
-    {"word": "ngày", "freq": 70},
-    {"word": "lần", "freq": 65},
-    {"word": "chút", "freq": 55},
-    {"word": "mình", "freq": 50},
-    {"word": "ít", "freq": 45},
-    {"word": "vài", "freq": 40}
+    {"word": "số", "freq": 1.00},
+    {"word": "cách", "freq": 0.85},
+    {"word": "người", "freq": 0.80},
+    {"word": "ngày", "freq": 0.70},
+    {"word": "lần", "freq": 0.65},
+    {"word": "chút", "freq": 0.55},
+    {"word": "mình", "freq": 0.50},
+    {"word": "ít", "freq": 0.45},
+    {"word": "vài", "freq": 0.40}
   ],
   "những": [
-    {"word": "người", "freq": 100},
-    {"word": "gì", "freq": 80},
-    {"word": "điều", "freq": 75},
-    {"word": "ngày", "freq": 65},
-    {"word": "lúc", "freq": 55},
-    {"word": "nơi", "freq": 50},
-    {"word": "thứ", "freq": 45},
-    {"word": "việc", "freq": 40}
+    {"word": "người", "freq": 1.00},
+    {"word": "gì", "freq": 0.80},
+    {"word": "điều", "freq": 0.75},
+    {"word": "ngày", "freq": 0.65},
+    {"word": "lúc", "freq": 0.55},
+    {"word": "nơi", "freq": 0.50},
+    {"word": "thứ", "freq": 0.45},
+    {"word": "việc", "freq": 0.40}
   ],
   "cũng": [
-    {"word": "không", "freq": 100},
-    {"word": "có", "freq": 85},
-    {"word": "là", "freq": 70},
-    {"word": "được", "freq": 65},
-    {"word": "như", "freq": 55},
-    {"word": "vậy", "freq": 50},
-    {"word": "đã", "freq": 45},
-    {"word": "rất", "freq": 40}
+    {"word": "không", "freq": 1.00},
+    {"word": "có", "freq": 0.85},
+    {"word": "là", "freq": 0.70},
+    {"word": "được", "freq": 0.65},
+    {"word": "như", "freq": 0.55},
+    {"word": "vậy", "freq": 0.50},
+    {"word": "đã", "freq": 0.45},
+    {"word": "rất", "freq": 0.40}
   ],
   "anh": [
-    {"word": "ấy", "freq": 100},
-    {"word": "em", "freq": 90},
-    {"word": "ta", "freq": 70},
-    {"word": "có", "freq": 60},
-    {"word": "đã", "freq": 55},
-    {"word": "không", "freq": 50},
-    {"word": "chị", "freq": 45},
-    {"word": "yêu", "freq": 40},
-    {"word": "muốn", "freq": 35}
+    {"word": "ấy", "freq": 1.00},
+    {"word": "em", "freq": 0.90},
+    {"word": "ta", "freq": 0.70},
+    {"word": "có", "freq": 0.60},
+    {"word": "đã", "freq": 0.55},
+    {"word": "không", "freq": 0.50},
+    {"word": "chị", "freq": 0.45},
+    {"word": "yêu", "freq": 0.40},
+    {"word": "muốn", "freq": 0.35}
   ],
   "em": [
-    {"word": "ấy", "freq": 90},
-    {"word": "có", "freq": 75},
-    {"word": "không", "freq": 70},
-    {"word": "đã", "freq": 60},
-    {"word": "muốn", "freq": 55},
-    {"word": "yêu", "freq": 50},
-    {"word": "đang", "freq": 45},
-    {"word": "bé", "freq": 40},
-    {"word": "nhớ", "freq": 35},
-    {"word": "biết", "freq": 30}
+    {"word": "ấy", "freq": 0.90},
+    {"word": "có", "freq": 0.75},
+    {"word": "không", "freq": 0.70},
+    {"word": "đã", "freq": 0.60},
+    {"word": "muốn", "freq": 0.55},
+    {"word": "yêu", "freq": 0.50},
+    {"word": "đang", "freq": 0.45},
+    {"word": "bé", "freq": 0.40},
+    {"word": "nhớ", "freq": 0.35},
+    {"word": "biết", "freq": 0.30}
   ],
   "thì": [
-    {"word": "tôi", "freq": 85},
-    {"word": "không", "freq": 80},
-    {"word": "phải", "freq": 75},
-    {"word": "sẽ", "freq": 65},
-    {"word": "cũng", "freq": 60},
-    {"word": "mình", "freq": 50},
-    {"word": "nên", "freq": 45},
-    {"word": "bạn", "freq": 40}
+    {"word": "tôi", "freq": 0.85},
+    {"word": "không", "freq": 0.80},
+    {"word": "phải", "freq": 0.75},
+    {"word": "sẽ", "freq": 0.65},
+    {"word": "cũng", "freq": 0.60},
+    {"word": "mình", "freq": 0.50},
+    {"word": "nên", "freq": 0.45},
+    {"word": "bạn", "freq": 0.40}
   ],
   "nên": [
-    {"word": "làm", "freq": 100},
-    {"word": "mua", "freq": 70},
-    {"word": "đi", "freq": 65},
-    {"word": "ăn", "freq": 55},
-    {"word": "dùng", "freq": 50},
-    {"word": "chọn", "freq": 45},
-    {"word": "xem", "freq": 40}
+    {"word": "làm", "freq": 1.00},
+    {"word": "mua", "freq": 0.70},
+    {"word": "đi", "freq": 0.65},
+    {"word": "ăn", "freq": 0.55},
+    {"word": "dùng", "freq": 0.50},
+    {"word": "chọn", "freq": 0.45},
+    {"word": "xem", "freq": 0.40}
   ],
   "đến": [
-    {"word": "nay", "freq": 85},
-    {"word": "khi", "freq": 80},
-    {"word": "đây", "freq": 70},
-    {"word": "từ", "freq": 60},
-    {"word": "nơi", "freq": 50},
-    {"word": "nhà", "freq": 45},
-    {"word": "trường", "freq": 40}
+    {"word": "nay", "freq": 0.85},
+    {"word": "khi", "freq": 0.80},
+    {"word": "đây", "freq": 0.70},
+    {"word": "từ", "freq": 0.60},
+    {"word": "nơi", "freq": 0.50},
+    {"word": "nhà", "freq": 0.45},
+    {"word": "trường", "freq": 0.40}
   ],
   "đi": [
-    {"word": "đến", "freq": 85},
-    {"word": "làm", "freq": 80},
-    {"word": "chơi", "freq": 75},
-    {"word": "ăn", "freq": 70},
-    {"word": "học", "freq": 65},
-    {"word": "về", "freq": 60},
-    {"word": "ra", "freq": 55},
-    {"word": "ngủ", "freq": 50},
-    {"word": "uống", "freq": 45},
-    {"word": "mua", "freq": 40},
-    {"word": "xem", "freq": 35},
-    {"word": "du", "freq": 30}
+    {"word": "đến", "freq": 0.85},
+    {"word": "làm", "freq": 0.80},
+    {"word": "chơi", "freq": 0.75},
+    {"word": "ăn", "freq": 0.70},
+    {"word": "học", "freq": 0.65},
+    {"word": "về", "freq": 0.60},
+    {"word": "ra", "freq": 0.55},
+    {"word": "ngủ", "freq": 0.50},
+    {"word": "uống", "freq": 0.45},
+    {"word": "mua", "freq": 0.40},
+    {"word": "xem", "freq": 0.35},
+    {"word": "du", "freq": 0.30}
   ],
   "làm": [
-    {"word": "gì", "freq": 100},
-    {"word": "việc", "freq": 90},
-    {"word": "sao", "freq": 80},
-    {"word": "thế", "freq": 65},
-    {"word": "cho", "freq": 55},
-    {"word": "được", "freq": 50},
-    {"word": "ơn", "freq": 45},
-    {"word": "bài", "freq": 40},
-    {"word": "quen", "freq": 35}
+    {"word": "gì", "freq": 1.00},
+    {"word": "việc", "freq": 0.90},
+    {"word": "sao", "freq": 0.80},
+    {"word": "thế", "freq": 0.65},
+    {"word": "cho", "freq": 0.55},
+    {"word": "được", "freq": 0.50},
+    {"word": "ơn", "freq": 0.45},
+    {"word": "bài", "freq": 0.40},
+    {"word": "quen", "freq": 0.35}
   ],
   "người": [
-    {"word": "ta", "freq": 100},
-    {"word": "đó", "freq": 80},
-    {"word": "yêu", "freq": 65},
-    {"word": "ấy", "freq": 60},
-    {"word": "dùng", "freq": 50},
-    {"word": "Việt", "freq": 45},
-    {"word": "lớn", "freq": 40},
-    {"word": "mới", "freq": 35},
-    {"word": "già", "freq": 30}
+    {"word": "ta", "freq": 1.00},
+    {"word": "đó", "freq": 0.80},
+    {"word": "yêu", "freq": 0.65},
+    {"word": "ấy", "freq": 0.60},
+    {"word": "dùng", "freq": 0.50},
+    {"word": "Việt", "freq": 0.45},
+    {"word": "lớn", "freq": 0.40},
+    {"word": "mới", "freq": 0.35},
+    {"word": "già", "freq": 0.30}
   ],
   "như": [
-    {"word": "vậy", "freq": 100},
-    {"word": "thế", "freq": 85},
-    {"word": "là", "freq": 70},
-    {"word": "một", "freq": 60},
-    {"word": "sau", "freq": 50},
-    {"word": "thường", "freq": 45},
-    {"word": "nhau", "freq": 40}
+    {"word": "vậy", "freq": 1.00},
+    {"word": "thế", "freq": 0.85},
+    {"word": "là", "freq": 0.70},
+    {"word": "một", "freq": 0.60},
+    {"word": "sau", "freq": 0.50},
+    {"word": "thường", "freq": 0.45},
+    {"word": "nhau", "freq": 0.40}
   ],
   "nếu": [
-    {"word": "bạn", "freq": 100},
-    {"word": "không", "freq": 90},
-    {"word": "có", "freq": 75},
-    {"word": "muốn", "freq": 65},
-    {"word": "như", "freq": 55},
-    {"word": "tôi", "freq": 50},
-    {"word": "mà", "freq": 45},
-    {"word": "được", "freq": 40}
+    {"word": "bạn", "freq": 1.00},
+    {"word": "không", "freq": 0.90},
+    {"word": "có", "freq": 0.75},
+    {"word": "muốn", "freq": 0.65},
+    {"word": "như", "freq": 0.55},
+    {"word": "tôi", "freq": 0.50},
+    {"word": "mà", "freq": 0.45},
+    {"word": "được", "freq": 0.40}
   ],
   "nhưng": [
-    {"word": "mà", "freq": 100},
-    {"word": "tôi", "freq": 80},
-    {"word": "không", "freq": 75},
-    {"word": "vẫn", "freq": 65},
-    {"word": "cũng", "freq": 55},
-    {"word": "lại", "freq": 50}
+    {"word": "mà", "freq": 1.00},
+    {"word": "tôi", "freq": 0.80},
+    {"word": "không", "freq": 0.75},
+    {"word": "vẫn", "freq": 0.65},
+    {"word": "cũng", "freq": 0.55},
+    {"word": "lại", "freq": 0.50}
   ],
   "mình": [
-    {"word": "có", "freq": 85},
-    {"word": "không", "freq": 80},
-    {"word": "đã", "freq": 70},
-    {"word": "muốn", "freq": 60},
-    {"word": "sẽ", "freq": 55},
-    {"word": "đi", "freq": 50},
-    {"word": "làm", "freq": 45},
-    {"word": "ơi", "freq": 40}
+    {"word": "có", "freq": 0.85},
+    {"word": "không", "freq": 0.80},
+    {"word": "đã", "freq": 0.70},
+    {"word": "muốn", "freq": 0.60},
+    {"word": "sẽ", "freq": 0.55},
+    {"word": "đi", "freq": 0.50},
+    {"word": "làm", "freq": 0.45},
+    {"word": "ơi", "freq": 0.40}
   ],
   "phải": [
-    {"word": "không", "freq": 100},
-    {"word": "làm", "freq": 80},
-    {"word": "là", "freq": 70},
-    {"word": "đi", "freq": 55},
-    {"word": "có", "freq": 50},
-    {"word": "chờ", "freq": 45}
+    {"word": "không", "freq": 1.00},
+    {"word": "làm", "freq": 0.80},
+    {"word": "là", "freq": 0.70},
+    {"word": "đi", "freq": 0.55},
+    {"word": "có", "freq": 0.50},
+    {"word": "chờ", "freq": 0.45}
   ],
   "rất": [
-    {"word": "nhiều", "freq": 100},
-    {"word": "tốt", "freq": 85},
-    {"word": "đẹp", "freq": 75},
-    {"word": "vui", "freq": 65},
-    {"word": "hay", "freq": 60},
-    {"word": "thích", "freq": 55},
-    {"word": "ngon", "freq": 50},
-    {"word": "buồn", "freq": 45},
-    {"word": "nhanh", "freq": 40},
-    {"word": "lớn", "freq": 35}
+    {"word": "nhiều", "freq": 1.00},
+    {"word": "tốt", "freq": 0.85},
+    {"word": "đẹp", "freq": 0.75},
+    {"word": "vui", "freq": 0.65},
+    {"word": "hay", "freq": 0.60},
+    {"word": "thích", "freq": 0.55},
+    {"word": "ngon", "freq": 0.50},
+    {"word": "buồn", "freq": 0.45},
+    {"word": "nhanh", "freq": 0.40},
+    {"word": "lớn", "freq": 0.35}
   ],
   "cần": [
-    {"word": "phải", "freq": 100},
-    {"word": "có", "freq": 80},
-    {"word": "làm", "freq": 70},
-    {"word": "thiết", "freq": 65},
-    {"word": "biết", "freq": 55},
-    {"word": "mua", "freq": 50},
-    {"word": "giúp", "freq": 45}
+    {"word": "phải", "freq": 1.00},
+    {"word": "có", "freq": 0.80},
+    {"word": "làm", "freq": 0.70},
+    {"word": "thiết", "freq": 0.65},
+    {"word": "biết", "freq": 0.55},
+    {"word": "mua", "freq": 0.50},
+    {"word": "giúp", "freq": 0.45}
   ],
   "khi": [
-    {"word": "nào", "freq": 100},
-    {"word": "đó", "freq": 80},
-    {"word": "tôi", "freq": 65},
-    {"word": "bạn", "freq": 55},
-    {"word": "mà", "freq": 50},
-    {"word": "nào", "freq": 45},
-    {"word": "về", "freq": 40}
+    {"word": "nào", "freq": 1.00},
+    {"word": "đó", "freq": 0.80},
+    {"word": "tôi", "freq": 0.65},
+    {"word": "bạn", "freq": 0.55},
+    {"word": "mà", "freq": 0.50},
+    {"word": "nào", "freq": 0.45},
+    {"word": "về", "freq": 0.40}
   ],
   "vì": [
-    {"word": "sao", "freq": 100},
-    {"word": "vậy", "freq": 85},
-    {"word": "thế", "freq": 70},
-    {"word": "tôi", "freq": 55},
-    {"word": "không", "freq": 50},
-    {"word": "lý", "freq": 45}
+    {"word": "sao", "freq": 1.00},
+    {"word": "vậy", "freq": 0.85},
+    {"word": "thế", "freq": 0.70},
+    {"word": "tôi", "freq": 0.55},
+    {"word": "không", "freq": 0.50},
+    {"word": "lý", "freq": 0.45}
   ],
   "từ": [
-    {"word": "đó", "freq": 90},
-    {"word": "khi", "freq": 80},
-    {"word": "trước", "freq": 70},
-    {"word": "nay", "freq": 60},
-    {"word": "đây", "freq": 55},
-    {"word": "lâu", "freq": 50},
-    {"word": "nhỏ", "freq": 45},
-    {"word": "xa", "freq": 40}
+    {"word": "đó", "freq": 0.90},
+    {"word": "khi", "freq": 0.80},
+    {"word": "trước", "freq": 0.70},
+    {"word": "nay", "freq": 0.60},
+    {"word": "đây", "freq": 0.55},
+    {"word": "lâu", "freq": 0.50},
+    {"word": "nhỏ", "freq": 0.45},
+    {"word": "xa", "freq": 0.40}
   ],
   "thấy": [
-    {"word": "được", "freq": 85},
-    {"word": "rằng", "freq": 75},
-    {"word": "rất", "freq": 65},
-    {"word": "vui", "freq": 55},
-    {"word": "buồn", "freq": 50},
-    {"word": "hay", "freq": 45},
-    {"word": "đẹp", "freq": 40}
+    {"word": "được", "freq": 0.85},
+    {"word": "rằng", "freq": 0.75},
+    {"word": "rất", "freq": 0.65},
+    {"word": "vui", "freq": 0.55},
+    {"word": "buồn", "freq": 0.50},
+    {"word": "hay", "freq": 0.45},
+    {"word": "đẹp", "freq": 0.40}
   ],
   "còn": [
-    {"word": "có", "freq": 85},
-    {"word": "lại", "freq": 80},
-    {"word": "không", "freq": 70},
-    {"word": "nhiều", "freq": 60},
-    {"word": "gì", "freq": 50},
-    {"word": "nữa", "freq": 45}
+    {"word": "có", "freq": 0.85},
+    {"word": "lại", "freq": 0.80},
+    {"word": "không", "freq": 0.70},
+    {"word": "nhiều", "freq": 0.60},
+    {"word": "gì", "freq": 0.50},
+    {"word": "nữa", "freq": 0.45}
   ],
   "vẫn": [
-    {"word": "còn", "freq": 100},
-    {"word": "không", "freq": 80},
-    {"word": "là", "freq": 65},
-    {"word": "có", "freq": 55},
-    {"word": "đang", "freq": 50},
-    {"word": "chưa", "freq": 45}
+    {"word": "còn", "freq": 1.00},
+    {"word": "không", "freq": 0.80},
+    {"word": "là", "freq": 0.65},
+    {"word": "có", "freq": 0.55},
+    {"word": "đang", "freq": 0.50},
+    {"word": "chưa", "freq": 0.45}
   ],
   "muốn": [
-    {"word": "làm", "freq": 100},
-    {"word": "mua", "freq": 80},
-    {"word": "ăn", "freq": 70},
-    {"word": "đi", "freq": 65},
-    {"word": "biết", "freq": 60},
-    {"word": "hỏi", "freq": 55},
-    {"word": "nói", "freq": 50},
-    {"word": "xem", "freq": 45},
-    {"word": "uống", "freq": 40},
-    {"word": "gặp", "freq": 35}
+    {"word": "làm", "freq": 1.00},
+    {"word": "mua", "freq": 0.80},
+    {"word": "ăn", "freq": 0.70},
+    {"word": "đi", "freq": 0.65},
+    {"word": "biết", "freq": 0.60},
+    {"word": "hỏi", "freq": 0.55},
+    {"word": "nói", "freq": 0.50},
+    {"word": "xem", "freq": 0.45},
+    {"word": "uống", "freq": 0.40},
+    {"word": "gặp", "freq": 0.35}
   ],
   "biết": [
-    {"word": "được", "freq": 90},
-    {"word": "rằng", "freq": 75},
-    {"word": "không", "freq": 65},
-    {"word": "gì", "freq": 55},
-    {"word": "ơn", "freq": 50},
-    {"word": "làm", "freq": 45},
-    {"word": "thêm", "freq": 40}
+    {"word": "được", "freq": 0.90},
+    {"word": "rằng", "freq": 0.75},
+    {"word": "không", "freq": 0.65},
+    {"word": "gì", "freq": 0.55},
+    {"word": "ơn", "freq": 0.50},
+    {"word": "làm", "freq": 0.45},
+    {"word": "thêm", "freq": 0.40}
   ],
   "nói": [
-    {"word": "rằng", "freq": 90},
-    {"word": "chung", "freq": 75},
-    {"word": "với", "freq": 70},
-    {"word": "gì", "freq": 60},
-    {"word": "chuyện", "freq": 55},
-    {"word": "là", "freq": 50},
-    {"word": "thật", "freq": 45},
-    {"word": "dối", "freq": 40}
+    {"word": "rằng", "freq": 0.90},
+    {"word": "chung", "freq": 0.75},
+    {"word": "với", "freq": 0.70},
+    {"word": "gì", "freq": 0.60},
+    {"word": "chuyện", "freq": 0.55},
+    {"word": "là", "freq": 0.50},
+    {"word": "thật", "freq": 0.45},
+    {"word": "dối", "freq": 0.40}
   ],
   "ở": [
-    {"word": "đây", "freq": 100},
-    {"word": "đâu", "freq": 90},
-    {"word": "nhà", "freq": 75},
-    {"word": "trên", "freq": 60},
-    {"word": "đó", "freq": 55},
-    {"word": "Việt", "freq": 50},
-    {"word": "ngoài", "freq": 45},
-    {"word": "gần", "freq": 40}
+    {"word": "đây", "freq": 1.00},
+    {"word": "đâu", "freq": 0.90},
+    {"word": "nhà", "freq": 0.75},
+    {"word": "trên", "freq": 0.60},
+    {"word": "đó", "freq": 0.55},
+    {"word": "Việt", "freq": 0.50},
+    {"word": "ngoài", "freq": 0.45},
+    {"word": "gần", "freq": 0.40}
   ],
   "trên": [
-    {"word": "đó", "freq": 85},
-    {"word": "này", "freq": 75},
-    {"word": "đường", "freq": 60},
-    {"word": "mạng", "freq": 55},
-    {"word": "thế", "freq": 50},
-    {"word": "trời", "freq": 45}
+    {"word": "đó", "freq": 0.85},
+    {"word": "này", "freq": 0.75},
+    {"word": "đường", "freq": 0.60},
+    {"word": "mạng", "freq": 0.55},
+    {"word": "thế", "freq": 0.50},
+    {"word": "trời", "freq": 0.45}
   ],
   "ra": [
-    {"word": "ngoài", "freq": 85},
-    {"word": "đi", "freq": 75},
-    {"word": "sao", "freq": 65},
-    {"word": "mắt", "freq": 55},
-    {"word": "đời", "freq": 50},
-    {"word": "đây", "freq": 45},
-    {"word": "chỗ", "freq": 40}
+    {"word": "ngoài", "freq": 0.85},
+    {"word": "đi", "freq": 0.75},
+    {"word": "sao", "freq": 0.65},
+    {"word": "mắt", "freq": 0.55},
+    {"word": "đời", "freq": 0.50},
+    {"word": "đây", "freq": 0.45},
+    {"word": "chỗ", "freq": 0.40}
   ],
   "về": [
-    {"word": "nhà", "freq": 100},
-    {"word": "việc", "freq": 75},
-    {"word": "sau", "freq": 65},
-    {"word": "đây", "freq": 55},
-    {"word": "phía", "freq": 50},
-    {"word": "sớm", "freq": 45},
-    {"word": "trễ", "freq": 40}
+    {"word": "nhà", "freq": 1.00},
+    {"word": "việc", "freq": 0.75},
+    {"word": "sau", "freq": 0.65},
+    {"word": "đây", "freq": 0.55},
+    {"word": "phía", "freq": 0.50},
+    {"word": "sớm", "freq": 0.45},
+    {"word": "trễ", "freq": 0.40}
   ],
   "theo": [
-    {"word": "tôi", "freq": 85},
-    {"word": "đó", "freq": 70},
-    {"word": "dõi", "freq": 65},
-    {"word": "như", "freq": 55},
-    {"word": "em", "freq": 50}
+    {"word": "tôi", "freq": 0.85},
+    {"word": "đó", "freq": 0.70},
+    {"word": "dõi", "freq": 0.65},
+    {"word": "như", "freq": 0.55},
+    {"word": "em", "freq": 0.50}
   ],
   "xin": [
-    {"word": "chào", "freq": 100},
-    {"word": "lỗi", "freq": 90},
-    {"word": "cảm", "freq": 75},
-    {"word": "hỏi", "freq": 65},
-    {"word": "phép", "freq": 55},
-    {"word": "mời", "freq": 50}
+    {"word": "chào", "freq": 1.00},
+    {"word": "lỗi", "freq": 0.90},
+    {"word": "cảm", "freq": 0.75},
+    {"word": "hỏi", "freq": 0.65},
+    {"word": "phép", "freq": 0.55},
+    {"word": "mời", "freq": 0.50}
   ],
   "cảm": [
-    {"word": "ơn", "freq": 100},
-    {"word": "thấy", "freq": 70},
-    {"word": "xúc", "freq": 65},
-    {"word": "giác", "freq": 50},
-    {"word": "động", "freq": 45}
+    {"word": "ơn", "freq": 1.00},
+    {"word": "thấy", "freq": 0.70},
+    {"word": "xúc", "freq": 0.65},
+    {"word": "giác", "freq": 0.50},
+    {"word": "động", "freq": 0.45}
   ],
   "chúc": [
-    {"word": "mừng", "freq": 100},
-    {"word": "bạn", "freq": 85},
-    {"word": "vui", "freq": 70},
-    {"word": "ngủ", "freq": 60},
-    {"word": "may", "freq": 50},
-    {"word": "anh", "freq": 45},
-    {"word": "em", "freq": 40},
-    {"word": "sức", "freq": 35}
+    {"word": "mừng", "freq": 1.00},
+    {"word": "bạn", "freq": 0.85},
+    {"word": "vui", "freq": 0.70},
+    {"word": "ngủ", "freq": 0.60},
+    {"word": "may", "freq": 0.50},
+    {"word": "anh", "freq": 0.45},
+    {"word": "em", "freq": 0.40},
+    {"word": "sức", "freq": 0.35}
   ],
   "tốt": [
-    {"word": "nhất", "freq": 100},
-    {"word": "hơn", "freq": 80},
-    {"word": "lắm", "freq": 65},
-    {"word": "đẹp", "freq": 55},
-    {"word": "quá", "freq": 50}
+    {"word": "nhất", "freq": 1.00},
+    {"word": "hơn", "freq": 0.80},
+    {"word": "lắm", "freq": 0.65},
+    {"word": "đẹp", "freq": 0.55},
+    {"word": "quá", "freq": 0.50}
   ],
   "nhiều": [
-    {"word": "người", "freq": 90},
-    {"word": "hơn", "freq": 80},
-    {"word": "lắm", "freq": 65},
-    {"word": "quá", "freq": 55},
-    {"word": "năm", "freq": 50},
-    {"word": "thứ", "freq": 45},
-    {"word": "nơi", "freq": 40}
+    {"word": "người", "freq": 0.90},
+    {"word": "hơn", "freq": 0.80},
+    {"word": "lắm", "freq": 0.65},
+    {"word": "quá", "freq": 0.55},
+    {"word": "năm", "freq": 0.50},
+    {"word": "thứ", "freq": 0.45},
+    {"word": "nơi", "freq": 0.40}
   ],
   "mới": [
-    {"word": "nhất", "freq": 85},
-    {"word": "có", "freq": 75},
-    {"word": "được", "freq": 65},
-    {"word": "đây", "freq": 55},
-    {"word": "biết", "freq": 50},
-    {"word": "là", "freq": 45}
+    {"word": "nhất", "freq": 0.85},
+    {"word": "có", "freq": 0.75},
+    {"word": "được", "freq": 0.65},
+    {"word": "đây", "freq": 0.55},
+    {"word": "biết", "freq": 0.50},
+    {"word": "là", "freq": 0.45}
   ],
   "chỉ": [
-    {"word": "có", "freq": 90},
-    {"word": "là", "freq": 75},
-    {"word": "cần", "freq": 65},
-    {"word": "muốn", "freq": 55},
-    {"word": "còn", "freq": 50}
+    {"word": "có", "freq": 0.90},
+    {"word": "là", "freq": 0.75},
+    {"word": "cần", "freq": 0.65},
+    {"word": "muốn", "freq": 0.55},
+    {"word": "còn", "freq": 0.50}
   ],
   "rồi": [
-    {"word": "sao", "freq": 80},
-    {"word": "mà", "freq": 70},
-    {"word": "thì", "freq": 60},
-    {"word": "đi", "freq": 50},
-    {"word": "ạ", "freq": 45}
+    {"word": "sao", "freq": 0.80},
+    {"word": "mà", "freq": 0.70},
+    {"word": "thì", "freq": 0.60},
+    {"word": "đi", "freq": 0.50},
+    {"word": "ạ", "freq": 0.45}
   ],
   "hay": [
-    {"word": "là", "freq": 85},
-    {"word": "không", "freq": 75},
-    {"word": "quá", "freq": 65},
-    {"word": "lắm", "freq": 55},
-    {"word": "đấy", "freq": 50}
+    {"word": "là", "freq": 0.85},
+    {"word": "không", "freq": 0.75},
+    {"word": "quá", "freq": 0.65},
+    {"word": "lắm", "freq": 0.55},
+    {"word": "đấy", "freq": 0.50}
   ],
   "thật": [
-    {"word": "sự", "freq": 100},
-    {"word": "ra", "freq": 75},
-    {"word": "là", "freq": 60},
-    {"word": "vậy", "freq": 50},
-    {"word": "đẹp", "freq": 45},
-    {"word": "tốt", "freq": 40}
+    {"word": "sự", "freq": 1.00},
+    {"word": "ra", "freq": 0.75},
+    {"word": "là", "freq": 0.60},
+    {"word": "vậy", "freq": 0.50},
+    {"word": "đẹp", "freq": 0.45},
+    {"word": "tốt", "freq": 0.40}
   ],
   "ăn": [
-    {"word": "gì", "freq": 100},
-    {"word": "cơm", "freq": 85},
-    {"word": "uống", "freq": 75},
-    {"word": "sáng", "freq": 60},
-    {"word": "trưa", "freq": 55},
-    {"word": "tối", "freq": 50},
-    {"word": "ngon", "freq": 45},
-    {"word": "chay", "freq": 40},
-    {"word": "phở", "freq": 35},
-    {"word": "bánh", "freq": 30}
+    {"word": "gì", "freq": 1.00},
+    {"word": "cơm", "freq": 0.85},
+    {"word": "uống", "freq": 0.75},
+    {"word": "sáng", "freq": 0.60},
+    {"word": "trưa", "freq": 0.55},
+    {"word": "tối", "freq": 0.50},
+    {"word": "ngon", "freq": 0.45},
+    {"word": "chay", "freq": 0.40},
+    {"word": "phở", "freq": 0.35},
+    {"word": "bánh", "freq": 0.30}
   ],
   "uống": [
-    {"word": "nước", "freq": 100},
-    {"word": "cà", "freq": 80},
-    {"word": "trà", "freq": 70},
-    {"word": "bia", "freq": 55},
-    {"word": "thuốc", "freq": 50},
-    {"word": "sữa", "freq": 45},
-    {"word": "rượu", "freq": 40}
+    {"word": "nước", "freq": 1.00},
+    {"word": "cà", "freq": 0.80},
+    {"word": "trà", "freq": 0.70},
+    {"word": "bia", "freq": 0.55},
+    {"word": "thuốc", "freq": 0.50},
+    {"word": "sữa", "freq": 0.45},
+    {"word": "rượu", "freq": 0.40}
   ],
   "mua": [
-    {"word": "gì", "freq": 90},
-    {"word": "được", "freq": 75},
-    {"word": "cho", "freq": 65},
-    {"word": "hàng", "freq": 55},
-    {"word": "sắm", "freq": 50},
-    {"word": "nhà", "freq": 45},
-    {"word": "xe", "freq": 40},
-    {"word": "quà", "freq": 35}
+    {"word": "gì", "freq": 0.90},
+    {"word": "được", "freq": 0.75},
+    {"word": "cho", "freq": 0.65},
+    {"word": "hàng", "freq": 0.55},
+    {"word": "sắm", "freq": 0.50},
+    {"word": "nhà", "freq": 0.45},
+    {"word": "xe", "freq": 0.40},
+    {"word": "quà", "freq": 0.35}
   ],
   "bán": [
-    {"word": "hàng", "freq": 90},
-    {"word": "được", "freq": 75},
-    {"word": "cho", "freq": 60},
-    {"word": "chạy", "freq": 50},
-    {"word": "giá", "freq": 45}
+    {"word": "hàng", "freq": 0.90},
+    {"word": "được", "freq": 0.75},
+    {"word": "cho", "freq": 0.60},
+    {"word": "chạy", "freq": 0.50},
+    {"word": "giá", "freq": 0.45}
   ],
   "giá": [
-    {"word": "bao", "freq": 90},
-    {"word": "rẻ", "freq": 75},
-    {"word": "cả", "freq": 65},
-    {"word": "trị", "freq": 55},
-    {"word": "tiền", "freq": 50},
-    {"word": "cao", "freq": 45}
+    {"word": "bao", "freq": 0.90},
+    {"word": "rẻ", "freq": 0.75},
+    {"word": "cả", "freq": 0.65},
+    {"word": "trị", "freq": 0.55},
+    {"word": "tiền", "freq": 0.50},
+    {"word": "cao", "freq": 0.45}
   ],
   "bao": [
-    {"word": "nhiêu", "freq": 100},
-    {"word": "giờ", "freq": 80},
-    {"word": "lâu", "freq": 70},
-    {"word": "gồm", "freq": 55},
-    {"word": "xa", "freq": 50}
+    {"word": "nhiêu", "freq": 1.00},
+    {"word": "giờ", "freq": 0.80},
+    {"word": "lâu", "freq": 0.70},
+    {"word": "gồm", "freq": 0.55},
+    {"word": "xa", "freq": 0.50}
   ],
   "cái": [
-    {"word": "này", "freq": 100},
-    {"word": "đó", "freq": 85},
-    {"word": "gì", "freq": 70},
-    {"word": "nào", "freq": 60},
-    {"word": "kia", "freq": 50}
+    {"word": "này", "freq": 1.00},
+    {"word": "đó", "freq": 0.85},
+    {"word": "gì", "freq": 0.70},
+    {"word": "nào", "freq": 0.60},
+    {"word": "kia", "freq": 0.50}
   ],
   "thế": [
-    {"word": "nào", "freq": 100},
-    {"word": "giới", "freq": 85},
-    {"word": "này", "freq": 65},
-    {"word": "mà", "freq": 55},
-    {"word": "là", "freq": 50},
-    {"word": "thôi", "freq": 45}
+    {"word": "nào", "freq": 1.00},
+    {"word": "giới", "freq": 0.85},
+    {"word": "này", "freq": 0.65},
+    {"word": "mà", "freq": 0.55},
+    {"word": "là", "freq": 0.50},
+    {"word": "thôi", "freq": 0.45}
   ],
   "nào": [
-    {"word": "cũng", "freq": 85},
-    {"word": "đó", "freq": 70},
-    {"word": "rồi", "freq": 55},
-    {"word": "thì", "freq": 50},
-    {"word": "đi", "freq": 45}
+    {"word": "cũng", "freq": 0.85},
+    {"word": "đó", "freq": 0.70},
+    {"word": "rồi", "freq": 0.55},
+    {"word": "thì", "freq": 0.50},
+    {"word": "đi", "freq": 0.45}
   ],
   "lúc": [
-    {"word": "nào", "freq": 100},
-    {"word": "đó", "freq": 80},
-    {"word": "này", "freq": 60},
-    {"word": "trước", "freq": 50},
-    {"word": "đầu", "freq": 45}
+    {"word": "nào", "freq": 1.00},
+    {"word": "đó", "freq": 0.80},
+    {"word": "này", "freq": 0.60},
+    {"word": "trước", "freq": 0.50},
+    {"word": "đầu", "freq": 0.45}
   ],
   "năm": [
-    {"word": "nay", "freq": 90},
-    {"word": "ngoái", "freq": 80},
-    {"word": "sau", "freq": 70},
-    {"word": "trước", "freq": 60},
-    {"word": "mới", "freq": 50},
-    {"word": "tới", "freq": 45}
+    {"word": "nay", "freq": 0.90},
+    {"word": "ngoái", "freq": 0.80},
+    {"word": "sau", "freq": 0.70},
+    {"word": "trước", "freq": 0.60},
+    {"word": "mới", "freq": 0.50},
+    {"word": "tới", "freq": 0.45}
   ],
   "tháng": [
-    {"word": "này", "freq": 85},
-    {"word": "trước", "freq": 75},
-    {"word": "sau", "freq": 65},
-    {"word": "tới", "freq": 55},
-    {"word": "rồi", "freq": 50}
+    {"word": "này", "freq": 0.85},
+    {"word": "trước", "freq": 0.75},
+    {"word": "sau", "freq": 0.65},
+    {"word": "tới", "freq": 0.55},
+    {"word": "rồi", "freq": 0.50}
   ],
   "tuần": [
-    {"word": "này", "freq": 90},
-    {"word": "sau", "freq": 80},
-    {"word": "trước", "freq": 70},
-    {"word": "tới", "freq": 55},
-    {"word": "rồi", "freq": 50}
+    {"word": "này", "freq": 0.90},
+    {"word": "sau", "freq": 0.80},
+    {"word": "trước", "freq": 0.70},
+    {"word": "tới", "freq": 0.55},
+    {"word": "rồi", "freq": 0.50}
   ],
   "giờ": [
-    {"word": "này", "freq": 85},
-    {"word": "đây", "freq": 75},
-    {"word": "nào", "freq": 60},
-    {"word": "rồi", "freq": 50},
-    {"word": "mới", "freq": 45}
+    {"word": "này", "freq": 0.85},
+    {"word": "đây", "freq": 0.75},
+    {"word": "nào", "freq": 0.60},
+    {"word": "rồi", "freq": 0.50},
+    {"word": "mới", "freq": 0.45}
   ],
   "chưa": [
-    {"word": "bao", "freq": 85},
-    {"word": "có", "freq": 75},
-    {"word": "biết", "freq": 65},
-    {"word": "được", "freq": 55},
-    {"word": "từng", "freq": 50},
-    {"word": "xong", "freq": 45}
+    {"word": "bao", "freq": 0.85},
+    {"word": "có", "freq": 0.75},
+    {"word": "biết", "freq": 0.65},
+    {"word": "được", "freq": 0.55},
+    {"word": "từng", "freq": 0.50},
+    {"word": "xong", "freq": 0.45}
   ],
   "ai": [
-    {"word": "cũng", "freq": 90},
-    {"word": "đó", "freq": 75},
-    {"word": "biết", "freq": 60},
-    {"word": "mà", "freq": 50},
-    {"word": "vậy", "freq": 45}
+    {"word": "cũng", "freq": 0.90},
+    {"word": "đó", "freq": 0.75},
+    {"word": "biết", "freq": 0.60},
+    {"word": "mà", "freq": 0.50},
+    {"word": "vậy", "freq": 0.45}
   ],
   "gì": [
-    {"word": "cũng", "freq": 85},
-    {"word": "đó", "freq": 70},
-    {"word": "vậy", "freq": 60},
-    {"word": "nữa", "freq": 50},
-    {"word": "đâu", "freq": 45}
+    {"word": "cũng", "freq": 0.85},
+    {"word": "đó", "freq": 0.70},
+    {"word": "vậy", "freq": 0.60},
+    {"word": "nữa", "freq": 0.50},
+    {"word": "đâu", "freq": 0.45}
   ],
   "đâu": [
-    {"word": "có", "freq": 85},
-    {"word": "rồi", "freq": 70},
-    {"word": "đó", "freq": 55},
-    {"word": "mà", "freq": 50},
-    {"word": "vậy", "freq": 45}
+    {"word": "có", "freq": 0.85},
+    {"word": "rồi", "freq": 0.70},
+    {"word": "đó", "freq": 0.55},
+    {"word": "mà", "freq": 0.50},
+    {"word": "vậy", "freq": 0.45}
   ],
   "tại": [
-    {"word": "sao", "freq": 100},
-    {"word": "vì", "freq": 80},
-    {"word": "đây", "freq": 65},
-    {"word": "đó", "freq": 55},
-    {"word": "nhà", "freq": 50}
+    {"word": "sao", "freq": 1.00},
+    {"word": "vì", "freq": 0.80},
+    {"word": "đây", "freq": 0.65},
+    {"word": "đó", "freq": 0.55},
+    {"word": "nhà", "freq": 0.50}
   ],
   "sao": [
-    {"word": "cho", "freq": 75},
-    {"word": "vậy", "freq": 65},
-    {"word": "mà", "freq": 55},
-    {"word": "rồi", "freq": 50},
-    {"word": "cũng", "freq": 45}
+    {"word": "cho", "freq": 0.75},
+    {"word": "vậy", "freq": 0.65},
+    {"word": "mà", "freq": 0.55},
+    {"word": "rồi", "freq": 0.50},
+    {"word": "cũng", "freq": 0.45}
   ],
   "chúng": [
-    {"word": "ta", "freq": 100},
-    {"word": "tôi", "freq": 90},
-    {"word": "tớ", "freq": 60},
-    {"word": "mình", "freq": 50},
-    {"word": "em", "freq": 45}
+    {"word": "ta", "freq": 1.00},
+    {"word": "tôi", "freq": 0.90},
+    {"word": "tớ", "freq": 0.60},
+    {"word": "mình", "freq": 0.50},
+    {"word": "em", "freq": 0.45}
   ],
   "họ": [
-    {"word": "đã", "freq": 85},
-    {"word": "có", "freq": 75},
-    {"word": "không", "freq": 65},
-    {"word": "đang", "freq": 55},
-    {"word": "sẽ", "freq": 50},
-    {"word": "muốn", "freq": 45}
+    {"word": "đã", "freq": 0.85},
+    {"word": "có", "freq": 0.75},
+    {"word": "không", "freq": 0.65},
+    {"word": "đang", "freq": 0.55},
+    {"word": "sẽ", "freq": 0.50},
+    {"word": "muốn", "freq": 0.45}
   ],
   "ông": [
-    {"word": "ấy", "freq": 90},
-    {"word": "ta", "freq": 75},
-    {"word": "bà", "freq": 70},
-    {"word": "đã", "freq": 55},
-    {"word": "nội", "freq": 50},
-    {"word": "ngoại", "freq": 45}
+    {"word": "ấy", "freq": 0.90},
+    {"word": "ta", "freq": 0.75},
+    {"word": "bà", "freq": 0.70},
+    {"word": "đã", "freq": 0.55},
+    {"word": "nội", "freq": 0.50},
+    {"word": "ngoại", "freq": 0.45}
   ],
   "bà": [
-    {"word": "ấy", "freq": 90},
-    {"word": "ta", "freq": 70},
-    {"word": "con", "freq": 60},
-    {"word": "nội", "freq": 50},
-    {"word": "ngoại", "freq": 45}
+    {"word": "ấy", "freq": 0.90},
+    {"word": "ta", "freq": 0.70},
+    {"word": "con", "freq": 0.60},
+    {"word": "nội", "freq": 0.50},
+    {"word": "ngoại", "freq": 0.45}
   ],
   "con": [
-    {"word": "người", "freq": 85},
-    {"word": "gái", "freq": 75},
-    {"word": "trai", "freq": 70},
-    {"word": "đường", "freq": 55},
-    {"word": "cái", "freq": 50},
-    {"word": "mèo", "freq": 45},
-    {"word": "chó", "freq": 40}
+    {"word": "người", "freq": 0.85},
+    {"word": "gái", "freq": 0.75},
+    {"word": "trai", "freq": 0.70},
+    {"word": "đường", "freq": 0.55},
+    {"word": "cái", "freq": 0.50},
+    {"word": "mèo", "freq": 0.45},
+    {"word": "chó", "freq": 0.40}
   ],
   "nhà": [
-    {"word": "mình", "freq": 85},
-    {"word": "tôi", "freq": 75},
-    {"word": "ở", "freq": 65},
-    {"word": "hàng", "freq": 55},
-    {"word": "trường", "freq": 50},
-    {"word": "bếp", "freq": 45},
-    {"word": "vệ", "freq": 40},
-    {"word": "thờ", "freq": 35}
+    {"word": "mình", "freq": 0.85},
+    {"word": "tôi", "freq": 0.75},
+    {"word": "ở", "freq": 0.65},
+    {"word": "hàng", "freq": 0.55},
+    {"word": "trường", "freq": 0.50},
+    {"word": "bếp", "freq": 0.45},
+    {"word": "vệ", "freq": 0.40},
+    {"word": "thờ", "freq": 0.35}
   ],
   "học": [
-    {"word": "sinh", "freq": 100},
-    {"word": "được", "freq": 75},
-    {"word": "tập", "freq": 70},
-    {"word": "hỏi", "freq": 60},
-    {"word": "bài", "freq": 55},
-    {"word": "giỏi", "freq": 50},
-    {"word": "tiếng", "freq": 45}
+    {"word": "sinh", "freq": 1.00},
+    {"word": "được", "freq": 0.75},
+    {"word": "tập", "freq": 0.70},
+    {"word": "hỏi", "freq": 0.60},
+    {"word": "bài", "freq": 0.55},
+    {"word": "giỏi", "freq": 0.50},
+    {"word": "tiếng", "freq": 0.45}
   ],
   "công": [
-    {"word": "việc", "freq": 100},
-    {"word": "ty", "freq": 85},
-    {"word": "nghệ", "freq": 70},
-    {"word": "an", "freq": 60},
-    {"word": "nhân", "freq": 50},
-    {"word": "bằng", "freq": 45},
-    {"word": "chúa", "freq": 40}
+    {"word": "việc", "freq": 1.00},
+    {"word": "ty", "freq": 0.85},
+    {"word": "nghệ", "freq": 0.70},
+    {"word": "an", "freq": 0.60},
+    {"word": "nhân", "freq": 0.50},
+    {"word": "bằng", "freq": 0.45},
+    {"word": "chúa", "freq": 0.40}
   ],
   "việc": [
-    {"word": "làm", "freq": 90},
-    {"word": "này", "freq": 75},
-    {"word": "gì", "freq": 65},
-    {"word": "đó", "freq": 55},
-    {"word": "nhà", "freq": 50}
+    {"word": "làm", "freq": 0.90},
+    {"word": "này", "freq": 0.75},
+    {"word": "gì", "freq": 0.65},
+    {"word": "đó", "freq": 0.55},
+    {"word": "nhà", "freq": 0.50}
   ],
   "thời": [
-    {"word": "gian", "freq": 100},
-    {"word": "tiết", "freq": 80},
-    {"word": "đại", "freq": 65},
-    {"word": "điểm", "freq": 55},
-    {"word": "trang", "freq": 50}
+    {"word": "gian", "freq": 1.00},
+    {"word": "tiết", "freq": 0.80},
+    {"word": "đại", "freq": 0.65},
+    {"word": "điểm", "freq": 0.55},
+    {"word": "trang", "freq": 0.50}
   ],
   "cuộc": [
-    {"word": "sống", "freq": 100},
-    {"word": "đời", "freq": 80},
-    {"word": "họp", "freq": 65},
-    {"word": "gọi", "freq": 60},
-    {"word": "thi", "freq": 50},
-    {"word": "chiến", "freq": 45},
-    {"word": "hẹn", "freq": 40}
+    {"word": "sống", "freq": 1.00},
+    {"word": "đời", "freq": 0.80},
+    {"word": "họp", "freq": 0.65},
+    {"word": "gọi", "freq": 0.60},
+    {"word": "thi", "freq": 0.50},
+    {"word": "chiến", "freq": 0.45},
+    {"word": "hẹn", "freq": 0.40}
   ],
   "cả": [
-    {"word": "ngày", "freq": 80},
-    {"word": "nhà", "freq": 70},
-    {"word": "hai", "freq": 65},
-    {"word": "đời", "freq": 50},
-    {"word": "tuần", "freq": 45},
-    {"word": "năm", "freq": 40}
+    {"word": "ngày", "freq": 0.80},
+    {"word": "nhà", "freq": 0.70},
+    {"word": "hai", "freq": 0.65},
+    {"word": "đời", "freq": 0.50},
+    {"word": "tuần", "freq": 0.45},
+    {"word": "năm", "freq": 0.40}
   ],
   "lại": [
-    {"word": "là", "freq": 80},
-    {"word": "có", "freq": 70},
-    {"word": "không", "freq": 60},
-    {"word": "đây", "freq": 50},
-    {"word": "gần", "freq": 45}
+    {"word": "là", "freq": 0.80},
+    {"word": "có", "freq": 0.70},
+    {"word": "không", "freq": 0.60},
+    {"word": "đây", "freq": 0.50},
+    {"word": "gần", "freq": 0.45}
   ],
   "sau": [
-    {"word": "khi", "freq": 100},
-    {"word": "đó", "freq": 85},
-    {"word": "này", "freq": 65},
-    {"word": "cùng", "freq": 50},
-    {"word": "đây", "freq": 45}
+    {"word": "khi", "freq": 1.00},
+    {"word": "đó", "freq": 0.85},
+    {"word": "này", "freq": 0.65},
+    {"word": "cùng", "freq": 0.50},
+    {"word": "đây", "freq": 0.45}
   ],
   "trước": [
-    {"word": "khi", "freq": 100},
-    {"word": "đó", "freq": 80},
-    {"word": "đây", "freq": 65},
-    {"word": "tiên", "freq": 55},
-    {"word": "mặt", "freq": 50}
+    {"word": "khi", "freq": 1.00},
+    {"word": "đó", "freq": 0.80},
+    {"word": "đây", "freq": 0.65},
+    {"word": "tiên", "freq": 0.55},
+    {"word": "mặt", "freq": 0.50}
   ],
   "lần": [
-    {"word": "đầu", "freq": 90},
-    {"word": "này", "freq": 75},
-    {"word": "nào", "freq": 65},
-    {"word": "sau", "freq": 55},
-    {"word": "cuối", "freq": 50},
-    {"word": "trước", "freq": 45}
+    {"word": "đầu", "freq": 0.90},
+    {"word": "này", "freq": 0.75},
+    {"word": "nào", "freq": 0.65},
+    {"word": "sau", "freq": 0.55},
+    {"word": "cuối", "freq": 0.50},
+    {"word": "trước", "freq": 0.45}
   ],
   "tất": [
-    {"word": "cả", "freq": 100},
-    {"word": "nhiên", "freq": 70}
+    {"word": "cả", "freq": 1.00},
+    {"word": "nhiên", "freq": 0.70}
   ],
   "mỗi": [
-    {"word": "ngày", "freq": 100},
-    {"word": "người", "freq": 80},
-    {"word": "lần", "freq": 70},
-    {"word": "khi", "freq": 55},
-    {"word": "tuần", "freq": 50},
-    {"word": "năm", "freq": 45}
+    {"word": "ngày", "freq": 1.00},
+    {"word": "người", "freq": 0.80},
+    {"word": "lần", "freq": 0.70},
+    {"word": "khi", "freq": 0.55},
+    {"word": "tuần", "freq": 0.50},
+    {"word": "năm", "freq": 0.45}
   ],
   "đều": [
-    {"word": "có", "freq": 85},
-    {"word": "là", "freq": 70},
-    {"word": "được", "freq": 60},
-    {"word": "rất", "freq": 50},
-    {"word": "biết", "freq": 45}
+    {"word": "có", "freq": 0.85},
+    {"word": "là", "freq": 0.70},
+    {"word": "được", "freq": 0.60},
+    {"word": "rất", "freq": 0.50},
+    {"word": "biết", "freq": 0.45}
   ],
   "vui": [
-    {"word": "vẻ", "freq": 85},
-    {"word": "lòng", "freq": 75},
-    {"word": "quá", "freq": 65},
-    {"word": "lắm", "freq": 55},
-    {"word": "ghê", "freq": 50}
+    {"word": "vẻ", "freq": 0.85},
+    {"word": "lòng", "freq": 0.75},
+    {"word": "quá", "freq": 0.65},
+    {"word": "lắm", "freq": 0.55},
+    {"word": "ghê", "freq": 0.50}
   ],
   "yêu": [
-    {"word": "thương", "freq": 90},
-    {"word": "em", "freq": 75},
-    {"word": "anh", "freq": 65},
-    {"word": "cầu", "freq": 55},
-    {"word": "quý", "freq": 50},
-    {"word": "đời", "freq": 45}
+    {"word": "thương", "freq": 0.90},
+    {"word": "em", "freq": 0.75},
+    {"word": "anh", "freq": 0.65},
+    {"word": "cầu", "freq": 0.55},
+    {"word": "quý", "freq": 0.50},
+    {"word": "đời", "freq": 0.45}
   ],
   "nhớ": [
-    {"word": "nhà", "freq": 85},
-    {"word": "em", "freq": 70},
-    {"word": "anh", "freq": 60},
-    {"word": "lại", "freq": 55},
-    {"word": "rằng", "freq": 50},
-    {"word": "mãi", "freq": 45}
+    {"word": "nhà", "freq": 0.85},
+    {"word": "em", "freq": 0.70},
+    {"word": "anh", "freq": 0.60},
+    {"word": "lại", "freq": 0.55},
+    {"word": "rằng", "freq": 0.50},
+    {"word": "mãi", "freq": 0.45}
   ],
   "hiểu": [
-    {"word": "được", "freq": 90},
-    {"word": "rằng", "freq": 70},
-    {"word": "biết", "freq": 55},
-    {"word": "rồi", "freq": 50},
-    {"word": "nhau", "freq": 45}
+    {"word": "được", "freq": 0.90},
+    {"word": "rằng", "freq": 0.70},
+    {"word": "biết", "freq": 0.55},
+    {"word": "rồi", "freq": 0.50},
+    {"word": "nhau", "freq": 0.45}
   ],
   "Việt": [
-    {"word": "Nam", "freq": 100}
+    {"word": "Nam", "freq": 1.00}
   ],
   "cơm": [
-    {"word": "trưa", "freq": 85},
-    {"word": "tối", "freq": 75},
-    {"word": "sáng", "freq": 60},
-    {"word": "nhà", "freq": 50},
-    {"word": "chiên", "freq": 45}
+    {"word": "trưa", "freq": 0.85},
+    {"word": "tối", "freq": 0.75},
+    {"word": "sáng", "freq": 0.60},
+    {"word": "nhà", "freq": 0.50},
+    {"word": "chiên", "freq": 0.45}
   ],
   "tiền": [
-    {"word": "bạc", "freq": 75},
-    {"word": "mặt", "freq": 65},
-    {"word": "lương", "freq": 55},
-    {"word": "đâu", "freq": 50},
-    {"word": "điện", "freq": 45}
+    {"word": "bạc", "freq": 0.75},
+    {"word": "mặt", "freq": 0.65},
+    {"word": "lương", "freq": 0.55},
+    {"word": "đâu", "freq": 0.50},
+    {"word": "điện", "freq": 0.45}
   ],
   "đường": [
-    {"word": "đi", "freq": 85},
-    {"word": "phố", "freq": 70},
-    {"word": "về", "freq": 60},
-    {"word": "dài", "freq": 50},
-    {"word": "cao", "freq": 45},
-    {"word": "tốc", "freq": 40}
+    {"word": "đi", "freq": 0.85},
+    {"word": "phố", "freq": 0.70},
+    {"word": "về", "freq": 0.60},
+    {"word": "dài", "freq": 0.50},
+    {"word": "cao", "freq": 0.45},
+    {"word": "tốc", "freq": 0.40}
   ],
   "trời": [
-    {"word": "ơi", "freq": 100},
-    {"word": "đất", "freq": 75},
-    {"word": "mưa", "freq": 65},
-    {"word": "nắng", "freq": 55},
-    {"word": "lạnh", "freq": 50},
-    {"word": "nóng", "freq": 45}
+    {"word": "ơi", "freq": 1.00},
+    {"word": "đất", "freq": 0.75},
+    {"word": "mưa", "freq": 0.65},
+    {"word": "nắng", "freq": 0.55},
+    {"word": "lạnh", "freq": 0.50},
+    {"word": "nóng", "freq": 0.45}
   ],
   "nước": [
-    {"word": "ta", "freq": 85},
-    {"word": "ngoài", "freq": 70},
-    {"word": "mắt", "freq": 55},
-    {"word": "uống", "freq": 50},
-    {"word": "lọc", "freq": 45}
+    {"word": "ta", "freq": 0.85},
+    {"word": "ngoài", "freq": 0.70},
+    {"word": "mắt", "freq": 0.55},
+    {"word": "uống", "freq": 0.50},
+    {"word": "lọc", "freq": 0.45}
   ],
   "điện": [
-    {"word": "thoại", "freq": 100},
-    {"word": "tử", "freq": 80},
-    {"word": "ảnh", "freq": 60},
-    {"word": "nước", "freq": 50},
-    {"word": "tử", "freq": 45}
+    {"word": "thoại", "freq": 1.00},
+    {"word": "tử", "freq": 0.80},
+    {"word": "ảnh", "freq": 0.60},
+    {"word": "nước", "freq": 0.50},
+    {"word": "tử", "freq": 0.45}
   ],
   "xe": [
-    {"word": "máy", "freq": 90},
-    {"word": "hơi", "freq": 80},
-    {"word": "buýt", "freq": 65},
-    {"word": "đạp", "freq": 55},
-    {"word": "ôm", "freq": 50},
-    {"word": "tải", "freq": 45},
-    {"word": "ô", "freq": 40}
+    {"word": "máy", "freq": 0.90},
+    {"word": "hơi", "freq": 0.80},
+    {"word": "buýt", "freq": 0.65},
+    {"word": "đạp", "freq": 0.55},
+    {"word": "ôm", "freq": 0.50},
+    {"word": "tải", "freq": 0.45},
+    {"word": "ô", "freq": 0.40}
   ],
   "bây": [
-    {"word": "giờ", "freq": 100}
+    {"word": "giờ", "freq": 1.00}
   ],
   "hơn": [
-    {"word": "nữa", "freq": 80},
-    {"word": "là", "freq": 65},
-    {"word": "một", "freq": 50},
-    {"word": "cả", "freq": 45}
+    {"word": "nữa", "freq": 0.80},
+    {"word": "là", "freq": 0.65},
+    {"word": "một", "freq": 0.50},
+    {"word": "cả", "freq": 0.45}
   ],
   "dù": [
-    {"word": "sao", "freq": 85},
-    {"word": "gì", "freq": 70},
-    {"word": "cho", "freq": 55},
-    {"word": "vậy", "freq": 50}
+    {"word": "sao", "freq": 0.85},
+    {"word": "gì", "freq": 0.70},
+    {"word": "cho", "freq": 0.55},
+    {"word": "vậy", "freq": 0.50}
   ],
   "tuy": [
-    {"word": "nhiên", "freq": 100},
-    {"word": "vậy", "freq": 65}
+    {"word": "nhiên", "freq": 1.00},
+    {"word": "vậy", "freq": 0.65}
   ],
   "hoặc": [
-    {"word": "là", "freq": 90},
-    {"word": "không", "freq": 65}
+    {"word": "là", "freq": 0.90},
+    {"word": "không", "freq": 0.65}
   ],
   "hãy": [
-    {"word": "làm", "freq": 85},
-    {"word": "đi", "freq": 75},
-    {"word": "cho", "freq": 65},
-    {"word": "cùng", "freq": 55},
-    {"word": "thử", "freq": 50},
-    {"word": "giúp", "freq": 45},
-    {"word": "tin", "freq": 40}
+    {"word": "làm", "freq": 0.85},
+    {"word": "đi", "freq": 0.75},
+    {"word": "cho", "freq": 0.65},
+    {"word": "cùng", "freq": 0.55},
+    {"word": "thử", "freq": 0.50},
+    {"word": "giúp", "freq": 0.45},
+    {"word": "tin", "freq": 0.40}
   ],
   "đừng": [
-    {"word": "lo", "freq": 90},
-    {"word": "có", "freq": 75},
-    {"word": "quên", "freq": 65},
-    {"word": "làm", "freq": 55},
-    {"word": "buồn", "freq": 50},
-    {"word": "sợ", "freq": 45},
-    {"word": "nói", "freq": 40}
+    {"word": "lo", "freq": 0.90},
+    {"word": "có", "freq": 0.75},
+    {"word": "quên", "freq": 0.65},
+    {"word": "làm", "freq": 0.55},
+    {"word": "buồn", "freq": 0.50},
+    {"word": "sợ", "freq": 0.45},
+    {"word": "nói", "freq": 0.40}
   ],
   "chào": [
-    {"word": "bạn", "freq": 100},
-    {"word": "anh", "freq": 80},
-    {"word": "em", "freq": 75},
-    {"word": "mừng", "freq": 60},
-    {"word": "buổi", "freq": 55}
+    {"word": "bạn", "freq": 1.00},
+    {"word": "anh", "freq": 0.80},
+    {"word": "em", "freq": 0.75},
+    {"word": "mừng", "freq": 0.60},
+    {"word": "buổi", "freq": 0.55}
   ],
   "thích": [
-    {"word": "lắm", "freq": 80},
-    {"word": "quá", "freq": 70},
-    {"word": "ăn", "freq": 60},
-    {"word": "nhất", "freq": 55},
-    {"word": "hợp", "freq": 50},
-    {"word": "nghe", "freq": 45}
+    {"word": "lắm", "freq": 0.80},
+    {"word": "quá", "freq": 0.70},
+    {"word": "ăn", "freq": 0.60},
+    {"word": "nhất", "freq": 0.55},
+    {"word": "hợp", "freq": 0.50},
+    {"word": "nghe", "freq": 0.45}
   ],
   "cùng": [
-    {"word": "nhau", "freq": 100},
-    {"word": "với", "freq": 75},
-    {"word": "đi", "freq": 60},
-    {"word": "lúc", "freq": 50},
-    {"word": "lắm", "freq": 45}
+    {"word": "nhau", "freq": 1.00},
+    {"word": "với", "freq": 0.75},
+    {"word": "đi", "freq": 0.60},
+    {"word": "lúc", "freq": 0.50},
+    {"word": "lắm", "freq": 0.45}
   ],
   "bắt": [
-    {"word": "đầu", "freq": 100},
-    {"word": "được", "freq": 65},
-    {"word": "buộc", "freq": 55},
-    {"word": "tay", "freq": 50}
+    {"word": "đầu", "freq": 1.00},
+    {"word": "được", "freq": 0.65},
+    {"word": "buộc", "freq": 0.55},
+    {"word": "tay", "freq": 0.50}
   ],
   "kết": [
-    {"word": "quả", "freq": 100},
-    {"word": "thúc", "freq": 80},
-    {"word": "nối", "freq": 65},
-    {"word": "hợp", "freq": 55},
-    {"word": "luận", "freq": 50},
-    {"word": "bạn", "freq": 45}
+    {"word": "quả", "freq": 1.00},
+    {"word": "thúc", "freq": 0.80},
+    {"word": "nối", "freq": 0.65},
+    {"word": "hợp", "freq": 0.55},
+    {"word": "luận", "freq": 0.50},
+    {"word": "bạn", "freq": 0.45}
   ],
   "quan": [
-    {"word": "trọng", "freq": 100},
-    {"word": "tâm", "freq": 80},
-    {"word": "hệ", "freq": 65},
-    {"word": "điểm", "freq": 55},
-    {"word": "niệm", "freq": 50}
+    {"word": "trọng", "freq": 1.00},
+    {"word": "tâm", "freq": 0.80},
+    {"word": "hệ", "freq": 0.65},
+    {"word": "điểm", "freq": 0.55},
+    {"word": "niệm", "freq": 0.50}
   ],
   "tình": [
-    {"word": "hình", "freq": 85},
-    {"word": "yêu", "freq": 80},
-    {"word": "cảm", "freq": 65},
-    {"word": "trạng", "freq": 55},
-    {"word": "huống", "freq": 50},
-    {"word": "bạn", "freq": 45}
+    {"word": "hình", "freq": 0.85},
+    {"word": "yêu", "freq": 0.80},
+    {"word": "cảm", "freq": 0.65},
+    {"word": "trạng", "freq": 0.55},
+    {"word": "huống", "freq": 0.50},
+    {"word": "bạn", "freq": 0.45}
   ],
   "vấn": [
-    {"word": "đề", "freq": 100}
+    {"word": "đề", "freq": 1.00}
   ],
   "giải": [
-    {"word": "quyết", "freq": 100},
-    {"word": "thích", "freq": 75},
-    {"word": "pháp", "freq": 60},
-    {"word": "trí", "freq": 50}
+    {"word": "quyết", "freq": 1.00},
+    {"word": "thích", "freq": 0.75},
+    {"word": "pháp", "freq": 0.60},
+    {"word": "trí", "freq": 0.50}
   ],
   "phát": [
-    {"word": "triển", "freq": 100},
-    {"word": "hiện", "freq": 80},
-    {"word": "sinh", "freq": 55},
-    {"word": "hành", "freq": 50}
+    {"word": "triển", "freq": 1.00},
+    {"word": "hiện", "freq": 0.80},
+    {"word": "sinh", "freq": 0.55},
+    {"word": "hành", "freq": 0.50}
   ],
   "chất": [
-    {"word": "lượng", "freq": 100},
-    {"word": "liệu", "freq": 65}
+    {"word": "lượng", "freq": 1.00},
+    {"word": "liệu", "freq": 0.65}
   ],
   "sức": [
-    {"word": "khỏe", "freq": 100},
-    {"word": "mạnh", "freq": 70}
+    {"word": "khỏe", "freq": 1.00},
+    {"word": "mạnh", "freq": 0.70}
   ],
   "tin": [
-    {"word": "tức", "freq": 90},
-    {"word": "nhắn", "freq": 80},
-    {"word": "rằng", "freq": 55},
-    {"word": "tưởng", "freq": 50},
-    {"word": "học", "freq": 45}
+    {"word": "tức", "freq": 0.90},
+    {"word": "nhắn", "freq": 0.80},
+    {"word": "rằng", "freq": 0.55},
+    {"word": "tưởng", "freq": 0.50},
+    {"word": "học", "freq": 0.45}
   ],
   "gửi": [
-    {"word": "cho", "freq": 90},
-    {"word": "tin", "freq": 75},
-    {"word": "đi", "freq": 60},
-    {"word": "lại", "freq": 50},
-    {"word": "email", "freq": 45}
+    {"word": "cho", "freq": 0.90},
+    {"word": "tin", "freq": 0.75},
+    {"word": "đi", "freq": 0.60},
+    {"word": "lại", "freq": 0.50},
+    {"word": "email", "freq": 0.45}
   ],
   "liên": [
-    {"word": "hệ", "freq": 100},
-    {"word": "quan", "freq": 75},
-    {"word": "lạc", "freq": 65},
-    {"word": "tục", "freq": 55}
+    {"word": "hệ", "freq": 1.00},
+    {"word": "quan", "freq": 0.75},
+    {"word": "lạc", "freq": 0.65},
+    {"word": "tục", "freq": 0.55}
   ],
   "chắc": [
-    {"word": "chắn", "freq": 90},
-    {"word": "là", "freq": 75},
-    {"word": "rồi", "freq": 55},
-    {"word": "luôn", "freq": 50}
+    {"word": "chắn", "freq": 0.90},
+    {"word": "là", "freq": 0.75},
+    {"word": "rồi", "freq": 0.55},
+    {"word": "luôn", "freq": 0.50}
   ],
   "hoàn": [
-    {"word": "toàn", "freq": 100},
-    {"word": "thành", "freq": 80},
-    {"word": "hảo", "freq": 55},
-    {"word": "thiện", "freq": 50}
+    {"word": "toàn", "freq": 1.00},
+    {"word": "thành", "freq": 0.80},
+    {"word": "hảo", "freq": 0.55},
+    {"word": "thiện", "freq": 0.50}
   ],
   "tiếp": [
-    {"word": "tục", "freq": 100},
-    {"word": "theo", "freq": 75},
-    {"word": "nhận", "freq": 55},
-    {"word": "xúc", "freq": 50}
+    {"word": "tục", "freq": 1.00},
+    {"word": "theo", "freq": 0.75},
+    {"word": "nhận", "freq": 0.55},
+    {"word": "xúc", "freq": 0.50}
   ],
   "cuối": [
-    {"word": "cùng", "freq": 100},
-    {"word": "tuần", "freq": 80},
-    {"word": "năm", "freq": 55},
-    {"word": "tháng", "freq": 50}
+    {"word": "cùng", "freq": 1.00},
+    {"word": "tuần", "freq": 0.80},
+    {"word": "năm", "freq": 0.55},
+    {"word": "tháng", "freq": 0.50}
   ],
   "bước": [
-    {"word": "đi", "freq": 85},
-    {"word": "vào", "freq": 70},
-    {"word": "tiếp", "freq": 60},
-    {"word": "đầu", "freq": 50},
-    {"word": "ra", "freq": 45}
+    {"word": "đi", "freq": 0.85},
+    {"word": "vào", "freq": 0.70},
+    {"word": "tiếp", "freq": 0.60},
+    {"word": "đầu", "freq": 0.50},
+    {"word": "ra", "freq": 0.45}
   ],
   "đặc": [
-    {"word": "biệt", "freq": 100},
-    {"word": "điểm", "freq": 65},
-    {"word": "sắc", "freq": 50}
+    {"word": "biệt", "freq": 1.00},
+    {"word": "điểm", "freq": 0.65},
+    {"word": "sắc", "freq": 0.50}
   ],
   "chính": [
-    {"word": "là", "freq": 90},
-    {"word": "xác", "freq": 75},
-    {"word": "thức", "freq": 60},
-    {"word": "sách", "freq": 55},
-    {"word": "phủ", "freq": 50}
+    {"word": "là", "freq": 0.90},
+    {"word": "xác", "freq": 0.75},
+    {"word": "thức", "freq": 0.60},
+    {"word": "sách", "freq": 0.55},
+    {"word": "phủ", "freq": 0.50}
   ],
   "thực": [
-    {"word": "sự", "freq": 90},
-    {"word": "hiện", "freq": 80},
-    {"word": "tế", "freq": 70},
-    {"word": "hành", "freq": 55},
-    {"word": "phẩm", "freq": 50},
-    {"word": "đơn", "freq": 45}
+    {"word": "sự", "freq": 0.90},
+    {"word": "hiện", "freq": 0.80},
+    {"word": "tế", "freq": 0.70},
+    {"word": "hành", "freq": 0.55},
+    {"word": "phẩm", "freq": 0.50},
+    {"word": "đơn", "freq": 0.45}
   ],
   "luôn": [
-    {"word": "luôn", "freq": 80},
-    {"word": "là", "freq": 70},
-    {"word": "có", "freq": 55},
-    {"word": "cả", "freq": 50}
+    {"word": "luôn", "freq": 0.80},
+    {"word": "là", "freq": 0.70},
+    {"word": "có", "freq": 0.55},
+    {"word": "cả", "freq": 0.50}
   ],
   "xong": [
-    {"word": "rồi", "freq": 100},
-    {"word": "chưa", "freq": 85},
-    {"word": "hết", "freq": 65},
-    {"word": "việc", "freq": 50}
+    {"word": "rồi", "freq": 1.00},
+    {"word": "chưa", "freq": 0.85},
+    {"word": "hết", "freq": 0.65},
+    {"word": "việc", "freq": 0.50}
   ],
   "xem": [
-    {"word": "phim", "freq": 90},
-    {"word": "nào", "freq": 80},
-    {"word": "lại", "freq": 65},
-    {"word": "thử", "freq": 55},
-    {"word": "được", "freq": 50},
-    {"word": "xét", "freq": 45}
+    {"word": "phim", "freq": 0.90},
+    {"word": "nào", "freq": 0.80},
+    {"word": "lại", "freq": 0.65},
+    {"word": "thử", "freq": 0.55},
+    {"word": "được", "freq": 0.50},
+    {"word": "xét", "freq": 0.45}
   ],
   "nghe": [
-    {"word": "nói", "freq": 90},
-    {"word": "nhạc", "freq": 85},
-    {"word": "được", "freq": 65},
-    {"word": "thấy", "freq": 55},
-    {"word": "hay", "freq": 50}
+    {"word": "nói", "freq": 0.90},
+    {"word": "nhạc", "freq": 0.85},
+    {"word": "được", "freq": 0.65},
+    {"word": "thấy", "freq": 0.55},
+    {"word": "hay", "freq": 0.50}
   ],
   "viết": [
-    {"word": "bài", "freq": 85},
-    {"word": "thư", "freq": 70},
-    {"word": "cho", "freq": 60},
-    {"word": "lại", "freq": 50},
-    {"word": "gì", "freq": 45}
+    {"word": "bài", "freq": 0.85},
+    {"word": "thư", "freq": 0.70},
+    {"word": "cho", "freq": 0.60},
+    {"word": "lại", "freq": 0.50},
+    {"word": "gì", "freq": 0.45}
   ],
   "đọc": [
-    {"word": "sách", "freq": 90},
-    {"word": "bài", "freq": 75},
-    {"word": "được", "freq": 60},
-    {"word": "tin", "freq": 55},
-    {"word": "báo", "freq": 50}
+    {"word": "sách", "freq": 0.90},
+    {"word": "bài", "freq": 0.75},
+    {"word": "được", "freq": 0.60},
+    {"word": "tin", "freq": 0.55},
+    {"word": "báo", "freq": 0.50}
   ],
   "chơi": [
-    {"word": "game", "freq": 85},
-    {"word": "với", "freq": 75},
-    {"word": "đi", "freq": 60},
-    {"word": "bóng", "freq": 55},
-    {"word": "vui", "freq": 50}
+    {"word": "game", "freq": 0.85},
+    {"word": "với", "freq": 0.75},
+    {"word": "đi", "freq": 0.60},
+    {"word": "bóng", "freq": 0.55},
+    {"word": "vui", "freq": 0.50}
   ],
   "gặp": [
-    {"word": "nhau", "freq": 100},
-    {"word": "được", "freq": 75},
-    {"word": "lại", "freq": 65},
-    {"word": "may", "freq": 55},
-    {"word": "gỡ", "freq": 50}
+    {"word": "nhau", "freq": 1.00},
+    {"word": "được", "freq": 0.75},
+    {"word": "lại", "freq": 0.65},
+    {"word": "may", "freq": 0.55},
+    {"word": "gỡ", "freq": 0.50}
   ],
   "gọi": [
-    {"word": "điện", "freq": 90},
-    {"word": "cho", "freq": 80},
-    {"word": "là", "freq": 65},
-    {"word": "tôi", "freq": 55},
-    {"word": "lại", "freq": 50}
+    {"word": "điện", "freq": 0.90},
+    {"word": "cho", "freq": 0.80},
+    {"word": "là", "freq": 0.65},
+    {"word": "tôi", "freq": 0.55},
+    {"word": "lại", "freq": 0.50}
   ],
   "chờ": [
-    {"word": "đợi", "freq": 85},
-    {"word": "tôi", "freq": 75},
-    {"word": "một", "freq": 60},
-    {"word": "chút", "freq": 55},
-    {"word": "xíu", "freq": 50}
+    {"word": "đợi", "freq": 0.85},
+    {"word": "tôi", "freq": 0.75},
+    {"word": "một", "freq": 0.60},
+    {"word": "chút", "freq": 0.55},
+    {"word": "xíu", "freq": 0.50}
   ],
   "hỏi": [
-    {"word": "thăm", "freq": 85},
-    {"word": "rằng", "freq": 70},
-    {"word": "gì", "freq": 60},
-    {"word": "xem", "freq": 50}
+    {"word": "thăm", "freq": 0.85},
+    {"word": "rằng", "freq": 0.70},
+    {"word": "gì", "freq": 0.60},
+    {"word": "xem", "freq": 0.50}
   ],
   "trả": [
-    {"word": "lời", "freq": 100},
-    {"word": "tiền", "freq": 80},
-    {"word": "lại", "freq": 65},
-    {"word": "về", "freq": 50}
+    {"word": "lời", "freq": 1.00},
+    {"word": "tiền", "freq": 0.80},
+    {"word": "lại", "freq": 0.65},
+    {"word": "về", "freq": 0.50}
   ],
   "giúp": [
-    {"word": "tôi", "freq": 100},
-    {"word": "đỡ", "freq": 80},
-    {"word": "cho", "freq": 65},
-    {"word": "được", "freq": 55},
-    {"word": "bạn", "freq": 50},
-    {"word": "em", "freq": 45}
+    {"word": "tôi", "freq": 1.00},
+    {"word": "đỡ", "freq": 0.80},
+    {"word": "cho", "freq": 0.65},
+    {"word": "được", "freq": 0.55},
+    {"word": "bạn", "freq": 0.50},
+    {"word": "em", "freq": 0.45}
   ],
   "tìm": [
-    {"word": "kiếm", "freq": 90},
-    {"word": "được", "freq": 80},
-    {"word": "hiểu", "freq": 65},
-    {"word": "ra", "freq": 55},
-    {"word": "thấy", "freq": 50},
-    {"word": "việc", "freq": 45}
+    {"word": "kiếm", "freq": 0.90},
+    {"word": "được", "freq": 0.80},
+    {"word": "hiểu", "freq": 0.65},
+    {"word": "ra", "freq": 0.55},
+    {"word": "thấy", "freq": 0.50},
+    {"word": "việc", "freq": 0.45}
   ],
   "mang": [
-    {"word": "theo", "freq": 85},
-    {"word": "đến", "freq": 75},
-    {"word": "về", "freq": 65},
-    {"word": "lại", "freq": 55},
-    {"word": "đi", "freq": 50}
+    {"word": "theo", "freq": 0.85},
+    {"word": "đến", "freq": 0.75},
+    {"word": "về", "freq": 0.65},
+    {"word": "lại", "freq": 0.55},
+    {"word": "đi", "freq": 0.50}
   ],
   "đưa": [
-    {"word": "ra", "freq": 90},
-    {"word": "cho", "freq": 75},
-    {"word": "đi", "freq": 60},
-    {"word": "về", "freq": 55},
-    {"word": "đón", "freq": 50}
+    {"word": "ra", "freq": 0.90},
+    {"word": "cho", "freq": 0.75},
+    {"word": "đi", "freq": 0.60},
+    {"word": "về", "freq": 0.55},
+    {"word": "đón", "freq": 0.50}
   ],
   "lấy": [
-    {"word": "được", "freq": 85},
-    {"word": "cho", "freq": 70},
-    {"word": "ra", "freq": 60},
-    {"word": "gì", "freq": 50}
+    {"word": "được", "freq": 0.85},
+    {"word": "cho", "freq": 0.70},
+    {"word": "ra", "freq": 0.60},
+    {"word": "gì", "freq": 0.50}
   ],
   "mở": [
-    {"word": "ra", "freq": 85},
-    {"word": "cửa", "freq": 80},
-    {"word": "rộng", "freq": 60},
-    {"word": "mắt", "freq": 50},
-    {"word": "lòng", "freq": 45}
+    {"word": "ra", "freq": 0.85},
+    {"word": "cửa", "freq": 0.80},
+    {"word": "rộng", "freq": 0.60},
+    {"word": "mắt", "freq": 0.50},
+    {"word": "lòng", "freq": 0.45}
   ],
   "đóng": [
-    {"word": "cửa", "freq": 90},
-    {"word": "góp", "freq": 75},
-    {"word": "lại", "freq": 60},
-    {"word": "vai", "freq": 50}
+    {"word": "cửa", "freq": 0.90},
+    {"word": "góp", "freq": 0.75},
+    {"word": "lại", "freq": 0.60},
+    {"word": "vai", "freq": 0.50}
   ],
   "chạy": [
-    {"word": "đi", "freq": 85},
-    {"word": "bộ", "freq": 80},
-    {"word": "nhanh", "freq": 65},
-    {"word": "về", "freq": 55},
-    {"word": "theo", "freq": 50}
+    {"word": "đi", "freq": 0.85},
+    {"word": "bộ", "freq": 0.80},
+    {"word": "nhanh", "freq": 0.65},
+    {"word": "về", "freq": 0.55},
+    {"word": "theo", "freq": 0.50}
   ],
   "nghĩ": [
-    {"word": "rằng", "freq": 90},
-    {"word": "là", "freq": 75},
-    {"word": "sao", "freq": 65},
-    {"word": "đến", "freq": 50},
-    {"word": "lại", "freq": 45}
+    {"word": "rằng", "freq": 0.90},
+    {"word": "là", "freq": 0.75},
+    {"word": "sao", "freq": 0.65},
+    {"word": "đến", "freq": 0.50},
+    {"word": "lại", "freq": 0.45}
   ],
   "nhận": [
-    {"word": "được", "freq": 100},
-    {"word": "ra", "freq": 75},
-    {"word": "xét", "freq": 60},
-    {"word": "thức", "freq": 55},
-    {"word": "lời", "freq": 50}
+    {"word": "được", "freq": 1.00},
+    {"word": "ra", "freq": 0.75},
+    {"word": "xét", "freq": 0.60},
+    {"word": "thức", "freq": 0.55},
+    {"word": "lời", "freq": 0.50}
   ],
   "giao": [
-    {"word": "hàng", "freq": 90},
-    {"word": "thông", "freq": 75},
-    {"word": "dịch", "freq": 60},
-    {"word": "tiếp", "freq": 55},
-    {"word": "cho", "freq": 50}
+    {"word": "hàng", "freq": 0.90},
+    {"word": "thông", "freq": 0.75},
+    {"word": "dịch", "freq": 0.60},
+    {"word": "tiếp", "freq": 0.55},
+    {"word": "cho", "freq": 0.50}
   ],
   "thanh": [
-    {"word": "toán", "freq": 90},
-    {"word": "niên", "freq": 70},
-    {"word": "tra", "freq": 55}
+    {"word": "toán", "freq": 0.90},
+    {"word": "niên", "freq": 0.70},
+    {"word": "tra", "freq": 0.55}
   ],
   "đặt": [
-    {"word": "hàng", "freq": 90},
-    {"word": "mua", "freq": 75},
-    {"word": "bàn", "freq": 60},
-    {"word": "vé", "freq": 55},
-    {"word": "phòng", "freq": 50},
-    {"word": "tên", "freq": 45}
+    {"word": "hàng", "freq": 0.90},
+    {"word": "mua", "freq": 0.75},
+    {"word": "bàn", "freq": 0.60},
+    {"word": "vé", "freq": 0.55},
+    {"word": "phòng", "freq": 0.50},
+    {"word": "tên", "freq": 0.45}
   ],
   "ship": [
-    {"word": "hàng", "freq": 90},
-    {"word": "cho", "freq": 75},
-    {"word": "nhanh", "freq": 60},
-    {"word": "về", "freq": 50}
+    {"word": "hàng", "freq": 0.90},
+    {"word": "cho", "freq": 0.75},
+    {"word": "nhanh", "freq": 0.60},
+    {"word": "về", "freq": 0.50}
   ],
   "đăng": [
-    {"word": "ký", "freq": 90},
-    {"word": "nhập", "freq": 85},
-    {"word": "bài", "freq": 65},
-    {"word": "xuất", "freq": 55}
+    {"word": "ký", "freq": 0.90},
+    {"word": "nhập", "freq": 0.85},
+    {"word": "bài", "freq": 0.65},
+    {"word": "xuất", "freq": 0.55}
   ],
   "tải": [
-    {"word": "về", "freq": 90},
-    {"word": "xuống", "freq": 80},
-    {"word": "app", "freq": 60},
-    {"word": "lên", "freq": 55}
+    {"word": "về", "freq": 0.90},
+    {"word": "xuống", "freq": 0.80},
+    {"word": "app", "freq": 0.60},
+    {"word": "lên", "freq": 0.55}
   ],
   "cập": [
-    {"word": "nhật", "freq": 100}
+    {"word": "nhật", "freq": 1.00}
   ],
   "chia": [
-    {"word": "sẻ", "freq": 100},
-    {"word": "tay", "freq": 70},
-    {"word": "cho", "freq": 55}
+    {"word": "sẻ", "freq": 1.00},
+    {"word": "tay", "freq": 0.70},
+    {"word": "cho", "freq": 0.55}
   ],
   "hỗ": [
-    {"word": "trợ", "freq": 100}
+    {"word": "trợ", "freq": 1.00}
   ],
   "bảo": [
-    {"word": "vệ", "freq": 85},
-    {"word": "mật", "freq": 75},
-    {"word": "hành", "freq": 55},
-    {"word": "hiểm", "freq": 50},
-    {"word": "đảm", "freq": 45}
+    {"word": "vệ", "freq": 0.85},
+    {"word": "mật", "freq": 0.75},
+    {"word": "hành", "freq": 0.55},
+    {"word": "hiểm", "freq": 0.50},
+    {"word": "đảm", "freq": 0.45}
   ],
   "kiểm": [
-    {"word": "tra", "freq": 100},
-    {"word": "soát", "freq": 70},
-    {"word": "định", "freq": 55}
+    {"word": "tra", "freq": 1.00},
+    {"word": "soát", "freq": 0.70},
+    {"word": "định", "freq": 0.55}
   ],
   "quản": [
-    {"word": "lý", "freq": 100},
-    {"word": "trị", "freq": 65}
+    {"word": "lý", "freq": 1.00},
+    {"word": "trị", "freq": 0.65}
   ],
   "sử": [
-    {"word": "dụng", "freq": 100}
+    {"word": "dụng", "freq": 1.00}
   ],
   "phương": [
-    {"word": "pháp", "freq": 85},
-    {"word": "tiện", "freq": 75},
-    {"word": "án", "freq": 65},
-    {"word": "hướng", "freq": 55}
+    {"word": "pháp", "freq": 0.85},
+    {"word": "tiện", "freq": 0.75},
+    {"word": "án", "freq": 0.65},
+    {"word": "hướng", "freq": 0.55}
   ],
   "hệ": [
-    {"word": "thống", "freq": 100},
-    {"word": "số", "freq": 60}
+    {"word": "thống", "freq": 1.00},
+    {"word": "số", "freq": 0.60}
   ],
   "chương": [
-    {"word": "trình", "freq": 100}
+    {"word": "trình", "freq": 1.00}
   ],
   "dự": [
-    {"word": "án", "freq": 90},
-    {"word": "định", "freq": 75},
-    {"word": "kiến", "freq": 60},
-    {"word": "báo", "freq": 55}
+    {"word": "án", "freq": 0.90},
+    {"word": "định", "freq": 0.75},
+    {"word": "kiến", "freq": 0.60},
+    {"word": "báo", "freq": 0.55}
   ],
   "thông": [
-    {"word": "tin", "freq": 100},
-    {"word": "báo", "freq": 75},
-    {"word": "qua", "freq": 60},
-    {"word": "minh", "freq": 55}
+    {"word": "tin", "freq": 1.00},
+    {"word": "báo", "freq": 0.75},
+    {"word": "qua", "freq": 0.60},
+    {"word": "minh", "freq": 0.55}
   ],
   "số": [
-    {"word": "điện", "freq": 85},
-    {"word": "lượng", "freq": 75},
-    {"word": "liệu", "freq": 65},
-    {"word": "tiền", "freq": 55},
-    {"word": "người", "freq": 50}
+    {"word": "điện", "freq": 0.85},
+    {"word": "lượng", "freq": 0.75},
+    {"word": "liệu", "freq": 0.65},
+    {"word": "tiền", "freq": 0.55},
+    {"word": "người", "freq": 0.50}
   ],
   "máy": [
-    {"word": "tính", "freq": 90},
-    {"word": "bay", "freq": 80},
-    {"word": "ảnh", "freq": 65},
-    {"word": "giặt", "freq": 55},
-    {"word": "lạnh", "freq": 50}
+    {"word": "tính", "freq": 0.90},
+    {"word": "bay", "freq": 0.80},
+    {"word": "ảnh", "freq": 0.65},
+    {"word": "giặt", "freq": 0.55},
+    {"word": "lạnh", "freq": 0.50}
   ],
   "mạng": [
-    {"word": "xã", "freq": 90},
-    {"word": "internet", "freq": 70},
-    {"word": "wifi", "freq": 55}
+    {"word": "xã", "freq": 0.90},
+    {"word": "internet", "freq": 0.70},
+    {"word": "wifi", "freq": 0.55}
   ],
   "trang": [
-    {"word": "web", "freq": 85},
-    {"word": "chủ", "freq": 75},
-    {"word": "phục", "freq": 60},
-    {"word": "trí", "freq": 55}
+    {"word": "web", "freq": 0.85},
+    {"word": "chủ", "freq": 0.75},
+    {"word": "phục", "freq": 0.60},
+    {"word": "trí", "freq": 0.55}
   ],
   "ứng": [
-    {"word": "dụng", "freq": 100},
-    {"word": "viên", "freq": 60}
+    {"word": "dụng", "freq": 1.00},
+    {"word": "viên", "freq": 0.60}
   ],
   "trường": [
-    {"word": "học", "freq": 90},
-    {"word": "hợp", "freq": 80},
-    {"word": "đại", "freq": 65}
+    {"word": "học", "freq": 0.90},
+    {"word": "hợp", "freq": 0.80},
+    {"word": "đại", "freq": 0.65}
   ],
   "sinh": [
-    {"word": "viên", "freq": 90},
-    {"word": "nhật", "freq": 80},
-    {"word": "hoạt", "freq": 65},
-    {"word": "ra", "freq": 50}
+    {"word": "viên", "freq": 0.90},
+    {"word": "nhật", "freq": 0.80},
+    {"word": "hoạt", "freq": 0.65},
+    {"word": "ra", "freq": 0.50}
   ],
   "giáo": [
-    {"word": "viên", "freq": 90},
-    {"word": "dục", "freq": 80},
-    {"word": "sư", "freq": 60}
+    {"word": "viên", "freq": 0.90},
+    {"word": "dục", "freq": 0.80},
+    {"word": "sư", "freq": 0.60}
   ],
   "bài": [
-    {"word": "viết", "freq": 85},
-    {"word": "tập", "freq": 80},
-    {"word": "hát", "freq": 65},
-    {"word": "kiểm", "freq": 55},
-    {"word": "học", "freq": 50}
+    {"word": "viết", "freq": 0.85},
+    {"word": "tập", "freq": 0.80},
+    {"word": "hát", "freq": 0.65},
+    {"word": "kiểm", "freq": 0.55},
+    {"word": "học", "freq": 0.50}
   ],
   "thi": [
-    {"word": "đấu", "freq": 75},
-    {"word": "cử", "freq": 65},
-    {"word": "đỗ", "freq": 55},
-    {"word": "rớt", "freq": 50}
+    {"word": "đấu", "freq": 0.75},
+    {"word": "cử", "freq": 0.65},
+    {"word": "đỗ", "freq": 0.55},
+    {"word": "rớt", "freq": 0.50}
   ],
   "điểm": [
-    {"word": "số", "freq": 80},
-    {"word": "cao", "freq": 70},
-    {"word": "đến", "freq": 55},
-    {"word": "yếu", "freq": 50},
-    {"word": "mạnh", "freq": 45}
+    {"word": "số", "freq": 0.80},
+    {"word": "cao", "freq": 0.70},
+    {"word": "đến", "freq": 0.55},
+    {"word": "yếu", "freq": 0.50},
+    {"word": "mạnh", "freq": 0.45}
   ],
   "gia": [
-    {"word": "đình", "freq": 100},
-    {"word": "nhập", "freq": 60},
-    {"word": "tăng", "freq": 50}
+    {"word": "đình", "freq": 1.00},
+    {"word": "nhập", "freq": 0.60},
+    {"word": "tăng", "freq": 0.50}
   ],
   "bố": [
-    {"word": "mẹ", "freq": 100},
-    {"word": "tôi", "freq": 70},
-    {"word": "em", "freq": 55}
+    {"word": "mẹ", "freq": 1.00},
+    {"word": "tôi", "freq": 0.70},
+    {"word": "em", "freq": 0.55}
   ],
   "mẹ": [
-    {"word": "tôi", "freq": 85},
-    {"word": "em", "freq": 70},
-    {"word": "ơi", "freq": 60},
-    {"word": "con", "freq": 55}
+    {"word": "tôi", "freq": 0.85},
+    {"word": "em", "freq": 0.70},
+    {"word": "ơi", "freq": 0.60},
+    {"word": "con", "freq": 0.55}
   ],
   "vợ": [
-    {"word": "chồng", "freq": 100},
-    {"word": "tôi", "freq": 75},
-    {"word": "anh", "freq": 55}
+    {"word": "chồng", "freq": 1.00},
+    {"word": "tôi", "freq": 0.75},
+    {"word": "anh", "freq": 0.55}
   ],
   "chồng": [
-    {"word": "tôi", "freq": 85},
-    {"word": "em", "freq": 65},
-    {"word": "cô", "freq": 50}
+    {"word": "tôi", "freq": 0.85},
+    {"word": "em", "freq": 0.65},
+    {"word": "cô", "freq": 0.50}
   ],
   "du": [
-    {"word": "lịch", "freq": 100},
-    {"word": "học", "freq": 60}
+    {"word": "lịch", "freq": 1.00},
+    {"word": "học", "freq": 0.60}
   ],
   "khách": [
-    {"word": "sạn", "freq": 90},
-    {"word": "hàng", "freq": 80},
-    {"word": "du", "freq": 55}
+    {"word": "sạn", "freq": 0.90},
+    {"word": "hàng", "freq": 0.80},
+    {"word": "du", "freq": 0.55}
   ],
   "phòng": [
-    {"word": "khách", "freq": 80},
-    {"word": "ngủ", "freq": 75},
-    {"word": "tắm", "freq": 65},
-    {"word": "bếp", "freq": 55},
-    {"word": "họp", "freq": 50}
+    {"word": "khách", "freq": 0.80},
+    {"word": "ngủ", "freq": 0.75},
+    {"word": "tắm", "freq": 0.65},
+    {"word": "bếp", "freq": 0.55},
+    {"word": "họp", "freq": 0.50}
   ],
   "sân": [
-    {"word": "bay", "freq": 90},
-    {"word": "bóng", "freq": 75},
-    {"word": "nhà", "freq": 55},
-    {"word": "vườn", "freq": 50}
+    {"word": "bay", "freq": 0.90},
+    {"word": "bóng", "freq": 0.75},
+    {"word": "nhà", "freq": 0.55},
+    {"word": "vườn", "freq": 0.50}
   ],
   "chuyến": [
-    {"word": "bay", "freq": 90},
-    {"word": "đi", "freq": 80},
-    {"word": "xe", "freq": 65},
-    {"word": "tàu", "freq": 55}
+    {"word": "bay", "freq": 0.90},
+    {"word": "đi", "freq": 0.80},
+    {"word": "xe", "freq": 0.65},
+    {"word": "tàu", "freq": 0.55}
   ],
   "vé": [
-    {"word": "máy", "freq": 85},
-    {"word": "xe", "freq": 75},
-    {"word": "tàu", "freq": 60}
+    {"word": "máy", "freq": 0.85},
+    {"word": "xe", "freq": 0.75},
+    {"word": "tàu", "freq": 0.60}
   ],
   "đẹp": [
-    {"word": "quá", "freq": 85},
-    {"word": "lắm", "freq": 75},
-    {"word": "trai", "freq": 60},
-    {"word": "gái", "freq": 55},
-    {"word": "nhất", "freq": 50}
+    {"word": "quá", "freq": 0.85},
+    {"word": "lắm", "freq": 0.75},
+    {"word": "trai", "freq": 0.60},
+    {"word": "gái", "freq": 0.55},
+    {"word": "nhất", "freq": 0.50}
   ],
   "ngon": [
-    {"word": "lắm", "freq": 85},
-    {"word": "quá", "freq": 80},
-    {"word": "nhất", "freq": 60},
-    {"word": "ghê", "freq": 50}
+    {"word": "lắm", "freq": 0.85},
+    {"word": "quá", "freq": 0.80},
+    {"word": "nhất", "freq": 0.60},
+    {"word": "ghê", "freq": 0.50}
   ],
   "nhanh": [
-    {"word": "lên", "freq": 85},
-    {"word": "hơn", "freq": 75},
-    {"word": "chóng", "freq": 60},
-    {"word": "quá", "freq": 50}
+    {"word": "lên", "freq": 0.85},
+    {"word": "hơn", "freq": 0.75},
+    {"word": "chóng", "freq": 0.60},
+    {"word": "quá", "freq": 0.50}
   ],
   "chậm": [
-    {"word": "lại", "freq": 85},
-    {"word": "rãi", "freq": 75},
-    {"word": "quá", "freq": 60}
+    {"word": "lại", "freq": 0.85},
+    {"word": "rãi", "freq": 0.75},
+    {"word": "quá", "freq": 0.60}
   ],
   "lớn": [
-    {"word": "nhất", "freq": 85},
-    {"word": "hơn", "freq": 75},
-    {"word": "lên", "freq": 60},
-    {"word": "tuổi", "freq": 50}
+    {"word": "nhất", "freq": 0.85},
+    {"word": "hơn", "freq": 0.75},
+    {"word": "lên", "freq": 0.60},
+    {"word": "tuổi", "freq": 0.50}
   ],
   "nhỏ": [
-    {"word": "nhất", "freq": 85},
-    {"word": "hơn", "freq": 75},
-    {"word": "tuổi", "freq": 55},
-    {"word": "bé", "freq": 50}
+    {"word": "nhất", "freq": 0.85},
+    {"word": "hơn", "freq": 0.75},
+    {"word": "tuổi", "freq": 0.55},
+    {"word": "bé", "freq": 0.50}
   ],
   "dài": [
-    {"word": "hơn", "freq": 85},
-    {"word": "quá", "freq": 65},
-    {"word": "lắm", "freq": 50}
+    {"word": "hơn", "freq": 0.85},
+    {"word": "quá", "freq": 0.65},
+    {"word": "lắm", "freq": 0.50}
   ],
   "ngắn": [
-    {"word": "hơn", "freq": 85},
-    {"word": "gọn", "freq": 70},
-    {"word": "quá", "freq": 55}
+    {"word": "hơn", "freq": 0.85},
+    {"word": "gọn", "freq": 0.70},
+    {"word": "quá", "freq": 0.55}
   ],
   "cao": [
-    {"word": "hơn", "freq": 85},
-    {"word": "nhất", "freq": 75},
-    {"word": "quá", "freq": 55},
-    {"word": "cấp", "freq": 50}
+    {"word": "hơn", "freq": 0.85},
+    {"word": "nhất", "freq": 0.75},
+    {"word": "quá", "freq": 0.55},
+    {"word": "cấp", "freq": 0.50}
   ],
   "thấp": [
-    {"word": "hơn", "freq": 85},
-    {"word": "nhất", "freq": 70},
-    {"word": "quá", "freq": 55}
+    {"word": "hơn", "freq": 0.85},
+    {"word": "nhất", "freq": 0.70},
+    {"word": "quá", "freq": 0.55}
   ],
   "mệt": [
-    {"word": "quá", "freq": 90},
-    {"word": "mỏi", "freq": 75},
-    {"word": "rồi", "freq": 60},
-    {"word": "lắm", "freq": 55}
+    {"word": "quá", "freq": 0.90},
+    {"word": "mỏi", "freq": 0.75},
+    {"word": "rồi", "freq": 0.60},
+    {"word": "lắm", "freq": 0.55}
   ],
   "khỏe": [
-    {"word": "không", "freq": 90},
-    {"word": "mạnh", "freq": 75},
-    {"word": "hơn", "freq": 55},
-    {"word": "rồi", "freq": 50}
+    {"word": "không", "freq": 0.90},
+    {"word": "mạnh", "freq": 0.75},
+    {"word": "hơn", "freq": 0.55},
+    {"word": "rồi", "freq": 0.50}
   ],
   "đói": [
-    {"word": "quá", "freq": 90},
-    {"word": "bụng", "freq": 75},
-    {"word": "rồi", "freq": 60},
-    {"word": "lắm", "freq": 50}
+    {"word": "quá", "freq": 0.90},
+    {"word": "bụng", "freq": 0.75},
+    {"word": "rồi", "freq": 0.60},
+    {"word": "lắm", "freq": 0.50}
   ],
   "no": [
-    {"word": "rồi", "freq": 90},
-    {"word": "quá", "freq": 75},
-    {"word": "lắm", "freq": 55}
+    {"word": "rồi", "freq": 0.90},
+    {"word": "quá", "freq": 0.75},
+    {"word": "lắm", "freq": 0.55}
   ],
   "buồn": [
-    {"word": "quá", "freq": 85},
-    {"word": "ngủ", "freq": 75},
-    {"word": "cười", "freq": 60},
-    {"word": "ghê", "freq": 55},
-    {"word": "lắm", "freq": 50}
+    {"word": "quá", "freq": 0.85},
+    {"word": "ngủ", "freq": 0.75},
+    {"word": "cười", "freq": 0.60},
+    {"word": "ghê", "freq": 0.55},
+    {"word": "lắm", "freq": 0.50}
   ],
   "vòng": [
-    {"word": "quanh", "freq": 85},
-    {"word": "tay", "freq": 65},
-    {"word": "đời", "freq": 50}
+    {"word": "quanh", "freq": 0.85},
+    {"word": "tay", "freq": 0.65},
+    {"word": "đời", "freq": 0.50}
   ],
   "hàng": [
-    {"word": "ngày", "freq": 80},
-    {"word": "hóa", "freq": 70},
-    {"word": "không", "freq": 55},
-    {"word": "xóm", "freq": 50},
-    {"word": "tuần", "freq": 45}
+    {"word": "ngày", "freq": 0.80},
+    {"word": "hóa", "freq": 0.70},
+    {"word": "không", "freq": 0.55},
+    {"word": "xóm", "freq": 0.50},
+    {"word": "tuần", "freq": 0.45}
   ],
   "đơn": [
-    {"word": "hàng", "freq": 90},
-    {"word": "giản", "freq": 80},
-    {"word": "vị", "freq": 60}
+    {"word": "hàng", "freq": 0.90},
+    {"word": "giản", "freq": 0.80},
+    {"word": "vị", "freq": 0.60}
   ],
   "miễn": [
-    {"word": "phí", "freq": 100},
-    {"word": "là", "freq": 60}
+    {"word": "phí", "freq": 1.00},
+    {"word": "là", "freq": 0.60}
   ],
   "giảm": [
-    {"word": "giá", "freq": 100},
-    {"word": "bớt", "freq": 65},
-    {"word": "xuống", "freq": 55}
+    {"word": "giá", "freq": 1.00},
+    {"word": "bớt", "freq": 0.65},
+    {"word": "xuống", "freq": 0.55}
   ],
   "tăng": [
-    {"word": "giá", "freq": 85},
-    {"word": "lên", "freq": 75},
-    {"word": "cường", "freq": 60},
-    {"word": "trưởng", "freq": 55}
+    {"word": "giá", "freq": 0.85},
+    {"word": "lên", "freq": 0.75},
+    {"word": "cường", "freq": 0.60},
+    {"word": "trưởng", "freq": 0.55}
   ],
   "trả": [
-    {"word": "lời", "freq": 100},
-    {"word": "tiền", "freq": 80},
-    {"word": "lại", "freq": 65},
-    {"word": "về", "freq": 50},
-    {"word": "góp", "freq": 45}
+    {"word": "lời", "freq": 1.00},
+    {"word": "tiền", "freq": 0.80},
+    {"word": "lại", "freq": 0.65},
+    {"word": "về", "freq": 0.50},
+    {"word": "góp", "freq": 0.45}
   ],
   "hết": [
-    {"word": "rồi", "freq": 90},
-    {"word": "sức", "freq": 70},
-    {"word": "mình", "freq": 55},
-    {"word": "hàng", "freq": 50}
+    {"word": "rồi", "freq": 0.90},
+    {"word": "sức", "freq": 0.70},
+    {"word": "mình", "freq": 0.55},
+    {"word": "hàng", "freq": 0.50}
   ],
   "còn": [
-    {"word": "có", "freq": 85},
-    {"word": "lại", "freq": 80},
-    {"word": "không", "freq": 70},
-    {"word": "nhiều", "freq": 60},
-    {"word": "gì", "freq": 50},
-    {"word": "nữa", "freq": 45},
-    {"word": "hàng", "freq": 40}
+    {"word": "có", "freq": 0.85},
+    {"word": "lại", "freq": 0.80},
+    {"word": "không", "freq": 0.70},
+    {"word": "nhiều", "freq": 0.60},
+    {"word": "gì", "freq": 0.50},
+    {"word": "nữa", "freq": 0.45},
+    {"word": "hàng", "freq": 0.40}
   ],
   "đúng": [
-    {"word": "rồi", "freq": 100},
-    {"word": "không", "freq": 80},
-    {"word": "vậy", "freq": 65},
-    {"word": "là", "freq": 55},
-    {"word": "hẹn", "freq": 50},
-    {"word": "giờ", "freq": 45}
+    {"word": "rồi", "freq": 1.00},
+    {"word": "không", "freq": 0.80},
+    {"word": "vậy", "freq": 0.65},
+    {"word": "là", "freq": 0.55},
+    {"word": "hẹn", "freq": 0.50},
+    {"word": "giờ", "freq": 0.45}
   ],
   "sai": [
-    {"word": "rồi", "freq": 90},
-    {"word": "lầm", "freq": 75},
-    {"word": "không", "freq": 55}
+    {"word": "rồi", "freq": 0.90},
+    {"word": "lầm", "freq": 0.75},
+    {"word": "không", "freq": 0.55}
   ],
   "đồng": [
-    {"word": "ý", "freq": 90},
-    {"word": "nghiệp", "freq": 75},
-    {"word": "hồ", "freq": 55},
-    {"word": "thời", "freq": 50}
+    {"word": "ý", "freq": 0.90},
+    {"word": "nghiệp", "freq": 0.75},
+    {"word": "hồ", "freq": 0.55},
+    {"word": "thời", "freq": 0.50}
   ],
   "khó": [
-    {"word": "khăn", "freq": 90},
-    {"word": "quá", "freq": 75},
-    {"word": "hiểu", "freq": 60},
-    {"word": "chịu", "freq": 50}
+    {"word": "khăn", "freq": 0.90},
+    {"word": "quá", "freq": 0.75},
+    {"word": "hiểu", "freq": 0.60},
+    {"word": "chịu", "freq": 0.50}
   ],
   "dễ": [
-    {"word": "dàng", "freq": 90},
-    {"word": "hiểu", "freq": 75},
-    {"word": "thương", "freq": 60},
-    {"word": "làm", "freq": 55},
-    {"word": "ăn", "freq": 50}
+    {"word": "dàng", "freq": 0.90},
+    {"word": "hiểu", "freq": 0.75},
+    {"word": "thương", "freq": 0.60},
+    {"word": "làm", "freq": 0.55},
+    {"word": "ăn", "freq": 0.50}
   ],
   "nhanh": [
-    {"word": "lên", "freq": 85},
-    {"word": "hơn", "freq": 75},
-    {"word": "chóng", "freq": 60},
-    {"word": "quá", "freq": 50}
+    {"word": "lên", "freq": 0.85},
+    {"word": "hơn", "freq": 0.75},
+    {"word": "chóng", "freq": 0.60},
+    {"word": "quá", "freq": 0.50}
   ],
   "may": [
-    {"word": "mắn", "freq": 90},
-    {"word": "mà", "freq": 70},
-    {"word": "quá", "freq": 55}
+    {"word": "mắn", "freq": 0.90},
+    {"word": "mà", "freq": 0.70},
+    {"word": "quá", "freq": 0.55}
   ],
   "sợ": [
-    {"word": "quá", "freq": 85},
-    {"word": "lắm", "freq": 70},
-    {"word": "hãi", "freq": 60},
-    {"word": "rằng", "freq": 50}
+    {"word": "quá", "freq": 0.85},
+    {"word": "lắm", "freq": 0.70},
+    {"word": "hãi", "freq": 0.60},
+    {"word": "rằng", "freq": 0.50}
   ],
   "lo": [
-    {"word": "lắng", "freq": 90},
-    {"word": "gì", "freq": 70},
-    {"word": "quá", "freq": 55},
-    {"word": "liệu", "freq": 50}
+    {"word": "lắng", "freq": 0.90},
+    {"word": "gì", "freq": 0.70},
+    {"word": "quá", "freq": 0.55},
+    {"word": "liệu", "freq": 0.50}
   ],
   "vui": [
-    {"word": "vẻ", "freq": 85},
-    {"word": "lòng", "freq": 75},
-    {"word": "quá", "freq": 65},
-    {"word": "lắm", "freq": 55},
-    {"word": "ghê", "freq": 50}
+    {"word": "vẻ", "freq": 0.85},
+    {"word": "lòng", "freq": 0.75},
+    {"word": "quá", "freq": 0.65},
+    {"word": "lắm", "freq": 0.55},
+    {"word": "ghê", "freq": 0.50}
   ],
   "buổi": [
-    {"word": "sáng", "freq": 90},
-    {"word": "chiều", "freq": 85},
-    {"word": "tối", "freq": 80},
-    {"word": "trưa", "freq": 70},
-    {"word": "họp", "freq": 50}
+    {"word": "sáng", "freq": 0.90},
+    {"word": "chiều", "freq": 0.85},
+    {"word": "tối", "freq": 0.80},
+    {"word": "trưa", "freq": 0.70},
+    {"word": "họp", "freq": 0.50}
   ],
   "sáng": [
-    {"word": "nay", "freq": 90},
-    {"word": "mai", "freq": 80},
-    {"word": "sớm", "freq": 65},
-    {"word": "tạo", "freq": 55}
+    {"word": "nay", "freq": 0.90},
+    {"word": "mai", "freq": 0.80},
+    {"word": "sớm", "freq": 0.65},
+    {"word": "tạo", "freq": 0.55}
   ],
   "chiều": [
-    {"word": "nay", "freq": 90},
-    {"word": "mai", "freq": 80},
-    {"word": "cao", "freq": 55},
-    {"word": "hướng", "freq": 50}
+    {"word": "nay", "freq": 0.90},
+    {"word": "mai", "freq": 0.80},
+    {"word": "cao", "freq": 0.55},
+    {"word": "hướng", "freq": 0.50}
   ],
   "tối": [
-    {"word": "nay", "freq": 90},
-    {"word": "mai", "freq": 80},
-    {"word": "qua", "freq": 65},
-    {"word": "đa", "freq": 55},
-    {"word": "thiểu", "freq": 50}
+    {"word": "nay", "freq": 0.90},
+    {"word": "mai", "freq": 0.80},
+    {"word": "qua", "freq": 0.65},
+    {"word": "đa", "freq": 0.55},
+    {"word": "thiểu", "freq": 0.50}
   ],
   "trưa": [
-    {"word": "nay", "freq": 90},
-    {"word": "mai", "freq": 75},
-    {"word": "rồi", "freq": 55}
+    {"word": "nay", "freq": 0.90},
+    {"word": "mai", "freq": 0.75},
+    {"word": "rồi", "freq": 0.55}
   ],
   "sớm": [
-    {"word": "hơn", "freq": 80},
-    {"word": "nhất", "freq": 65},
-    {"word": "quá", "freq": 55},
-    {"word": "mai", "freq": 50}
+    {"word": "hơn", "freq": 0.80},
+    {"word": "nhất", "freq": 0.65},
+    {"word": "quá", "freq": 0.55},
+    {"word": "mai", "freq": 0.50}
   ],
   "trễ": [
-    {"word": "rồi", "freq": 85},
-    {"word": "quá", "freq": 75},
-    {"word": "hơn", "freq": 55}
+    {"word": "rồi", "freq": 0.85},
+    {"word": "quá", "freq": 0.75},
+    {"word": "hơn", "freq": 0.55}
   ],
   "nhanh": [
-    {"word": "lên", "freq": 85},
-    {"word": "hơn", "freq": 75},
-    {"word": "chóng", "freq": 60},
-    {"word": "quá", "freq": 50}
+    {"word": "lên", "freq": 0.85},
+    {"word": "hơn", "freq": 0.75},
+    {"word": "chóng", "freq": 0.60},
+    {"word": "quá", "freq": 0.50}
   ],
   "chuẩn": [
-    {"word": "bị", "freq": 100},
-    {"word": "xác", "freq": 60}
+    {"word": "bị", "freq": 1.00},
+    {"word": "xác", "freq": 0.60}
   ],
   "thay": [
-    {"word": "đổi", "freq": 100},
-    {"word": "thế", "freq": 65},
-    {"word": "vì", "freq": 55}
+    {"word": "đổi", "freq": 1.00},
+    {"word": "thế", "freq": 0.65},
+    {"word": "vì", "freq": 0.55}
   ],
   "phải": [
-    {"word": "không", "freq": 100},
-    {"word": "làm", "freq": 80},
-    {"word": "là", "freq": 70},
-    {"word": "đi", "freq": 55},
-    {"word": "có", "freq": 50},
-    {"word": "chờ", "freq": 45}
+    {"word": "không", "freq": 1.00},
+    {"word": "làm", "freq": 0.80},
+    {"word": "là", "freq": 0.70},
+    {"word": "đi", "freq": 0.55},
+    {"word": "có", "freq": 0.50},
+    {"word": "chờ", "freq": 0.45}
   ],
   "qua": [
-    {"word": "đó", "freq": 75},
-    {"word": "đây", "freq": 65},
-    {"word": "rồi", "freq": 55},
-    {"word": "lại", "freq": 50}
+    {"word": "đó", "freq": 0.75},
+    {"word": "đây", "freq": 0.65},
+    {"word": "rồi", "freq": 0.55},
+    {"word": "lại", "freq": 0.50}
   ],
   "lên": [
-    {"word": "trên", "freq": 80},
-    {"word": "đây", "freq": 70},
-    {"word": "xe", "freq": 55},
-    {"word": "mạng", "freq": 50}
+    {"word": "trên", "freq": 0.80},
+    {"word": "đây", "freq": 0.70},
+    {"word": "xe", "freq": 0.55},
+    {"word": "mạng", "freq": 0.50}
   ],
   "xuống": [
-    {"word": "dưới", "freq": 80},
-    {"word": "xe", "freq": 70},
-    {"word": "đây", "freq": 55},
-    {"word": "nước", "freq": 50}
+    {"word": "dưới", "freq": 0.80},
+    {"word": "xe", "freq": 0.70},
+    {"word": "đây", "freq": 0.55},
+    {"word": "nước", "freq": 0.50}
   ],
   "vào": [
-    {"word": "đây", "freq": 80},
-    {"word": "nhà", "freq": 70},
-    {"word": "ngày", "freq": 60},
-    {"word": "lúc", "freq": 55},
-    {"word": "buổi", "freq": 50}
+    {"word": "đây", "freq": 0.80},
+    {"word": "nhà", "freq": 0.70},
+    {"word": "ngày", "freq": 0.60},
+    {"word": "lúc", "freq": 0.55},
+    {"word": "buổi", "freq": 0.50}
   ],
   "ngoài": [
-    {"word": "ra", "freq": 90},
-    {"word": "đường", "freq": 70},
-    {"word": "trời", "freq": 55},
-    {"word": "kia", "freq": 50}
+    {"word": "ra", "freq": 0.90},
+    {"word": "đường", "freq": 0.70},
+    {"word": "trời", "freq": 0.55},
+    {"word": "kia", "freq": 0.50}
   ],
   "hôn": [
-    {"word": "nhân", "freq": 85},
-    {"word": "em", "freq": 60}
+    {"word": "nhân", "freq": 0.85},
+    {"word": "em", "freq": 0.60}
   ],
   "cưới": [
-    {"word": "nhau", "freq": 90},
-    {"word": "vợ", "freq": 70},
-    {"word": "chồng", "freq": 60}
+    {"word": "nhau", "freq": 0.90},
+    {"word": "vợ", "freq": 0.70},
+    {"word": "chồng", "freq": 0.60}
   ],
   "yêu": [
-    {"word": "thương", "freq": 90},
-    {"word": "em", "freq": 75},
-    {"word": "anh", "freq": 65},
-    {"word": "cầu", "freq": 55},
-    {"word": "quý", "freq": 50},
-    {"word": "đời", "freq": 45}
+    {"word": "thương", "freq": 0.90},
+    {"word": "em", "freq": 0.75},
+    {"word": "anh", "freq": 0.65},
+    {"word": "cầu", "freq": 0.55},
+    {"word": "quý", "freq": 0.50},
+    {"word": "đời", "freq": 0.45}
   ],
   "ghét": [
-    {"word": "quá", "freq": 85},
-    {"word": "lắm", "freq": 70},
-    {"word": "nhất", "freq": 55}
+    {"word": "quá", "freq": 0.85},
+    {"word": "lắm", "freq": 0.70},
+    {"word": "nhất", "freq": 0.55}
   ],
   "thương": [
-    {"word": "yêu", "freq": 80},
-    {"word": "nhớ", "freq": 65},
-    {"word": "mại", "freq": 55},
-    {"word": "hiệu", "freq": 50}
+    {"word": "yêu", "freq": 0.80},
+    {"word": "nhớ", "freq": 0.65},
+    {"word": "mại", "freq": 0.55},
+    {"word": "hiệu", "freq": 0.50}
   ],
   "quên": [
-    {"word": "rồi", "freq": 90},
-    {"word": "mất", "freq": 70},
-    {"word": "đi", "freq": 55}
+    {"word": "rồi", "freq": 0.90},
+    {"word": "mất", "freq": 0.70},
+    {"word": "đi", "freq": 0.55}
   ],
   "nhớ": [
-    {"word": "nhà", "freq": 85},
-    {"word": "em", "freq": 70},
-    {"word": "anh", "freq": 60},
-    {"word": "lại", "freq": 55},
-    {"word": "rằng", "freq": 50},
-    {"word": "mãi", "freq": 45}
+    {"word": "nhà", "freq": 0.85},
+    {"word": "em", "freq": 0.70},
+    {"word": "anh", "freq": 0.60},
+    {"word": "lại", "freq": 0.55},
+    {"word": "rằng", "freq": 0.50},
+    {"word": "mãi", "freq": 0.45}
   ],
   "giống": [
-    {"word": "như", "freq": 100},
-    {"word": "nhau", "freq": 70},
-    {"word": "vậy", "freq": 55}
+    {"word": "như", "freq": 1.00},
+    {"word": "nhau", "freq": 0.70},
+    {"word": "vậy", "freq": 0.55}
   ],
   "khác": [
-    {"word": "nhau", "freq": 85},
-    {"word": "biệt", "freq": 70},
-    {"word": "với", "freq": 55},
-    {"word": "hẳn", "freq": 50}
+    {"word": "nhau", "freq": 0.85},
+    {"word": "biệt", "freq": 0.70},
+    {"word": "với", "freq": 0.55},
+    {"word": "hẳn", "freq": 0.50}
   ],
   "đủ": [
-    {"word": "rồi", "freq": 85},
-    {"word": "để", "freq": 70},
-    {"word": "điều", "freq": 55},
-    {"word": "kiện", "freq": 50}
+    {"word": "rồi", "freq": 0.85},
+    {"word": "để", "freq": 0.70},
+    {"word": "điều", "freq": 0.55},
+    {"word": "kiện", "freq": 0.50}
   ],
   "thiếu": [
-    {"word": "gì", "freq": 80},
-    {"word": "nữa", "freq": 65},
-    {"word": "tiền", "freq": 55}
+    {"word": "gì", "freq": 0.80},
+    {"word": "nữa", "freq": 0.65},
+    {"word": "tiền", "freq": 0.55}
   ],
   "thêm": [
-    {"word": "vào", "freq": 80},
-    {"word": "nữa", "freq": 75},
-    {"word": "một", "freq": 60},
-    {"word": "cho", "freq": 50}
+    {"word": "vào", "freq": 0.80},
+    {"word": "nữa", "freq": 0.75},
+    {"word": "một", "freq": 0.60},
+    {"word": "cho", "freq": 0.50}
   ],
   "bớt": [
-    {"word": "đi", "freq": 80},
-    {"word": "lại", "freq": 65},
-    {"word": "giá", "freq": 55}
+    {"word": "đi", "freq": 0.80},
+    {"word": "lại", "freq": 0.65},
+    {"word": "giá", "freq": 0.55}
   ],
   "chắc": [
-    {"word": "chắn", "freq": 90},
-    {"word": "là", "freq": 75},
-    {"word": "rồi", "freq": 55},
-    {"word": "luôn", "freq": 50}
+    {"word": "chắn", "freq": 0.90},
+    {"word": "là", "freq": 0.75},
+    {"word": "rồi", "freq": 0.55},
+    {"word": "luôn", "freq": 0.50}
   ],
   "chuyện": [
-    {"word": "gì", "freq": 90},
-    {"word": "đó", "freq": 70},
-    {"word": "này", "freq": 55},
-    {"word": "xưa", "freq": 50}
+    {"word": "gì", "freq": 0.90},
+    {"word": "đó", "freq": 0.70},
+    {"word": "này", "freq": 0.55},
+    {"word": "xưa", "freq": 0.50}
   ],
   "câu": [
-    {"word": "hỏi", "freq": 90},
-    {"word": "chuyện", "freq": 75},
-    {"word": "trả", "freq": 60},
-    {"word": "nói", "freq": 50}
+    {"word": "hỏi", "freq": 0.90},
+    {"word": "chuyện", "freq": 0.75},
+    {"word": "trả", "freq": 0.60},
+    {"word": "nói", "freq": 0.50}
   ],
   "mùa": [
-    {"word": "hè", "freq": 85},
-    {"word": "đông", "freq": 80},
-    {"word": "xuân", "freq": 75},
-    {"word": "thu", "freq": 70},
-    {"word": "mưa", "freq": 60}
+    {"word": "hè", "freq": 0.85},
+    {"word": "đông", "freq": 0.80},
+    {"word": "xuân", "freq": 0.75},
+    {"word": "thu", "freq": 0.70},
+    {"word": "mưa", "freq": 0.60}
   ],
   "mưa": [
-    {"word": "rồi", "freq": 80},
-    {"word": "lớn", "freq": 70},
-    {"word": "nhỏ", "freq": 55},
-    {"word": "to", "freq": 50}
+    {"word": "rồi", "freq": 0.80},
+    {"word": "lớn", "freq": 0.70},
+    {"word": "nhỏ", "freq": 0.55},
+    {"word": "to", "freq": 0.50}
   ],
   "nắng": [
-    {"word": "quá", "freq": 85},
-    {"word": "nóng", "freq": 70},
-    {"word": "đẹp", "freq": 55}
+    {"word": "quá", "freq": 0.85},
+    {"word": "nóng", "freq": 0.70},
+    {"word": "đẹp", "freq": 0.55}
   ],
   "lạnh": [
-    {"word": "quá", "freq": 85},
-    {"word": "lẽo", "freq": 65},
-    {"word": "lùng", "freq": 55}
+    {"word": "quá", "freq": 0.85},
+    {"word": "lẽo", "freq": 0.65},
+    {"word": "lùng", "freq": 0.55}
   ],
   "nóng": [
-    {"word": "quá", "freq": 90},
-    {"word": "lắm", "freq": 70},
-    {"word": "bức", "freq": 55}
+    {"word": "quá", "freq": 0.90},
+    {"word": "lắm", "freq": 0.70},
+    {"word": "bức", "freq": 0.55}
   ],
   "chụp": [
-    {"word": "ảnh", "freq": 100},
-    {"word": "hình", "freq": 75}
+    {"word": "ảnh", "freq": 1.00},
+    {"word": "hình", "freq": 0.75}
   ],
   "quay": [
-    {"word": "lại", "freq": 85},
-    {"word": "video", "freq": 75},
-    {"word": "phim", "freq": 60},
-    {"word": "về", "freq": 50}
+    {"word": "lại", "freq": 0.85},
+    {"word": "video", "freq": 0.75},
+    {"word": "phim", "freq": 0.60},
+    {"word": "về", "freq": 0.50}
   ],
   "bình": [
-    {"word": "thường", "freq": 90},
-    {"word": "luận", "freq": 70},
-    {"word": "an", "freq": 60},
-    {"word": "tĩnh", "freq": 50}
+    {"word": "thường", "freq": 0.90},
+    {"word": "luận", "freq": 0.70},
+    {"word": "an", "freq": 0.60},
+    {"word": "tĩnh", "freq": 0.50}
   ],
   "đã": [
-    {"word": "có", "freq": 90},
-    {"word": "được", "freq": 85},
-    {"word": "làm", "freq": 75},
-    {"word": "đến", "freq": 65},
-    {"word": "từng", "freq": 55},
-    {"word": "biết", "freq": 50},
-    {"word": "nói", "freq": 45},
-    {"word": "xong", "freq": 40}
+    {"word": "có", "freq": 0.90},
+    {"word": "được", "freq": 0.85},
+    {"word": "làm", "freq": 0.75},
+    {"word": "đến", "freq": 0.65},
+    {"word": "từng", "freq": 0.55},
+    {"word": "biết", "freq": 0.50},
+    {"word": "nói", "freq": 0.45},
+    {"word": "xong", "freq": 0.40}
   ],
   "nữa": [
-    {"word": "là", "freq": 75},
-    {"word": "đi", "freq": 65},
-    {"word": "rồi", "freq": 55},
-    {"word": "không", "freq": 50}
+    {"word": "là", "freq": 0.75},
+    {"word": "đi", "freq": 0.65},
+    {"word": "rồi", "freq": 0.55},
+    {"word": "không", "freq": 0.50}
   ],
   "rồi": [
-    {"word": "sao", "freq": 80},
-    {"word": "mà", "freq": 70},
-    {"word": "thì", "freq": 60},
-    {"word": "đi", "freq": 50},
-    {"word": "ạ", "freq": 45}
+    {"word": "sao", "freq": 0.80},
+    {"word": "mà", "freq": 0.70},
+    {"word": "thì", "freq": 0.60},
+    {"word": "đi", "freq": 0.50},
+    {"word": "ạ", "freq": 0.45}
   ],
   "ơi": [
-    {"word": "là", "freq": 75},
-    {"word": "ơi", "freq": 60}
+    {"word": "là", "freq": 0.75},
+    {"word": "ơi", "freq": 0.60}
   ],
   "ạ": [
-    {"word": "em", "freq": 65},
-    {"word": "vâng", "freq": 55}
+    {"word": "em", "freq": 0.65},
+    {"word": "vâng", "freq": 0.55}
   ],
   "dạ": [
-    {"word": "vâng", "freq": 80},
-    {"word": "em", "freq": 65},
-    {"word": "không", "freq": 55}
+    {"word": "vâng", "freq": 0.80},
+    {"word": "em", "freq": 0.65},
+    {"word": "không", "freq": 0.55}
   ],
   "vâng": [
-    {"word": "ạ", "freq": 90},
-    {"word": "em", "freq": 65}
+    {"word": "ạ", "freq": 0.90},
+    {"word": "em", "freq": 0.65}
   ],
   "ok": [
-    {"word": "bạn", "freq": 80},
-    {"word": "anh", "freq": 65},
-    {"word": "em", "freq": 60},
-    {"word": "luôn", "freq": 55}
+    {"word": "bạn", "freq": 0.80},
+    {"word": "anh", "freq": 0.65},
+    {"word": "em", "freq": 0.60},
+    {"word": "luôn", "freq": 0.55}
   ],
   "sorry": [
-    {"word": "bạn", "freq": 80},
-    {"word": "nha", "freq": 70},
-    {"word": "em", "freq": 55}
+    {"word": "bạn", "freq": 0.80},
+    {"word": "nha", "freq": 0.70},
+    {"word": "em", "freq": 0.55}
   ],
   "thanks": [
-    {"word": "bạn", "freq": 85},
-    {"word": "nha", "freq": 70},
-    {"word": "em", "freq": 55}
+    {"word": "bạn", "freq": 0.85},
+    {"word": "nha", "freq": 0.70},
+    {"word": "em", "freq": 0.55}
   ],
   "bye": [
-    {"word": "bạn", "freq": 85},
-    {"word": "nha", "freq": 70}
+    {"word": "bạn", "freq": 0.85},
+    {"word": "nha", "freq": 0.70}
   ],
   "hi": [
-    {"word": "bạn", "freq": 85},
-    {"word": "anh", "freq": 65},
-    {"word": "em", "freq": 60}
+    {"word": "bạn", "freq": 0.85},
+    {"word": "anh", "freq": 0.65},
+    {"word": "em", "freq": 0.60}
   ],
   "hello": [
-    {"word": "bạn", "freq": 85},
-    {"word": "anh", "freq": 65},
-    {"word": "em", "freq": 55}
+    {"word": "bạn", "freq": 0.85},
+    {"word": "anh", "freq": 0.65},
+    {"word": "em", "freq": 0.55}
   ],
   "hên": [
-    {"word": "xui", "freq": 85},
-    {"word": "quá", "freq": 70},
-    {"word": "ghê", "freq": 55}
+    {"word": "xui", "freq": 0.85},
+    {"word": "quá", "freq": 0.70},
+    {"word": "ghê", "freq": 0.55}
   ],
   "xui": [
-    {"word": "quá", "freq": 85},
-    {"word": "xẻo", "freq": 70},
-    {"word": "ghê", "freq": 55}
+    {"word": "quá", "freq": 0.85},
+    {"word": "xẻo", "freq": 0.70},
+    {"word": "ghê", "freq": 0.55}
   ],
   "trời": [
-    {"word": "ơi", "freq": 100},
-    {"word": "đất", "freq": 75},
-    {"word": "mưa", "freq": 65},
-    {"word": "nắng", "freq": 55},
-    {"word": "lạnh", "freq": 50},
-    {"word": "nóng", "freq": 45}
+    {"word": "ơi", "freq": 1.00},
+    {"word": "đất", "freq": 0.75},
+    {"word": "mưa", "freq": 0.65},
+    {"word": "nắng", "freq": 0.55},
+    {"word": "lạnh", "freq": 0.50},
+    {"word": "nóng", "freq": 0.45}
   ],
   "bình": [
-    {"word": "thường", "freq": 90},
-    {"word": "luận", "freq": 70},
-    {"word": "an", "freq": 60},
-    {"word": "tĩnh", "freq": 50}
+    {"word": "thường", "freq": 0.90},
+    {"word": "luận", "freq": 0.70},
+    {"word": "an", "freq": 0.60},
+    {"word": "tĩnh", "freq": 0.50}
   ]
 }

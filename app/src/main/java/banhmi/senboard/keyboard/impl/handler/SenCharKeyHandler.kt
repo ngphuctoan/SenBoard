@@ -13,6 +13,7 @@ class SenCharKeyHandler(private val char: Char) : SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
         val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
 
@@ -38,12 +39,14 @@ class SenCharKeyHandler(private val char: Char) : SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
-    ) = handleTap(state, onSetState, preferences, imService)
+        onSaveBigram: (String, String) -> Unit,
+    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
 
     override fun handleLongTap(
         state: SenBoardState,
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
-    ) = handleTap(state, onSetState, preferences, imService)
+        onSaveBigram: (String, String) -> Unit,
+    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
 }

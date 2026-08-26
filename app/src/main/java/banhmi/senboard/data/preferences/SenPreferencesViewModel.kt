@@ -1,7 +1,6 @@
 package banhmi.senboard.data.preferences
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -9,7 +8,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import banhmi.senboard.engine.VietnameseEngineType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
@@ -26,7 +24,7 @@ class SenPreferencesViewModel @Inject constructor(
     companion object {
         val REPOSITORY_KEY = CreationExtras.Key<SenPreferencesRepository>()
 
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
+        val Factory = viewModelFactory {
             initializer {
                 // Repository is required to be passed to the factory
                 val repository = requireNotNull(this[REPOSITORY_KEY])
@@ -35,7 +33,7 @@ class SenPreferencesViewModel @Inject constructor(
         }
     }
 
-    val preferences: StateFlow<SenPreferences> = repository.preferencesFlow.stateIn(
+    val preferences = repository.preferencesFlow.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5.seconds),
         /* Set the initial value as the first emitted value from the flow. This makes sure that

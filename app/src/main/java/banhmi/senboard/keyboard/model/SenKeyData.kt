@@ -154,6 +154,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 
@@ -162,6 +163,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 
@@ -170,6 +172,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 }
