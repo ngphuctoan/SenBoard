@@ -47,8 +47,8 @@ class UserBigramViewModel @Inject constructor(
         candidateText: String,
         incrementWeight: Float = UserBigramViewModelDefaults.IncrementWeight,
     ) {
-        // Disable saving user input as bigram for the time being.
-        // I think that saving user key taps is a very terrible idea
+        /* Disable saving user input as bigram for the time being.
+        I think that saving user key taps is a very terrible idea */
         return
 
         @Suppress("UNREACHABLE_CODE")
