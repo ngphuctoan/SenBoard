@@ -362,6 +362,7 @@ fun SenBoardPreview() {
                 mode = SenCharactersMode,
                 shiftMode = ShiftMode.Off,
                 composingText = SenBoardStateDefaults.EmptyComposingText,
+                previousWord = SenBoardStateDefaults.EmptyPreviousWord,
             ),
         )
     }

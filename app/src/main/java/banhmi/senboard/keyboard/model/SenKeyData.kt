@@ -23,10 +23,10 @@ data class SenKeyColors(
 )
 
 object SenKeyStyleDefaults {
-    val Shape: Shape = ShapeDefaults.Medium
+    val Shape = ShapeDefaults.Medium
 
     @Composable
-    fun textStyle(): TextStyle = MaterialTheme.typography.bodyLargeEmphasized
+    fun textStyle() = MaterialTheme.typography.bodyLargeEmphasized
 }
 
 data class SenKeyStyle(
@@ -109,7 +109,7 @@ data class SenKeyIconTransforms(
 object SenKeyDisplayDefaults {
     val EmptyIconDescription: String? = null
 
-    val IconTransforms: SenKeyIconTransforms = SenKeyIconTransforms(rotation = 0f)
+    val IconTransforms = SenKeyIconTransforms(rotation = 0f)
 }
 
 sealed interface SenKeyDisplay {
@@ -129,12 +129,12 @@ sealed interface SenKeyDisplay {
     ) : SenKeyDisplay
 
     data class Char(val char: kotlin.Char) : SenKeyDisplay {
-        override fun invoke(state: SenBoardState): SenKeyDisplay =
+        override fun invoke(state: SenBoardState) =
             Text(char.toString().run { if (state.isShifted) uppercase() else lowercase() })
     }
 
     object ShiftIcon : SenKeyDisplay {
-        override fun invoke(state: SenBoardState): SenKeyDisplay = when (state.shiftMode) {
+        override fun invoke(state: SenBoardState) = when (state.shiftMode) {
             ShiftMode.Off -> Icon(
                 icon = Icons.AutoMirrored.Outlined.Forward,
                 transforms = SenKeyIconTransforms(rotation = -90f),
@@ -154,6 +154,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 
@@ -162,6 +163,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 
@@ -170,6 +172,7 @@ interface SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) {
     }
 }
@@ -178,4 +181,5 @@ data class SenKeyData(
     val styleProvider: SenKeyStyleProvider,
     val display: SenKeyDisplay,
     val handler: SenKeyHandler,
+    val alt: SenAlt,
 )

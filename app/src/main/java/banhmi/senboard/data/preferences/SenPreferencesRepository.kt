@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import banhmi.senboard.engine.VietnameseEngineType
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -14,7 +13,7 @@ import javax.inject.Inject
 class SenPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) {
-    val preferencesFlow: Flow<SenPreferences> = dataStore.data.catch { exception ->
+    val preferencesFlow = dataStore.data.catch { exception ->
         when (exception) {
             // Tell the consumer that the settings are empty/default when failed to get the data store
             is IOException -> emit(emptyPreferences())

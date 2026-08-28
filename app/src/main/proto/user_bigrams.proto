@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "banhmi.senboard.datastore.snippets.proto";
+option java_multiple_files = true;
+
+message UserBigram {
+  repeated BigramEntry entries = 1;
+}
+
+message BigramEntry {
+  string text = 1;
+  repeated BigramCandidate candidates = 2;
+}
+
+message BigramCandidate {
+  string text = 1;
+  float frequency = 2;
+}

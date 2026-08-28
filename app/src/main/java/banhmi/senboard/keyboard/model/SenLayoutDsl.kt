@@ -11,15 +11,15 @@ class SenLayoutRowScope(private val heightMultiplier: Float) {
         // By default, the shape is the same width as the area
         shapeWidthProportion: Float = areaWidthMultiplier,
         shapeAlignment: Alignment.Horizontal = SenLayoutKeyDefaults.ShapeAlignment,
-    ): Boolean = keys.add(
+    ) = keys.add(
         SenLayoutKey(
             areaWidthMultiplier,
             shapeWidthProportion,
             shapeAlignment,
-        )
+        ),
     )
 
-    fun build(): SenLayoutRow = SenLayoutRow(
+    fun build() = SenLayoutRow(
         keys = keys.toList(), // Copy list as read-only
         heightMultiplier = heightMultiplier,
     )
@@ -31,13 +31,13 @@ class SenLayoutScope(private val keySpacing: PaddingValues) {
     fun senRow(
         heightMultiplier: Float = SenLayoutRowDefaults.HeightMultiplier,
         builder: SenLayoutRowScope.() -> Unit,
-    ): Boolean = rows.add(
+    ) = rows.add(
         SenLayoutRowScope(heightMultiplier)
             .apply(builder)
-            .build()
+            .build(),
     )
 
-    fun build(): SenLayout = SenLayout(
+    fun build() = SenLayout(
         rows = rows.toList(), // Copy list as read-only
         keySpacing = keySpacing,
     )
@@ -46,6 +46,6 @@ class SenLayoutScope(private val keySpacing: PaddingValues) {
 fun senLayout(
     keySpacing: PaddingValues = SenLayoutDefaults.KeySpacing,
     builder: SenLayoutScope.() -> Unit,
-): SenLayout = SenLayoutScope(keySpacing)
+) = SenLayoutScope(keySpacing)
     .apply(builder)
     .build()

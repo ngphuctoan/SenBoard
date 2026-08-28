@@ -12,13 +12,14 @@ object SenShiftKeyHandler : SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) = onSetState(
         state.copy(
             shiftMode = when (state.shiftMode) {
                 ShiftMode.Off -> ShiftMode.Shifted
                 ShiftMode.Shifted, ShiftMode.CapsLocked -> ShiftMode.Off
             },
-        )
+        ),
     )
 
     override fun handleDoubleTap(
@@ -26,6 +27,7 @@ object SenShiftKeyHandler : SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
+        onSaveBigram: (String, String) -> Unit,
     ) = onSetState(state.copy(shiftMode = ShiftMode.CapsLocked))
 
     override fun handleLongTap(
@@ -33,5 +35,6 @@ object SenShiftKeyHandler : SenKeyHandler {
         onSetState: (SenBoardState) -> Unit,
         preferences: SenPreferences,
         imService: SenImServiceProxy,
-    ) = handleTap(state, onSetState, preferences, imService)
+        onSaveBigram: (String, String) -> Unit,
+    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
 }

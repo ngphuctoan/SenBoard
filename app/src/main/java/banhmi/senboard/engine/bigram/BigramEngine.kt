@@ -1,91 +1,56 @@
 package banhmi.senboard.engine.bigram
 
 import android.content.Context
-import kotlinx.serialization.Serializable
+import banhmi.senboard.model.BigramDataset
+import banhmi.senboard.model.BigramDatasetTakeLimit
+import banhmi.senboard.model.BigramEntry
+import banhmi.senboard.model.addAllFrom
 import kotlinx.serialization.json.Json
 
-@Serializable
-data class BigramEntry(val word: String, val freq: Int)
+private const val DATASET_FILE_NAME = "bigrams.json"
 
-object BigramEngine {
+object BigramEngineDefaults {
+    @JvmStatic
+    val TakeLimit = BigramDatasetTakeLimit.Max(3)
+}
 
-    private var bigramMap: Map<String, List<BigramEntry>> = emptyMap()
-    private var isLoaded = false
+class BigramEngine(private val context: Context) {
+    private val bigramDataset = BigramDataset(entries = mutableListOf())
 
-    /**
-     * Load bigram data from assets/bigrams.json.
-     * Should be called once when the keyboard service initializes.
-     */
-    fun loadBigrams(context: Context) {
-        if (isLoaded) return
-        try {
-            val jsonString = context.assets
-                .open("bigrams.json")
-                .bufferedReader()
-                .use { it.readText() }
-            val json = Json { ignoreUnknownKeys = true }
-            bigramMap = json.decodeFromString<Map<String, List<BigramEntry>>>(jsonString)
-            isLoaded = true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            bigramMap = emptyMap()
-        }
+    private val jsonWithUnknownKeys = Json { ignoreUnknownKeys = true }
+
+    // Remember to clear first before loading
+    fun clearDataset(): BigramEngine {
+        bigramDataset.entries.clear()
+        return this // Makes it easier to chain clearDataset().loadDataset()
     }
 
-    /**
-     * Returns top N predicted next words based on the previous word.
-     * Prioritizes user-learned predictions from UserBigramStore, filling remaining slots from static bigramMap.
-     */
-    fun predict(previousWord: String, context: Context? = null, maxResults: Int = 3): List<String> {
-        if (previousWord.isBlank()) return emptyList()
+    fun loadDataset(): BigramEngine {
+        if (bigramDataset.entries.isNotEmpty()) throw IllegalStateException(
+            "Dataset must be cleared before loading. Have you called 'clearDataset()'?",
+        )
 
-        val key = previousWord
-            .trim()
-            .lowercase()
-        val resultList = mutableListOf<String>()
-        val seen = mutableSetOf<String>()
-
-        // 1. Prioritize user-personalized predictions
-        val userPredictions = UserBigramStore.getPredictions(context, key)
-        for (w in userPredictions) {
-            if (seen.add(w.lowercase())) {
-                resultList.add(w)
-                if (resultList.size >= maxResults) return resultList
-            }
+        context.assets.open(DATASET_FILE_NAME).bufferedReader().readText().let { encodedJson ->
+            val otherBigramDataset: BigramDataset<List<BigramEntry>> =
+                jsonWithUnknownKeys.decodeFromString(encodedJson)
+            bigramDataset.addAllFrom(otherBigramDataset)
         }
 
-        // 2. Fallback / fill remaining from static bigram dataset
-        if (isLoaded) {
-            val entries = bigramMap[key] ?: emptyList()
-            val staticPredictions = entries
-                .sortedByDescending { it.freq }
-                .map { it.word }
+        return this
+    }
 
-            for (w in staticPredictions) {
-                if (seen.add(w.lowercase())) {
-                    resultList.add(w)
-                    if (resultList.size >= maxResults) return resultList
-                }
-            }
+    fun <T : List<BigramEntry>> getBestCandidates(
+        entryText: String,
+        takeLimit: BigramDatasetTakeLimit = BigramEngineDefaults.TakeLimit,
+        // Merge the dataset with user provided one (e.g. from a DataStore)
+        userProvidedBigramDataset: BigramDataset<T>? = null,
+    ): List<String> {
+        val mergedBigramDataset = if (userProvidedBigramDataset != null) {
+            bigramDataset + userProvidedBigramDataset
+        } else {
+            bigramDataset
         }
 
-        return resultList
-    }
-
-    /**
-     * For unit testing: load bigrams directly from a map without needing Context.
-     */
-    fun loadBigramsFromMap(data: Map<String, List<BigramEntry>>) {
-        bigramMap = data
-        isLoaded = true
-    }
-
-    /**
-     * Clear loaded data (useful for testing).
-     */
-    fun clear() {
-        bigramMap = emptyMap()
-        isLoaded = false
-        UserBigramStore.clear()
+        return mergedBigramDataset.getBestCandidates(entryText, takeLimit)
     }
 }

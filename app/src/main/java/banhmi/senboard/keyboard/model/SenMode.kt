@@ -15,7 +15,7 @@ enum class SenModeType {
     Characters, Numbers, ExtraCharacters, Aaaaa;
 }
 
-fun provideMode(modeType: SenModeType): SenMode = when (modeType) {
+fun provideMode(modeType: SenModeType) = when (modeType) {
     SenModeType.Characters -> SenCharactersMode
     SenModeType.Numbers -> SenNumbersMode
     SenModeType.ExtraCharacters -> SenExtraCharactersMode
