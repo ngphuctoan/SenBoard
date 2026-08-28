@@ -1,40 +1,22 @@
 package banhmi.senboard.keyboard.impl.handler
 
-import banhmi.senboard.data.preferences.SenPreferences
-import banhmi.senboard.keyboard.data.SenBoardState
-import banhmi.senboard.keyboard.data.ShiftMode
 import banhmi.senboard.keyboard.model.SenKeyHandler
-import banhmi.senboard.keyboard.proxy.SenImServiceProxy
+import banhmi.senboard.keyboard.model.SenKeyHandlerContext
+import banhmi.senboard.keyboard.state.ShiftMode
 
 object SenShiftKeyHandler : SenKeyHandler {
     override fun handleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) = onSetState(
-        state.copy(
-            shiftMode = when (state.shiftMode) {
+        context: SenKeyHandlerContext,
+    ) = context.run {
+        onUpdateShiftMode(
+            when (uiState.shiftMode) {
                 ShiftMode.Off -> ShiftMode.Shifted
                 ShiftMode.Shifted, ShiftMode.CapsLocked -> ShiftMode.Off
             },
-        ),
-    )
+        )
+    }
 
     override fun handleDoubleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) = onSetState(state.copy(shiftMode = ShiftMode.CapsLocked))
-
-    override fun handleLongTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
+        context: SenKeyHandlerContext,
+    ) = context.onUpdateShiftMode(ShiftMode.CapsLocked)
 }

@@ -24,11 +24,11 @@ open class SenLifecycleImService : InputMethodService(), LifecycleOwner, SavedSt
     ViewModelStoreOwner, CoroutineScope by CoroutineScope(
         SupervisorJob() + Dispatchers.Main + CoroutineExceptionHandler { _, exception ->
             println("Error in coroutine: $exception")
-        }) {
+        },
+    ) {
     private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
 
-    private val savedStateRegistryController: SavedStateRegistryController =
-        SavedStateRegistryController.create(this)
+    private val savedStateRegistryController: SavedStateRegistryController = SavedStateRegistryController.create(this)
 
     private val _viewModelStore: ViewModelStore = ViewModelStore()
 

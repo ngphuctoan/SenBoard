@@ -33,7 +33,7 @@ class SenPreferencesViewModel @Inject constructor(
         }
     }
 
-    val preferences = repository.preferencesFlow.stateIn(
+    val preferencesState = repository.preferencesFlow.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5.seconds),
         /* Set the initial value as the first emitted value from the flow. This makes sure that

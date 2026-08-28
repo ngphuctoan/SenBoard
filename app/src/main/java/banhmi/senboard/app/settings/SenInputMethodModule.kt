@@ -63,7 +63,7 @@ fun SenInputMethodScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenInputMethodContent(
         onNavigateBack = navigator::goBack,
@@ -215,8 +215,7 @@ fun SenInputMethodScreenPreview() {
                 preferences = preferences.copy(vietnameseEngineType = vietnameseEngine)
             },
             onAutoCapitalizationEnabledUpdate = { autoCapitalizationEnabled ->
-                preferences =
-                    preferences.copy(autoCapitalizationEnabled = autoCapitalizationEnabled)
+                preferences = preferences.copy(autoCapitalizationEnabled = autoCapitalizationEnabled)
             },
             onSpaceBarShortcutEnabledUpdate = { spaceBarShortcutEnabled ->
                 preferences = preferences.copy(spaceBarShortcutEnabled = spaceBarShortcutEnabled)

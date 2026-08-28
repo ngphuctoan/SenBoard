@@ -1,34 +1,22 @@
 package banhmi.senboard.keyboard
 
-import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toAndroidRect
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -36,39 +24,34 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
-import banhmi.senboard.SenActivity
 import banhmi.senboard.data.bigram.UserBigramRepository
 import banhmi.senboard.data.bigram.UserBigramViewModel
-import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesRepository
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
 import banhmi.senboard.engine.bigram.BigramEngine
-import banhmi.senboard.engine.provideVietnameseEngine
-import banhmi.senboard.keyboard.data.SenBoardState
-import banhmi.senboard.keyboard.data.SenBoardStateDefaults
-import banhmi.senboard.keyboard.data.SenBoardStateViewModel
-import banhmi.senboard.keyboard.data.ShiftMode
 import banhmi.senboard.keyboard.impl.handler.SenShiftKeyHandler
-import banhmi.senboard.keyboard.impl.mode.SenAaaaaMode
-import banhmi.senboard.keyboard.impl.mode.SenCharactersMode
 import banhmi.senboard.keyboard.lifecycle.SenLifecycleImService
-import banhmi.senboard.keyboard.model.SenKeyDisplay
-import banhmi.senboard.keyboard.proxy.SenImServiceProxy
+import banhmi.senboard.keyboard.model.SenAlt
+import banhmi.senboard.keyboard.model.SenKeyHandlerContext
+import banhmi.senboard.keyboard.model.senAltNone
+import banhmi.senboard.keyboard.state.SenBoardStateDefaults
+import banhmi.senboard.keyboard.state.SenBoardStateViewModel
+import banhmi.senboard.keyboard.state.ShiftMode
+import banhmi.senboard.keyboard.ui.SenAltPopup
+import banhmi.senboard.keyboard.ui.SenAltPopupDefaults
 import banhmi.senboard.keyboard.ui.SenBoard
 import banhmi.senboard.keyboard.ui.SenBoardScaffold
-import banhmi.senboard.keyboard.ui.SenEngineIcon
-import banhmi.senboard.keyboard.ui.SenEngineSwitcher
+import banhmi.senboard.keyboard.ui.SenBoardScaffoldDefaults
+import banhmi.senboard.keyboard.ui.SenDisplay
 import banhmi.senboard.keyboard.ui.SenKey
-import banhmi.senboard.keyboard.ui.SenKeyDefaults
 import banhmi.senboard.keyboard.ui.SenKeyIndication
 import banhmi.senboard.keyboard.ui.SenKeyIndicationDefaults
-import banhmi.senboard.keyboard.ui.SenSuggestions
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.EMPTY
 import banhmi.senboard.utils.toIntOffset
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -86,7 +69,7 @@ class SenImService : SenLifecycleImService() {
 
     /* @HiltViewModel only works with Activity class, so we have to construct the view model manually
     using the Factory. Thankfully, we can use the injected repository to set the key value */
-    private val preferencesViewModel: SenPreferencesViewModel by lazy {
+    val preferencesViewModel by lazy {
         val extras = MutableCreationExtras().apply {
             set(SenPreferencesViewModel.REPOSITORY_KEY, preferencesRepository)
         }
@@ -98,14 +81,15 @@ class SenImService : SenLifecycleImService() {
         )[SenPreferencesViewModel::class.java]
     }
 
-    private val stateViewModel: SenBoardStateViewModel by lazy {
+    val stateViewModel by lazy {
         ViewModelProvider(
             store = this.viewModelStore,
             factory = SenBoardStateViewModel.Factory,
         )[SenBoardStateViewModel::class.java]
     }
 
-    private val userBigramViewModel: UserBigramViewModel by lazy {
+    @Suppress("UNUSED")
+    val userBigramViewModel by lazy {
         val extras = MutableCreationExtras().apply {
             set(UserBigramViewModel.REPOSITORY_KEY, userBigramRepository)
         }
@@ -125,9 +109,11 @@ class SenImService : SenLifecycleImService() {
     }
 
     // The keyboard's dimensions for setting touchable region (see onComputeInsets)
-    private var dimensions: IntRect = IntRect.Zero
+    private var dimensions = IntRect.Zero
 
-    override fun onComputeInsets(outInsets: Insets?) {
+    override fun onComputeInsets(
+        outInsets: Insets?,
+    ) {
         super.onComputeInsets(outInsets)
 
         outInsets?.apply {
@@ -138,31 +124,27 @@ class SenImService : SenLifecycleImService() {
         }
     }
 
-    override fun onStartInputView(editorInfo: EditorInfo?, restarting: Boolean) {
+    override fun onStartInputView(
+        editorInfo: EditorInfo?,
+        restarting: Boolean,
+    ) {
         super.onStartInputView(editorInfo, restarting)
 
-        val state = stateViewModel.uiState.value
-        val preferences = preferencesViewModel.preferences.value
-
-        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-        val composedText = engine.convertWord(state.composingText)
+        val preferencesState = preferencesViewModel.preferencesState.value
 
         currentInputConnection.finishComposingText()
 
-        if (composedText.isNotBlank() && state.previousWord.isNotBlank()) userBigramViewModel.saveBigram(state.previousWord, composedText)
-
-        stateViewModel.setState(
-            state.copy(
-                shiftMode = SenBoardStateDefaults.shiftMode(preferences.autoCapitalizationEnabled),
-                composingText = SenBoardStateDefaults.EmptyComposingText,
-                previousWord = composedText,
+        stateViewModel.updateShiftMode(
+            SenBoardStateDefaults.shiftMode(
+                preferencesState.autoCapitalizationEnabled,
             ),
         )
+        stateViewModel.updateComposingText(String.EMPTY)
+        // We don't have a bigram for empty string yet so we clear the suggestion
+        stateViewModel.updateWordSuggestions(emptyList())
     }
 
     override fun onCreateInputView(): View {
-        val imService = SenImServiceProxy(this)
-
         handleLifecycleOnStartEvent()
 
         return ComposeView(this).apply {
@@ -173,31 +155,26 @@ class SenImService : SenLifecycleImService() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
             )
 
-            window.window?.let { window -> WindowCompat.enableEdgeToEdge(window) }
-
             setContent {
-                val preferences: SenPreferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
-                val state: SenBoardState by stateViewModel.uiState.collectAsStateWithLifecycle()
-                val userBigramDataset by userBigramViewModel.bigramDataset.collectAsStateWithLifecycle()
+                window.window?.let { window ->
+                    WindowCompat.enableEdgeToEdge(window)
+                    WindowCompat.getInsetsController(window, window.decorView) //
+                        .isAppearanceLightNavigationBars = !isSystemInDarkTheme()
+                }
 
-                val isCapsLocked = state.shiftMode == ShiftMode.CapsLocked
+                val uiState by stateViewModel.uiState.collectAsStateWithLifecycle()
+                val preferencesState by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
+                // val userBigramDataset by userBigramViewModel.bigramDataset.collectAsStateWithLifecycle()
 
-                val mode = state.mode
-                val layout = mode.layout
+                var previousComposedText by remember { mutableStateOf("") }
+                var alt: SenAlt by remember { mutableStateOf(senAltNone()) }
+                var altPopupVisible by remember { mutableStateOf(false) }
 
-                val candidates = remember(
-                    bigramEngine,
-                    userBigramDataset,
-                    preferences.vietnameseEngineType,
-                    state.composingText,
-                ) {
-                    val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-                    val composedText = engine.convertWord(state.composingText)
-
-                    bigramEngine.getBestCandidates(
-                        entryText = composedText.ifBlank { state.previousWord },
-                        userProvidedBigramDataset = userBigramDataset,
-                    )
+                if (uiState.composingText.isBlank()) {
+                    val composedText = preferencesState.vietnameseEngine.convertWord(previousComposedText)
+                    stateViewModel.updateWordSuggestions(bigramEngine.getBestCandidates<Nothing>(composedText))
+                } else {
+                    previousComposedText = uiState.composingText
                 }
 
                 SenTheme {
@@ -206,38 +183,165 @@ class SenImService : SenLifecycleImService() {
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         SenBoardScaffold(
+                            bottomBar = {
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .navigationBarsPadding(),
+                                )
+                            },
+                            shadowElevation = SenBoardScaffoldDefaults.shadowElevation(
+                                preferencesState.keyBackgroundShadowEnabled,
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onGloballyPositioned { coordinates ->
+                                    dimensions = IntRect(
+                                        offset = coordinates.positionInWindow().toIntOffset(),
+                                        size = coordinates.size,
+                                    )
+
+                                    /* Tell the input view that the layout has changed,
+                                    this is for insets and touchable region to be re-computed */
+                                    window.window?.decorView?.requestLayout()
+                                },
+                        ) {
+                            SenBoard(
+                                layout = uiState.mode.layout,
+                                popup = { topLeftOffset, tapPosition ->
+                                    if (alt is SenAlt.Popup && altPopupVisible) {
+                                        SenAltPopup(
+                                            popup = alt as SenAlt.Popup,
+                                            offset = Offset(tapPosition.x, topLeftOffset.y),
+                                            shadowElevation = SenAltPopupDefaults.shadowElevation(
+                                                preferencesState.keyBackgroundShadowEnabled,
+                                            ),
+                                        ) { altData ->
+                                            SenDisplay(display = altData.display(uiState))
+                                        }
+                                    }
+                                },
+                                /* If I extract the context outside, there is a bug in which the long tap
+                                for char key handler will just keep repeating itself */
+                                onKeyTap = { index ->
+                                    val keyData = uiState.mode.keyDatas[index]
+                                    val context = SenKeyHandlerContext(
+                                        imService = this@SenImService,
+                                        uiState = uiState,
+                                        preferencesState = preferencesState,
+                                        onUpdateModeType = stateViewModel::updateModeType,
+                                        onUpdateShiftMode = stateViewModel::updateShiftMode,
+                                        onUpdateComposingText = stateViewModel::updateComposingText,
+                                        onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
+                                    )
+                                    keyData.handler.handleTap(context)
+                                },
+                                onKeyDoubleTap = { index ->
+                                    val keyData = uiState.mode.keyDatas[index]
+                                    val context = SenKeyHandlerContext(
+                                        imService = this@SenImService,
+                                        uiState = uiState,
+                                        preferencesState = preferencesState,
+                                        onUpdateModeType = stateViewModel::updateModeType,
+                                        onUpdateShiftMode = stateViewModel::updateShiftMode,
+                                        onUpdateComposingText = stateViewModel::updateComposingText,
+                                        onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
+                                    )
+                                    keyData.handler.handleDoubleTap(context)
+                                },
+                                onKeyLongTap = { index ->
+                                    val keyData = uiState.mode.keyDatas[index]
+
+                                    when (val newAlt = keyData.altProvider()) {
+                                        is SenAlt.Popup -> {
+                                            if (alt != newAlt) alt = newAlt
+                                            if (!altPopupVisible) altPopupVisible = true
+                                        }
+
+                                        SenAlt.None -> {
+                                            val context = SenKeyHandlerContext(
+                                                imService = this@SenImService,
+                                                uiState = uiState,
+                                                preferencesState = preferencesState,
+                                                onUpdateModeType = stateViewModel::updateModeType,
+                                                onUpdateShiftMode = stateViewModel::updateShiftMode,
+                                                onUpdateComposingText = stateViewModel::updateComposingText,
+                                                onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
+                                            )
+                                            keyData.handler.handleLongTap(context)
+                                        }
+                                    }
+                                },
+                                onKeyTapUp = {
+                                    altPopupVisible = false
+                                },
+                                onKeyTapCancel = {
+                                    altPopupVisible = false
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(300.dp),
+                            ) { index, key, interactionSource ->
+                                val keyData = uiState.mode.keyDatas[index]
+
+                                val shouldOverrideState = keyData.handler is SenShiftKeyHandler //
+                                        && uiState.shiftMode == ShiftMode.CapsLocked
+
+                                SenKey(
+                                    key = key,
+                                    style = keyData.styleProvider(
+                                        uiState,
+                                        preferencesState,
+                                        isSystemInDarkTheme(),
+                                    ),
+                                    indication = SenKeyIndication(
+                                        index = index,
+                                        shape = RectangleShape,
+                                        color = SenKeyIndicationDefaults.color(),
+                                        overrideState = if (shouldOverrideState) true else null,
+                                    ),
+                                    interactionSource = interactionSource,
+                                ) {
+                                    SenDisplay(
+                                        display = keyData.display(uiState),
+                                    )
+                                }
+                            }
+                        }
+
+                        /* SenBoardScaffold(
                             topBar = {
                                 Row(modifier = Modifier.widthIn(max = SenKeyDefaults.ShapeMaxWidth * layout.maxTotalAreaWidthMultipliers)) {
                                     SenEngineSwitcher(
-                                        engineType = preferences.vietnameseEngineType,
+                                        engineType = preferencesState.vietnameseEngineType,
                                         onEngineSwitch = { engineType ->
-                                            preferencesViewModel.updateVietnameseEngineType(
-                                                engineType,
-                                            )
                                             currentInputConnection.finishComposingText()
-                                            stateViewModel.setState(state.copy(composingText = SenBoardStateDefaults.EmptyComposingText))
+                                            preferencesViewModel.updateVietnameseEngineType(engineType)
+                                            stateViewModel.updateComposingText(String.EMPTY)
                                         },
                                     ) { engineType ->
                                         SenEngineIcon(engineType)
                                     }
 
-                                    if (preferences.easterEggsEnabled) {
+                                    SenSuggestions(
+                                        suggestions = uiState.wordSuggestions,
+                                        modifier = Modifier.weight(1f),
+                                    )
+
+                                    if (preferencesState.easterEggsEnabled) {
                                         IconToggleButton(
-                                            checked = state.mode == SenAaaaaMode,
+                                            checked = mode == SenAaaaaMode,
                                             onCheckedChange = {
-                                                stateViewModel.setState(
-                                                    state.copy(
-                                                        mode = if (state.mode == SenAaaaaMode) {
-                                                            SenCharactersMode
-                                                        } else {
-                                                            SenAaaaaMode
-                                                        },
-                                                    ),
+                                                stateViewModel.updateModeType(
+                                                    when (uiState.modeType) {
+                                                        SenModeType.Aaaaa -> SenModeType.Characters
+                                                        else -> SenModeType.Aaaaa
+                                                    },
                                                 )
                                             },
                                         ) {
                                             Icon(
-                                                imageVector = if (state.mode == SenAaaaaMode) {
+                                                imageVector = if (mode == SenAaaaaMode) {
                                                     Icons.Filled.AutoAwesome
                                                 } else {
                                                     Icons.Outlined.AutoAwesome
@@ -245,28 +349,6 @@ class SenImService : SenLifecycleImService() {
                                                 contentDescription = null,
                                             )
                                         }
-                                    }
-
-                                    SenSuggestions(
-                                        suggestions = candidates,
-                                        modifier = Modifier.weight(1f),
-                                    )
-
-                                    IconButton(
-                                        onClick = {
-                                            startActivity(
-                                                Intent(
-                                                    this@SenImService, SenActivity::class.java,
-                                                ).apply {
-                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                },
-                                            )
-                                        },
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Settings,
-                                            contentDescription = null,
-                                        )
                                     }
                                 }
                             },
@@ -293,44 +375,24 @@ class SenImService : SenLifecycleImService() {
                             SenBoard(
                                 layout = layout,
                                 onKeyTap = { index ->
-                                    mode.keyDatas[index].handler.handleTap(
-                                        state = state,
-                                        onSetState = stateViewModel::setState,
-                                        preferences = preferences,
-                                        imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
-                                    )
+                                    mode.keyDatas[index].handler.handleTap(handlerContext)
                                 },
                                 onKeyDoubleTap = { index ->
-                                    mode.keyDatas[index].handler.handleDoubleTap(
-                                        state = state,
-                                        onSetState = stateViewModel::setState,
-                                        preferences = preferences,
-                                        imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
-                                    )
+                                    mode.keyDatas[index].handler.handleDoubleTap(handlerContext)
                                 },
                                 onKeyLongTap = { index ->
-                                    mode.keyDatas[index].handler.handleLongTap(
-                                        state = state,
-                                        onSetState = stateViewModel::setState,
-                                        preferences = preferences,
-                                        imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
-                                    )
+                                    mode.keyDatas[index].handler.handleLongTap(handlerContext)
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                             ) { _, index, key, interactionSource ->
                                 val keyData = mode.keyDatas[index]
+                                val style = keyData.styleProvider(uiState, preferencesState)
 
-                                val style = keyData.styleProvider(state, preferences)
-
-                                val overrideState =
-                                    if (keyData.handler is SenShiftKeyHandler && isCapsLocked) {
-                                        true
-                                    } else {
-                                        null
-                                    }
+                                val overrideState = if (keyData.handler is SenShiftKeyHandler && uiState.shiftMode == ShiftMode.CapsLocked) {
+                                    true
+                                } else {
+                                    null
+                                }
 
                                 CompositionLocalProvider(LocalTextStyle provides style.textStyle) {
                                     SenKey(
@@ -347,7 +409,7 @@ class SenImService : SenLifecycleImService() {
                                         ),
                                         modifier = Modifier.padding(3.dp, 6.dp),
                                     ) {
-                                        when (val display = keyData.display(state)) {
+                                        when (val display = keyData.display(uiState)) {
                                             is SenKeyDisplay.Text -> Text(
                                                 text = display.text,
                                                 autoSize = TextAutoSize.StepBased(maxFontSize = 24.sp),
@@ -368,7 +430,7 @@ class SenImService : SenLifecycleImService() {
                                     }
                                 }
                             }
-                        }
+                        } */
                     }
                 }
             }

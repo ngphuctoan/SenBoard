@@ -85,7 +85,7 @@ fun SenAboutScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenAboutContent(
         onNavigateBack = navigator::goBack,
@@ -197,8 +197,7 @@ fun SenAboutContent(
                             toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
                         } else if (developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsRevealCount) {
                             developerOptionsCounter++
-                            val developerOptionsRemainingCounter =
-                                SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter
+                            val developerOptionsRemainingCounter = SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter
                             toaster.bake(context, "Cần $developerOptionsRemainingCounter lần chạm nữa để chế độ nhà phát triển")
                         } else {
                             developerOptionsCounter++
@@ -247,8 +246,7 @@ fun SenAboutScreenPreview() {
                     preferences = preferences.copy(easterEggsEnabled = easterEggsEnabled)
                 },
                 onDeveloperOptionsEnabledUpdate = { developerOptionsEnabled ->
-                    preferences =
-                        preferences.copy(developerOptionsEnabled = developerOptionsEnabled)
+                    preferences = preferences.copy(developerOptionsEnabled = developerOptionsEnabled)
                 },
             )
         }

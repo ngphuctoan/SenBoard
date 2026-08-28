@@ -59,7 +59,7 @@ fun SenDeveloperOptionsScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenDeveloperOptionsContent(
         onNavigateBack = navigator::goBack,

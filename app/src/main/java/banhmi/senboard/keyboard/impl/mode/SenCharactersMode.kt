@@ -1,6 +1,7 @@
 package banhmi.senboard.keyboard.impl.mode
 
 import banhmi.senboard.keyboard.impl.layout.SenStandardLayout
+import banhmi.senboard.keyboard.model.SenAltPopupAnchor
 import banhmi.senboard.keyboard.model.SenModeType
 import banhmi.senboard.keyboard.model.senAltCharKey
 import banhmi.senboard.keyboard.model.senAltPopup
@@ -19,21 +20,21 @@ val SenCharactersMode = senMode(SenStandardLayout) {
     senCharKey('q') {
         senAltPopup {
             senAltRow {
-                senAltCharKey('1', anchor = true)
+                senAltCharKey('1')
             }
         }
     }
     senCharKey('w') {
         senAltPopup {
             senAltRow {
-                senAltCharKey('2', anchor = true)
+                senAltCharKey('2')
             }
         }
     }
     senCharKey('e') {
-        senAltPopup {
+        senAltPopup(SenAltPopupAnchor.RowCenter) {
             senAltRow {
-                senAltCharKey('ê', anchor = true)
+                senAltCharKey('ê')
                 senAltCharKey('ế')
                 senAltCharKey('ề')
                 senAltCharKey('ể')

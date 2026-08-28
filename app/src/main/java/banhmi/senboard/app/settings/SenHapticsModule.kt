@@ -58,7 +58,7 @@ fun SenHapticsScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenHapticsContent(
         onNavigateBack = navigator::goBack,

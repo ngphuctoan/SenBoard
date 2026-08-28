@@ -219,12 +219,7 @@ fun senSettingsMenus(
 ) = SenSettingsMenusScope().apply(builder).build()
 
 object SenSettingsDefaults {
-    internal val TopBarPaddings = PaddingValues(
-        top = 0.dp,
-        bottom = 8.dp,
-        start = 16.dp,
-        end = 16.dp,
-    )
+    internal val TopBarPaddings = PaddingValues(16.dp, 8.dp)
 
     internal fun menus(
         easterEggsEnabled: Boolean,
@@ -251,7 +246,7 @@ object SenSettingsDefaults {
                 indexCount = 2 outOf 3,
                 destination = SenDeveloperOptions,
                 label = "Chế độ nhà phát triển",
-                supportingLabel = BuildConfig.APPLICATION_ID, // Placeholder
+                supportingLabel = "Hiển thị chạm, viền phím",
                 icon = Icons.Filled.Code,
                 iconPalette = m3RefPaletteCyan,
             )
@@ -284,7 +279,7 @@ object SenSettingsDefaults {
             senSettingsMenu(
                 indexCount = 3 outOf 4,
                 destination = SenEasterEggs,
-                label = "Easter Egg",
+                label = "Easter egg",
                 supportingLabel = "Chế độ aaaaa",
                 icon = Icons.Filled.Redeem,
                 iconPalette = m3RefPaletteGreen,
@@ -298,7 +293,7 @@ fun SenSettingsScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenSettingsContent(
         onNavigate = navigator::goTo,

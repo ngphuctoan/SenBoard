@@ -27,10 +27,10 @@ data class SenLayoutRow(
     val keys: List<SenLayoutKey>,
     val heightMultiplier: Float,
 ) {
-    val totalAreaWidthMultipliers
-        get() = keys.fold(initial = 0f) { widthMultipliers, key ->
-            widthMultipliers + key.areaWidthMultiplier
-        }
+    //val totalAreaWidthMultipliers
+    //    get() = keys.fold(initial = 0f) { widthMultipliers, key ->
+    //        widthMultipliers + key.areaWidthMultiplier
+    //    }
 }
 
 object SenLayoutDefaults {
@@ -41,11 +41,11 @@ data class SenLayout(
     val rows: List<SenLayoutRow>,
     val keySpacing: PaddingValues,
 ) {
-    val maxTotalAreaWidthMultipliers
-        get() = rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
-
-    val totalHeightMultipliers
-        get() = rows.fold(initial = 0f) { heightMultiplier, row ->
-            heightMultiplier + row.heightMultiplier
-        }
+    //val maxTotalAreaWidthMultipliers
+    //    get() = rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
+    //
+    //val totalHeightMultipliers
+    //    get() = rows.fold(initial = 0f) { heightMultiplier, row ->
+    //        heightMultiplier + row.heightMultiplier
+    //    }
 }

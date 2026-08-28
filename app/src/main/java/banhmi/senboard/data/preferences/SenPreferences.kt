@@ -1,6 +1,7 @@
 package banhmi.senboard.data.preferences
 
 import banhmi.senboard.engine.VietnameseEngineType
+import banhmi.senboard.engine.provideVietnameseEngine
 
 data class SenPreferences(
     /*====================
@@ -34,4 +35,7 @@ data class SenPreferences(
     Developer Options
     ====================*/
     val developerOptionsEnabled: Boolean = false,
-)
+) {
+    val vietnameseEngine
+        get() = provideVietnameseEngine(vietnameseEngineType)
+}

@@ -1,57 +1,33 @@
 package banhmi.senboard.keyboard.impl.handler
 
-import banhmi.senboard.data.preferences.SenPreferences
-import banhmi.senboard.engine.provideVietnameseEngine
-import banhmi.senboard.keyboard.data.SenBoardState
-import banhmi.senboard.keyboard.data.SenBoardStateDefaults
-import banhmi.senboard.keyboard.data.ShiftMode
 import banhmi.senboard.keyboard.model.SenKeyHandler
-import banhmi.senboard.keyboard.proxy.SenImServiceProxy
+import banhmi.senboard.keyboard.model.SenKeyHandlerContext
+import banhmi.senboard.keyboard.state.ShiftMode
 
-class SenTextKeyHandler(private val text: String) : SenKeyHandler {
+class SenTextKeyHandler(
+    private val text: String,
+) : SenKeyHandler {
     // Character key handler should be handling Vietnamese engine conversion instead
     override fun handleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) {
-        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-        val composedText = engine.convertWord(state.composingText)
+        context: SenKeyHandlerContext,
+    ) = context.run {
+        inputConnection.finishComposingText()
+        inputConnection.commitText(text, 1)
 
-        imService.inputConnection.finishComposingText()
-        imService.inputConnection.commitText(text, 1)
-
-        if (composedText.isNotBlank() && state.previousWord.isNotBlank())
-            onSaveBigram(state.previousWord, composedText)
-
-        onSetState(
-            state.copy(
-                shiftMode = if (state.shiftMode == ShiftMode.Shifted) {
-                    ShiftMode.Off
-                } else {
-                    state.shiftMode
-                },
-                composingText = SenBoardStateDefaults.EmptyComposingText,
-                previousWord = composedText,
-            ),
+        onUpdateShiftMode(
+            when (uiState.shiftMode) {
+                ShiftMode.Shifted -> ShiftMode.Off
+                else -> uiState.shiftMode
+            },
         )
+        clearComposingText()
     }
 
     override fun handleDoubleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
+        context: SenKeyHandlerContext,
+    ) = handleTap(context)
 
     override fun handleLongTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
-    ) = handleTap(state, onSetState, preferences, imService, onSaveBigram)
+        context: SenKeyHandlerContext,
+    ) = handleTap(context)
 }

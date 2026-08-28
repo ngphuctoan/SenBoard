@@ -1,6 +1,6 @@
 package banhmi.senboard.keyboard.model
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.view.inputmethod.InputConnection
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Forward
 import androidx.compose.material.icons.filled.Upload
@@ -11,11 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import banhmi.senboard.data.preferences.SenPreferences
-import banhmi.senboard.keyboard.data.SenBoardState
-import banhmi.senboard.keyboard.data.ShiftMode
-import banhmi.senboard.keyboard.proxy.SenImServiceProxy
+import banhmi.senboard.keyboard.SenImService
+import banhmi.senboard.keyboard.state.SenBoardState
+import banhmi.senboard.keyboard.state.ShiftMode
+import banhmi.senboard.utils.EMPTY
 
 data class SenKeyColors(
     val color: Color,
@@ -27,23 +30,40 @@ object SenKeyStyleDefaults {
 
     @Composable
     fun textStyle() = MaterialTheme.typography.bodyLargeEmphasized
+
+    @Composable
+    fun defaultShadowElevation() = with(LocalDensity.current) {
+        0.dp.toPx()
+    }
+
+    @Composable
+    fun shadowElevation(
+        keyBackgroundEnabled: Boolean,
+        keyBackgroundShadowEnabled: Boolean,
+    ) = with(LocalDensity.current) {
+        if (keyBackgroundEnabled && keyBackgroundShadowEnabled) {
+            1.dp.toPx()
+        } else {
+            defaultShadowElevation()
+        }
+    }
 }
 
 data class SenKeyStyle(
     val shape: Shape,
     val colors: SenKeyColors,
-    val addShadow: Boolean,
+    val shadowElevation: Float,
     val textStyle: TextStyle,
 )
 
-typealias SenKeyStyleProvider = @Composable (SenBoardState, SenPreferences) -> SenKeyStyle
+typealias SenKeyStyleProvider = @Composable (SenBoardState, SenPreferences, Boolean) -> SenKeyStyle
 
-val senNeutralKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
+val senNeutralKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, darkTheme ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
             color = if (preferences.keyBackgroundEnabled) {
-                if (isSystemInDarkTheme()) {
+                if (darkTheme) {
                     MaterialTheme.colorScheme.surfaceContainerHighest
                 } else {
                     MaterialTheme.colorScheme.surfaceContainerLowest
@@ -54,11 +74,14 @@ val senNeutralKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
-        addShadow = preferences.keyBackgroundEnabled,
+        shadowElevation = SenKeyStyleDefaults.shadowElevation(
+            preferences.keyBackgroundEnabled,
+            preferences.keyBackgroundShadowEnabled,
+        ),
     )
 }
 
-val senSecondaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
+val senSecondaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
@@ -70,11 +93,14 @@ val senSecondaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
-        addShadow = preferences.keyBackgroundEnabled,
+        shadowElevation = SenKeyStyleDefaults.shadowElevation(
+            preferences.keyBackgroundEnabled,
+            preferences.keyBackgroundShadowEnabled,
+        ),
     )
 }
 
-val senPrimaryKeyStyle: SenKeyStyleProvider = @Composable { _, _ ->
+val senPrimaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
@@ -82,11 +108,14 @@ val senPrimaryKeyStyle: SenKeyStyleProvider = @Composable { _, _ ->
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
-        addShadow = true,
+        shadowElevation = SenKeyStyleDefaults.shadowElevation(
+            true, // Primary always has a background
+            preferences.keyBackgroundShadowEnabled,
+        ),
     )
 }
 
-val senTertiaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
+val senTertiaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
@@ -98,7 +127,10 @@ val senTertiaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences ->
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
-        addShadow = preferences.keyBackgroundEnabled,
+        shadowElevation = SenKeyStyleDefaults.shadowElevation(
+            preferences.keyBackgroundEnabled,
+            preferences.keyBackgroundShadowEnabled,
+        ),
     )
 }
 
@@ -115,12 +147,16 @@ object SenKeyDisplayDefaults {
 sealed interface SenKeyDisplay {
     /* Default invocation returns itself, thus a "static" display.
     For dynamic ones, override this to access the state */
-    operator fun invoke(state: SenBoardState): SenKeyDisplay = this
+    operator fun invoke(
+        state: SenBoardState,
+    ): SenKeyDisplay = this
 
     object None : SenKeyDisplay
 
     // For actual character key, please use Char as it also handles uppercasing
-    data class Text(val text: String) : SenKeyDisplay
+    data class Text(
+        val text: String,
+    ) : SenKeyDisplay
 
     data class Icon(
         val icon: ImageVector,
@@ -128,13 +164,22 @@ sealed interface SenKeyDisplay {
         val transforms: SenKeyIconTransforms = SenKeyDisplayDefaults.IconTransforms,
     ) : SenKeyDisplay
 
-    data class Char(val char: kotlin.Char) : SenKeyDisplay {
-        override fun invoke(state: SenBoardState) =
-            Text(char.toString().run { if (state.isShifted) uppercase() else lowercase() })
+    data class Char(
+        val char: kotlin.Char,
+    ) : SenKeyDisplay {
+        override fun invoke(
+            state: SenBoardState,
+        ) = Text(
+            char.toString().run {
+                if (state.isShifted) uppercase() else lowercase()
+            },
+        )
     }
 
     object ShiftIcon : SenKeyDisplay {
-        override fun invoke(state: SenBoardState) = when (state.shiftMode) {
+        override fun invoke(
+            state: SenBoardState,
+        ) = when (state.shiftMode) {
             ShiftMode.Off -> Icon(
                 icon = Icons.AutoMirrored.Outlined.Forward,
                 transforms = SenKeyIconTransforms(rotation = -90f),
@@ -147,32 +192,43 @@ sealed interface SenKeyDisplay {
     }
 }
 
+// The context will only provide important services, states, and methods to the handler
+class SenKeyHandlerContext(
+    // Handler should access inputConnection below instead
+    imService: SenImService,
+    val uiState: SenBoardState,
+    val preferencesState: SenPreferences,
+    // Kinda ugly to have to define all the state's view model's setters here
+    val onUpdateModeType: (SenModeType) -> Unit,
+    val onUpdateShiftMode: (ShiftMode) -> Unit,
+    val onUpdateComposingText: (String) -> Unit,
+    val onUpdateWordSuggestions: (List<String>) -> Unit,
+) {
+    val inputConnection: InputConnection = imService.currentInputConnection
+
+    // Clearing composing text is a common action
+    fun clearComposingText() = onUpdateComposingText(String.EMPTY)
+
+    // Not as common but still useful, and for consistency :b
+    @Suppress("UNUSED")
+    fun clearWordSuggestions() = onUpdateWordSuggestions(emptyList())
+}
+
 // By default, these handlers do nothing, so that implementations don't need to override all of them
 interface SenKeyHandler {
     fun handleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
+        context: SenKeyHandlerContext,
     ) {
     }
 
     fun handleDoubleTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
+        context: SenKeyHandlerContext,
     ) {
     }
 
+    // This only works if the key's alternative is not defined, as it will override this!
     fun handleLongTap(
-        state: SenBoardState,
-        onSetState: (SenBoardState) -> Unit,
-        preferences: SenPreferences,
-        imService: SenImServiceProxy,
-        onSaveBigram: (String, String) -> Unit,
+        context: SenKeyHandlerContext,
     ) {
     }
 }
@@ -181,5 +237,5 @@ data class SenKeyData(
     val styleProvider: SenKeyStyleProvider,
     val display: SenKeyDisplay,
     val handler: SenKeyHandler,
-    val alt: SenAlt,
+    val altProvider: SenAltProvider,
 )

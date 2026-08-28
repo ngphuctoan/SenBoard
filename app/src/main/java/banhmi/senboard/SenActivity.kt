@@ -46,8 +46,7 @@ class SenActivity : ComponentActivity() {
             val resources = LocalResources.current
 
             val appIcon = try {
-                val drawable =
-                    ResourcesCompat.getDrawable(resources, R.mipmap.ic_launcher, context.theme)
+                val drawable = ResourcesCompat.getDrawable(resources, R.mipmap.ic_launcher, context.theme)
                 if (drawable != null) {
                     SenAppIconResult.Success(drawable)
                 } else {

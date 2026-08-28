@@ -18,13 +18,13 @@ class SenModeScope(private val layout: SenLayout) {
         styleProvider: SenKeyStyleProvider,
         display: SenKeyDisplay,
         handler: SenKeyHandler,
-        alt: SenAlt,
+        altProvider: SenAltProvider,
     ) = keyDatas.add(
         SenKeyData(
             styleProvider,
             display,
             handler,
-            alt,
+            altProvider,
         ),
     )
 
@@ -35,23 +35,23 @@ class SenModeScope(private val layout: SenLayout) {
 fun SenModeScope.senTextKey(
     text: String,
     styleProvider: SenKeyStyleProvider = senNeutralKeyStyle,
-    altProvider: () -> SenAlt = { SenAlt.None },
+    altProvider: SenAltProvider = { senAltNone() },
 ) = senKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Text(text),
     handler = SenTextKeyHandler(text),
-    alt = altProvider(),
+    altProvider = altProvider,
 )
 
 fun SenModeScope.senCharKey(
     char: Char,
     styleProvider: SenKeyStyleProvider = senNeutralKeyStyle,
-    altProvider: () -> SenAlt = { SenAlt.None },
+    altProvider: SenAltProvider = { senAltNone() },
 ) = senKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Char(char),
     handler = SenCharKeyHandler(char),
-    alt = altProvider(),
+    altProvider = altProvider,
 )
 
 fun SenModeScope.senBackSpaceKey(
@@ -60,7 +60,7 @@ fun SenModeScope.senBackSpaceKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
     handler = SenBackSpaceKeyHandler,
-    alt = SenAlt.None,
+    altProvider = { senAltNone() },
 )
 
 fun SenModeScope.senShiftKey(
@@ -69,7 +69,7 @@ fun SenModeScope.senShiftKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.ShiftIcon,
     handler = SenShiftKeyHandler,
-    alt = SenAlt.None,
+    altProvider = { senAltNone() },
 )
 
 fun SenModeScope.senSpaceKey(
@@ -78,7 +78,7 @@ fun SenModeScope.senSpaceKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.None,
     handler = SenSpaceKeyHandler,
-    alt = SenAlt.None,
+    altProvider = { senAltNone() },
 )
 
 fun SenModeScope.senReturnKey(
@@ -87,7 +87,7 @@ fun SenModeScope.senReturnKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Icon(Icons.AutoMirrored.Outlined.KeyboardReturn),
     handler = SenReturnKeyHandler,
-    alt = SenAlt.None,
+    altProvider = { senAltNone() },
 )
 
 fun SenModeScope.senModeSwitcherKey(
@@ -98,7 +98,7 @@ fun SenModeScope.senModeSwitcherKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Text(label),
     handler = SenModeSwitcherKeyHandler(modeType),
-    alt = SenAlt.None,
+    altProvider = { senAltNone() },
 )
 
 fun senMode(

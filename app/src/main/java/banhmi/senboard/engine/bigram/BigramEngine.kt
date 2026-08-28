@@ -31,8 +31,7 @@ class BigramEngine(private val context: Context) {
         )
 
         context.assets.open(DATASET_FILE_NAME).bufferedReader().readText().let { encodedJson ->
-            val otherBigramDataset: BigramDataset<List<BigramEntry>> =
-                jsonWithUnknownKeys.decodeFromString(encodedJson)
+            val otherBigramDataset: BigramDataset<List<BigramEntry>> = jsonWithUnknownKeys.decodeFromString(encodedJson)
             bigramDataset.addAllFrom(otherBigramDataset)
         }
 

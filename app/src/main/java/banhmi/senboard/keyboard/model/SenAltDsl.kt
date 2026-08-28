@@ -9,51 +9,57 @@ class SenAltRowScope {
     fun senAlt(
         display: SenKeyDisplay,
         handler: SenKeyHandler,
-        anchor: Boolean,
     ) = datas.add(
         SenAltData(
             display,
             handler,
-            anchor,
         ),
     )
 
-    fun build() = SenAltDataRow(datas.toList())
-}
-
-interface SenAltScope {
-    fun build(): SenAlt
-}
-
-class SenAltPopupScope : SenAltScope {
-    private val rows: MutableList<SenAltDataRow> = mutableListOf()
-
-    fun senAltRow(
-        builder: SenAltRowScope.() -> Unit,
-    ) = rows.add(SenAltRowScope().apply(builder).build())
-
-    override fun build() = SenAlt.Popup(rows.toList())
+    fun build() = SenAltRow(datas.toList())
 }
 
 // Extensions for alt keys
 fun SenAltRowScope.senAltCharKey(
     char: Char,
-    anchor: Boolean = SenAltDataDefaults.Anchor,
 ) = senAlt(
     display = SenKeyDisplay.Char(char),
     handler = SenCharKeyHandler(char),
-    anchor = anchor,
 )
 
 fun SenAltRowScope.senAltTextKey(
     text: String,
-    anchor: Boolean = SenAltDataDefaults.Anchor,
 ) = senAlt(
     display = SenKeyDisplay.Text(text),
     handler = SenTextKeyHandler(text),
-    anchor = anchor,
 )
 
+interface SenAltScope {
+    fun build(): SenAlt
+}
+
+class SenAltNoneScope : SenAltScope {
+    override fun build() = SenAlt.None
+}
+
+fun senAltNone() = SenAltNoneScope().build()
+
+class SenAltPopupScope(
+    private val anchor: SenAltPopupAnchor = SenAltPopupDefaults.Anchor,
+) : SenAltScope {
+    private val rows: MutableList<SenAltRow> = mutableListOf()
+
+    fun senAltRow(
+        builder: SenAltRowScope.() -> Unit,
+    ) = rows.add(SenAltRowScope().apply(builder).build())
+
+    override fun build() = SenAlt.Popup(
+        anchor,
+        rows.toList(),
+    )
+}
+
 fun senAltPopup(
+    anchor: SenAltPopupAnchor = SenAltPopupDefaults.Anchor,
     builder: SenAltPopupScope.() -> Unit,
-) = SenAltPopupScope().apply(builder).build()
+) = SenAltPopupScope(anchor).apply(builder).build()

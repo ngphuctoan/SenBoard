@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Tonality
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -60,7 +61,7 @@ fun SenAppearanceScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenAppearanceContent(
         onNavigateBack = navigator::goBack,
@@ -99,7 +100,30 @@ fun SenAppearanceContent(
         ) {
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 2),
+                    enabled = false,
+                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
+                    leadingContent = {
+                        SenIcon(
+                            icon = Icons.Outlined.Numbers,
+                            description = "Hàng phím số",
+                        )
+                    },
+                    trailingContent = {
+                        SenSwitch(
+                            enabled = false,
+                            checked = false,
+                            onCheckedChange = null,
+                        )
+                    },
+                    modifier = Modifier.segmentedPadding(),
+                ) {
+                    Text("Hàng phím số")
+                }
+            }
+
+            item {
+                SenMenu(
+                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 3),
                     onClick = { onKeyBackgroundEnabledUpdate(!keyBackgroundEnabled) },
                     leadingContent = {
                         SenIcon(
@@ -121,7 +145,7 @@ fun SenAppearanceContent(
 
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 2),
+                    shapes = SenMenuDefaults.segmentedShapes(2 outOf 3),
                     onClick = { onKeyBackgroundShadowEnabledUpdate(!keyBackgroundShadowEnabled) },
                     supportingContent = { Text("Yêu cầu hiển thị nền phím") },
                     leadingContent = {
@@ -157,8 +181,7 @@ fun SenAppearanceScreenPreview() {
                 preferences = preferences.copy(keyBackgroundEnabled = keyBackgroundEnabled)
             },
             onKeyBackgroundShadowEnabledUpdate = { keyBackgroundShadowEnabled ->
-                preferences =
-                    preferences.copy(keyBackgroundShadowEnabled = keyBackgroundShadowEnabled)
+                preferences = preferences.copy(keyBackgroundShadowEnabled = keyBackgroundShadowEnabled)
             },
         )
     }

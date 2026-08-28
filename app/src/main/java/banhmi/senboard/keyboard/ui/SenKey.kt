@@ -9,7 +9,6 @@ import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.LocalContentColor
@@ -25,42 +24,38 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.node.DelegatableNode
 import androidx.compose.ui.node.DrawModifierNode
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import banhmi.senboard.keyboard.model.SenKeyStyle
-import banhmi.senboard.keyboard.model.SenLayout
+import banhmi.senboard.keyboard.model.SenLayoutKey
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 object SenKeyIndicationDefaults {
     @Composable
-    fun color(darkTheme: Boolean = isSystemInDarkTheme()): Color =
+    fun color(darkTheme: Boolean = isSystemInDarkTheme()) =
         (if (darkTheme) Color.White else Color.Black).copy(alpha = 0.1f)
 }
 
 data class SenKeyIndication(
-    private val overrideState: Boolean? = null,
     private val index: Int,
     private val color: Color,
     private val shape: Shape,
+    private val overrideState: Boolean? = null,
 ) : IndicationNodeFactory {
-    override fun create(interactionSource: InteractionSource): DelegatableNode {
-        return SenKeyIndicationNode(
-            overrideState = overrideState,
+    override fun create(interactionSource: InteractionSource): DelegatableNode =
+        SenKeyIndicationNode(
             index = index,
             color = color,
             shape = shape,
+            overrideState = overrideState,
             interactionSource = interactionSource,
         )
-    }
 }
 
 private class SenKeyIndicationNode(
-    private val overrideState: Boolean? = null,
     private val index: Int,
     private val color: Color,
     private val shape: Shape,
+    private val overrideState: Boolean?,
     private val interactionSource: InteractionSource,
 ) : Modifier.Node(), DrawModifierNode {
     private val alphaProgress = Animatable(0f)
@@ -100,81 +95,125 @@ private class SenKeyIndicationNode(
 }
 
 object SenKeyDefaults {
-    val AreaHeight: Dp = 64.dp
-
-    val ShapeMaxWidth: Dp = 80.dp
-
-    @Composable
-    internal fun elevation(): Float = with(LocalDensity.current) { 1.dp.toPx() }
-
-    fun maxBoardWidth(layout: SenLayout): Dp =
-        ShapeMaxWidth * layout.rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
+    internal val ContentAlignment = Alignment.Center
 }
 
 @Composable
-fun RowScope.SenKey(
+fun SenKey(
+    key: SenLayoutKey,
     style: SenKeyStyle,
-    areaWidthMultiplier: Float,
-    shapeWidthProportion: Float,
-    shapeAlignment: Alignment.Horizontal,
-    modifier: Modifier = Modifier,
-    interactionSource: InteractionSource?,
     indication: Indication?,
+    interactionSource: InteractionSource?,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     Box(
-        contentAlignment = shapeAlignment + Alignment.CenterVertically,
-        modifier = modifier.weight(areaWidthMultiplier),
-    ) {
-        val elevation = SenKeyDefaults.elevation()
-
-        Box(
-            contentAlignment = Alignment.CenterHorizontally + Alignment.CenterVertically,
-            modifier = Modifier
-                .graphicsLayer {
-                    shape = style.shape
-                    if (style.addShadow) shadowElevation = elevation
-                }
-                .fillMaxWidth(shapeWidthProportion / areaWidthMultiplier)
-                .fillMaxHeight()
-                .background(color = style.colors.color, shape = style.shape)
-                .clip(shape = style.shape)
-                .then(
-                    if (interactionSource != null) {
-                        Modifier.indication(
-                            indication = indication,
-                            interactionSource = interactionSource,
-                        )
-                    } else {
-                        Modifier
-                    }
-                ),
-        ) {
-            CompositionLocalProvider(LocalContentColor provides style.colors.contentColor) {
-                content()
+        contentAlignment = SenKeyDefaults.ContentAlignment,
+        modifier = modifier
+            .graphicsLayer {
+                shape = style.shape
+                shadowElevation = style.shadowElevation
             }
+            .fillMaxWidth(key.shapeWidthProportion / key.areaWidthMultiplier)
+            .fillMaxHeight()
+            .background(
+                color = style.colors.color,
+                shape = style.shape,
+            )
+            .clip(shape = style.shape)
+            .then(
+                if (interactionSource != null) {
+                    Modifier.indication(
+                        indication = indication,
+                        interactionSource = interactionSource,
+                    )
+                } else {
+                    Modifier
+                },
+            ),
+    ) {
+        CompositionLocalProvider(LocalContentColor provides style.colors.contentColor) {
+            content()
         }
     }
 }
 
-@Suppress("UNUSED")
-@Composable
-fun RowScope.SenKey(
-    style: SenKeyStyle,
-    areaWidthMultiplier: Float,
-    shapeWidthProportion: Float,
-    shapeAlignment: Alignment.Horizontal,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    SenKey(
-        style = style,
-        areaWidthMultiplier = areaWidthMultiplier,
-        shapeWidthProportion = shapeWidthProportion,
-        shapeAlignment = shapeAlignment,
-        modifier = modifier,
-        interactionSource = null,
-        indication = null,
-        content = content,
-    )
-}
+//object SenKeyDefaults {
+//    val AreaHeight: Dp = 64.dp
+//
+//    val ShapeMaxWidth: Dp = 80.dp
+//
+//    @Composable
+//    internal fun elevation(): Float = with(LocalDensity.current) { 1.dp.toPx() }
+//
+//    fun maxBoardWidth(layout: SenLayout): Dp =
+//        ShapeMaxWidth * layout.rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
+//}
+//
+//@Composable
+//fun RowScope.SenKey(
+//    style: SenKeyStyle,
+//    areaWidthMultiplier: Float,
+//    shapeWidthProportion: Float,
+//    shapeAlignment: Alignment.Horizontal,
+//    modifier: Modifier = Modifier,
+//    interactionSource: InteractionSource?,
+//    indication: Indication?,
+//    content: @Composable () -> Unit,
+//) {
+//    Box(
+//        contentAlignment = shapeAlignment + Alignment.CenterVertically,
+//        modifier = modifier.weight(areaWidthMultiplier),
+//    ) {
+//        val elevation = SenKeyDefaults.elevation()
+//
+//        Box(
+//            contentAlignment = Alignment.CenterHorizontally + Alignment.CenterVertically,
+//            modifier = Modifier
+//                .graphicsLayer {
+//                    shape = style.shape
+//                    if (style.addShadow) shadowElevation = elevation
+//                }
+//                .fillMaxWidth(shapeWidthProportion / areaWidthMultiplier)
+//                .fillMaxHeight()
+//                .background(color = style.colors.color, shape = style.shape)
+//                .clip(shape = style.shape)
+//                .then(
+//                    if (interactionSource != null) {
+//                        Modifier.indication(
+//                            indication = indication,
+//                            interactionSource = interactionSource,
+//                        )
+//                    } else {
+//                        Modifier
+//                    },
+//                ),
+//        ) {
+//            CompositionLocalProvider(LocalContentColor provides style.colors.contentColor) {
+//                content()
+//            }
+//        }
+//    }
+//}
+//
+//@Suppress("UNUSED")
+//@Composable
+//fun RowScope.SenKey(
+//    style: SenKeyStyle,
+//    areaWidthMultiplier: Float,
+//    shapeWidthProportion: Float,
+//    shapeAlignment: Alignment.Horizontal,
+//    modifier: Modifier = Modifier,
+//    content: @Composable () -> Unit,
+//) {
+//    SenKey(
+//        style = style,
+//        areaWidthMultiplier = areaWidthMultiplier,
+//        shapeWidthProportion = shapeWidthProportion,
+//        shapeAlignment = shapeAlignment,
+//        modifier = modifier,
+//        interactionSource = null,
+//        indication = null,
+//        content = content,
+//    )
+//}
