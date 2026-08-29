@@ -11,6 +11,39 @@ object TelexEngine : VietnameseEngine {
         val normalizedRaw = Normalizer.normalize(rawWord, Normalizer.Form.NFC)
         var word = normalizedRaw.lowercase()
 
+        val escapeRepeats = listOf('a', 'e', 'o', 'd')
+
+        // 1. Handle leading repeated letter escapes (e.g. ddd -> dd, ddddddds -> dddddds, aaaaa -> aaaa)
+        for (ch in escapeRepeats) {
+            var leadingCount = 0
+            var idx = 0
+            while (idx < word.length && word[idx] == ch) {
+                leadingCount++
+                idx++
+            }
+            if (leadingCount >= 3) {
+                val rest = word.substring(leadingCount)
+                val escapedChars = ch.toString().repeat(leadingCount - 1)
+                return restoreCapitalization(rawWord, escapedChars + rest)
+            }
+        }
+
+        // 2. Handle trailing repeated letter escapes (e.g. baaaa -> baaa, teee -> tee)
+        for (ch in escapeRepeats) {
+            var trailingCount = 0
+            var tempWord = word
+            while (tempWord.endsWith(ch.toString())) {
+                trailingCount++
+                tempWord = tempWord.dropLast(1)
+            }
+            if (trailingCount >= 3) {
+                val stem = tempWord
+                val convertedStem = if (stem.isNotEmpty()) convertWord(stem) else ""
+                val escapedChars = ch.toString().repeat(trailingCount - 1)
+                return restoreCapitalization(rawWord, convertedStem + escapedChars)
+            }
+        }
+
         // Handle double tone key escape anywhere in word (e.g. "ess" -> "es", "essc" -> "esc", "esscape" -> "escape")
         val doubleToneKeys = mapOf("ss" to 's', "ff" to 'f', "rr" to 'r', "xx" to 'x', "jj" to 'j')
         for ((doubleKey, singleKey) in doubleToneKeys) {
@@ -69,9 +102,9 @@ object TelexEngine : VietnameseEngine {
         val (cleanWord, existingTone) = stripTone(word)
         word = cleanWord
         
-        // 1. Process initial consonant and double-d (including flexible non-adjacent d's: dedem -> đeem, duongdf -> đươngf)
+        // 3. Process initial consonant and double-d (including flexible non-adjacent d's: dedem -> đeem, duongdf -> đươngf)
         val dCount = word.count { it == 'd' }
-        if (dCount >= 2) {
+        if (dCount == 2 && !word.startsWith("dd")) {
             val firstD = word.indexOf('d')
             val sb = StringBuilder()
             var seenD = false
@@ -90,7 +123,7 @@ object TelexEngine : VietnameseEngine {
             word = word.replace("dd", "đ").replace("Dd", "Đ").replace("DD", "Đ")
         }
 
-        // 2. Extract tone mark from the word (supporting flexible tone key position e.g. sosong, sosngo, songos, duongwfd, kierue)
+        // 4. Extract tone mark from the word (supporting flexible tone key position e.g. sosong, sosngo, songos, duongwfd, kierue)
         var newTone = ""
         var toneCharIdx = -1
         
@@ -136,10 +169,10 @@ object TelexEngine : VietnameseEngine {
             word = word.substring(0, toneCharIdx) + word.substring(toneCharIdx + 1)
         }
 
-        // 3. Process universal flexible Telex vowel modifications
+        // 5. Process universal flexible Telex vowel modifications
         word = applyFlexibleVowelModifications(word)
 
-        // 4. Apply Tone Accent if present
+        // 6. Apply Tone Accent if present
         var tone = existingTone
         var isEscapingTone = false
 

@@ -1,8 +1,10 @@
 package banhmi.senboard.keyboard
 
 import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -25,7 +27,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -42,12 +43,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import banhmi.senboard.SenActivity
-import banhmi.senboard.data.bigram.UserBigramRepository
-import banhmi.senboard.data.bigram.UserBigramViewModel
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesRepository
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
-import banhmi.senboard.engine.bigram.BigramEngine
 import banhmi.senboard.engine.provideVietnameseEngine
 import banhmi.senboard.keyboard.data.SenBoardState
 import banhmi.senboard.keyboard.data.SenBoardStateDefaults
@@ -56,11 +54,13 @@ import banhmi.senboard.keyboard.data.ShiftMode
 import banhmi.senboard.keyboard.impl.handler.SenShiftKeyHandler
 import banhmi.senboard.keyboard.impl.mode.SenAaaaaMode
 import banhmi.senboard.keyboard.impl.mode.SenCharactersMode
+import banhmi.senboard.keyboard.impl.mode.SenCharactersModeWithNumberRow
 import banhmi.senboard.keyboard.lifecycle.SenLifecycleImService
 import banhmi.senboard.keyboard.model.SenKeyDisplay
 import banhmi.senboard.keyboard.proxy.SenImServiceProxy
 import banhmi.senboard.keyboard.ui.SenBoard
 import banhmi.senboard.keyboard.ui.SenBoardScaffold
+import banhmi.senboard.keyboard.ui.SenBoardScaffoldDefaults
 import banhmi.senboard.keyboard.ui.SenEngineIcon
 import banhmi.senboard.keyboard.ui.SenEngineSwitcher
 import banhmi.senboard.keyboard.ui.SenKey
@@ -77,12 +77,6 @@ import javax.inject.Inject
 class SenImService : SenLifecycleImService() {
     @Inject
     lateinit var preferencesRepository: SenPreferencesRepository
-
-    @Inject
-    lateinit var bigramEngine: BigramEngine
-
-    @Inject
-    lateinit var userBigramRepository: UserBigramRepository
 
     /* @HiltViewModel only works with Activity class, so we have to construct the view model manually
     using the Factory. Thankfully, we can use the injected repository to set the key value */
@@ -105,25 +99,6 @@ class SenImService : SenLifecycleImService() {
         )[SenBoardStateViewModel::class.java]
     }
 
-    private val userBigramViewModel: UserBigramViewModel by lazy {
-        val extras = MutableCreationExtras().apply {
-            set(UserBigramViewModel.REPOSITORY_KEY, userBigramRepository)
-        }
-
-        ViewModelProvider(
-            store = this.viewModelStore,
-            factory = UserBigramViewModel.Factory,
-            defaultCreationExtras = extras,
-        )[UserBigramViewModel::class.java]
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        // We load the dataset only when the keyboard is created, and never afterward
-        bigramEngine.clearDataset().loadDataset()
-    }
-
     // The keyboard's dimensions for setting touchable region (see onComputeInsets)
     private var dimensions: IntRect = IntRect.Zero
 
@@ -138,26 +113,137 @@ class SenImService : SenLifecycleImService() {
         }
     }
 
+    // =========================================================================
+    // FOCUS & BLUR LIFECYCLE MANAGEMENT
+    // =========================================================================
+
+    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
+        super.onStartInput(attribute, restarting)
+        handleInputFocusIn(attribute, restarting)
+    }
+
     override fun onStartInputView(editorInfo: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(editorInfo, restarting)
+        handleInputViewFocusActive(editorInfo, restarting)
+    }
+
+    override fun onFinishInputView(finishingInput: Boolean) {
+        super.onFinishInputView(finishingInput)
+        handleInputViewBlur(finishingInput)
+    }
+
+    override fun onFinishInput() {
+        super.onFinishInput()
+        handleInputUnfocusBlur()
+    }
+
+    override fun onWindowHidden() {
+        super.onWindowHidden()
+        handleWindowHiddenBlur()
+    }
+
+    override fun onUpdateSelection(
+        oldSelStart: Int,
+        oldSelEnd: Int,
+        newSelStart: Int,
+        newSelEnd: Int,
+        candidatesStart: Int,
+        candidatesEnd: Int,
+    ) {
+        super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd)
+        handleSelectionChangeBlur(newSelStart, newSelEnd, candidatesStart, candidatesEnd)
+    }
+
+    // -------------------------------------------------------------------------
+    // CLEAN HELPER FUNCTIONS FOR EACH FOCUS / BLUR CASE
+    // -------------------------------------------------------------------------
+
+    private fun commitAndFinishComposingText() {
+        val state = stateViewModel.uiState.value
+        val currentConnection = currentInputConnection
+        if (currentConnection != null && state.composingText.isNotEmpty()) {
+            val preferences = preferencesViewModel.preferences.value
+            val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
+            val converted = engine.convertWord(state.composingText)
+            currentConnection.commitText(converted, 1)
+            currentConnection.finishComposingText()
+        } else {
+            currentConnection?.finishComposingText()
+        }
+    }
+
+    private fun handleInputFocusIn(attribute: EditorInfo?, restarting: Boolean) {
+        // Initialize or prepare keyboard state when an input field gains focus
+    }
+
+    private fun handleInputViewFocusActive(editorInfo: EditorInfo?, restarting: Boolean) {
+        commitAndFinishComposingText()
 
         val state = stateViewModel.uiState.value
         val preferences = preferencesViewModel.preferences.value
-
-        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-        val composedText = engine.convertWord(state.composingText)
-
-        currentInputConnection.finishComposingText()
-
-        if (composedText.isNotBlank() && state.previousWord.isNotBlank()) userBigramViewModel.saveBigram(state.previousWord, composedText)
 
         stateViewModel.setState(
             state.copy(
                 shiftMode = SenBoardStateDefaults.shiftMode(preferences.autoCapitalizationEnabled),
                 composingText = SenBoardStateDefaults.EmptyComposingText,
-                previousWord = composedText,
             ),
         )
+    }
+
+    private fun handleInputViewBlur(finishingInput: Boolean) {
+        commitAndFinishComposingText()
+
+        val state = stateViewModel.uiState.value
+        stateViewModel.setState(
+            state.copy(
+                composingText = SenBoardStateDefaults.EmptyComposingText,
+            ),
+        )
+    }
+
+    private fun handleInputUnfocusBlur() {
+        commitAndFinishComposingText()
+
+        val state = stateViewModel.uiState.value
+        stateViewModel.setState(
+            state.copy(
+                composingText = SenBoardStateDefaults.EmptyComposingText,
+            ),
+        )
+    }
+
+    private fun handleWindowHiddenBlur() {
+        commitAndFinishComposingText()
+
+        val state = stateViewModel.uiState.value
+        stateViewModel.setState(
+            state.copy(
+                composingText = SenBoardStateDefaults.EmptyComposingText,
+            ),
+        )
+    }
+
+    private fun handleSelectionChangeBlur(
+        newSelStart: Int,
+        newSelEnd: Int,
+        candidatesStart: Int,
+        candidatesEnd: Int,
+    ) {
+        val state = stateViewModel.uiState.value
+        if (state.composingText.isEmpty()) return
+
+        val isOutsideCandidates = candidatesStart >= 0 && candidatesEnd >= 0 &&
+            (newSelStart < candidatesStart || newSelStart > candidatesEnd)
+        val isCursorShifted = newSelStart != newSelEnd
+
+        if (isOutsideCandidates || isCursorShifted) {
+            commitAndFinishComposingText()
+            stateViewModel.setState(
+                state.copy(
+                    composingText = SenBoardStateDefaults.EmptyComposingText,
+                ),
+            )
+        }
     }
 
     override fun onCreateInputView(): View {
@@ -173,32 +259,36 @@ class SenImService : SenLifecycleImService() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
             )
 
-            window.window?.let { window -> WindowCompat.enableEdgeToEdge(window) }
+            window.window?.let { window ->
+                WindowCompat.enableEdgeToEdge(window)
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_BLUR_BEHIND,
+                    WindowManager.LayoutParams.FLAG_BLUR_BEHIND,
+                )
+            }
 
             setContent {
                 val preferences: SenPreferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
                 val state: SenBoardState by stateViewModel.uiState.collectAsStateWithLifecycle()
-                val userBigramDataset by userBigramViewModel.bigramDataset.collectAsStateWithLifecycle()
+
+                // Hardware-accelerated deep window backdrop blur (120px heavy blur) for Android 12+ (API 31+)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    window.window?.let { win ->
+                        win.setBackgroundBlurRadius(120)
+                    }
+                }
 
                 val isCapsLocked = state.shiftMode == ShiftMode.CapsLocked
 
-                val mode = state.mode
-                val layout = mode.layout
-
-                val candidates = remember(
-                    bigramEngine,
-                    userBigramDataset,
-                    preferences.vietnameseEngineType,
-                    state.composingText,
-                ) {
-                    val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
-                    val composedText = engine.convertWord(state.composingText)
-
-                    bigramEngine.getBestCandidates(
-                        entryText = composedText.ifBlank { state.previousWord },
-                        userProvidedBigramDataset = userBigramDataset,
-                    )
+                val mode = if ((state.mode == SenCharactersMode || state.mode == SenCharactersModeWithNumberRow) && preferences.numberRowEnabled) {
+                    SenCharactersModeWithNumberRow
+                } else if (state.mode == SenCharactersModeWithNumberRow) {
+                    SenCharactersMode
+                } else {
+                    state.mode
                 }
+
+                val layout = mode.layout
 
                 SenTheme {
                     Box(
@@ -214,7 +304,7 @@ class SenImService : SenLifecycleImService() {
                                             preferencesViewModel.updateVietnameseEngineType(
                                                 engineType,
                                             )
-                                            currentInputConnection.finishComposingText()
+                                            commitAndFinishComposingText()
                                             stateViewModel.setState(state.copy(composingText = SenBoardStateDefaults.EmptyComposingText))
                                         },
                                     ) { engineType ->
@@ -247,8 +337,15 @@ class SenImService : SenLifecycleImService() {
                                         }
                                     }
 
+                                    val suggestions = if (state.composingText.isNotEmpty()) {
+                                        val engine = provideVietnameseEngine(preferences.vietnameseEngineType)
+                                        listOf(engine.convertWord(state.composingText))
+                                    } else {
+                                        emptyList()
+                                    }
+
                                     SenSuggestions(
-                                        suggestions = candidates,
+                                        suggestions = suggestions,
                                         modifier = Modifier.weight(1f),
                                     )
 
@@ -277,6 +374,7 @@ class SenImService : SenLifecycleImService() {
                                         .navigationBarsPadding(),
                                 )
                             },
+                            colors = SenBoardScaffoldDefaults.colors(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onGloballyPositioned { coordinates ->
@@ -298,7 +396,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
+                                        onSaveBigram = { _, _ -> },
                                     )
                                 },
                                 onKeyDoubleTap = { index ->
@@ -307,7 +405,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
+                                        onSaveBigram = { _, _ -> },
                                     )
                                 },
                                 onKeyLongTap = { index ->
@@ -316,7 +414,7 @@ class SenImService : SenLifecycleImService() {
                                         onSetState = stateViewModel::setState,
                                         preferences = preferences,
                                         imService = imService,
-                                        onSaveBigram = userBigramViewModel::saveBigram,
+                                        onSaveBigram = { _, _ -> },
                                     )
                                 },
                                 modifier = Modifier.fillMaxWidth(),

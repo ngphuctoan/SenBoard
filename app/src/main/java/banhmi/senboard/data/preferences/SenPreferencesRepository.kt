@@ -31,6 +31,7 @@ class SenPreferencesRepository @Inject constructor(
             wordSuggestionsEnabled = preferences[wordSuggestionsEnabled] ?: true,
             keyBackgroundEnabled = preferences[keyBackgroundEnabled] ?: true,
             keyBackgroundShadowEnabled = preferences[keyBackgroundShadowEnabled] ?: true,
+            numberRowEnabled = preferences[numberRowEnabled] ?: true,
             hapticsEnabled = preferences[hapticsEnabled] ?: true,
             hapticsIntensity = preferences[hapticsIntensity] ?: 66,
             easterEggsEnabled = preferences[easterEggsEnabled] ?: false,
@@ -71,6 +72,10 @@ class SenPreferencesRepository @Inject constructor(
     suspend fun updateKeyBackgroundShadowEnabled(
         newKeyBackgroundShadowEnabled: Boolean,
     ) = updatePreferences(keyBackgroundShadowEnabled, newKeyBackgroundShadowEnabled)
+
+    suspend fun updateNumberRowEnabled(
+        newNumberRowEnabled: Boolean,
+    ) = updatePreferences(numberRowEnabled, newNumberRowEnabled)
 
     suspend fun updateHapticsEnabled(
         newHapticsEnabled: Boolean,

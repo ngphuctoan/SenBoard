@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.Tonality
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -66,8 +67,10 @@ fun SenAppearanceScreen(
         onNavigateBack = navigator::goBack,
         keyBackgroundEnabled = preferences.keyBackgroundEnabled,
         keyBackgroundShadowEnabled = preferences.keyBackgroundShadowEnabled,
+        numberRowEnabled = preferences.numberRowEnabled,
         onKeyBackgroundEnabledUpdate = preferencesViewModel::updateKeyBackgroundEnabled,
         onKeyBackgroundShadowEnabledUpdate = preferencesViewModel::updateKeyBackgroundShadowEnabled,
+        onNumberRowEnabledUpdate = preferencesViewModel::updateNumberRowEnabled,
     )
 }
 
@@ -76,8 +79,10 @@ fun SenAppearanceContent(
     onNavigateBack: () -> Unit = {},
     keyBackgroundEnabled: Boolean,
     keyBackgroundShadowEnabled: Boolean,
+    numberRowEnabled: Boolean,
     onKeyBackgroundEnabledUpdate: (Boolean) -> Unit,
     onKeyBackgroundShadowEnabledUpdate: (Boolean) -> Unit,
+    onNumberRowEnabledUpdate: (Boolean) -> Unit,
 ) {
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
@@ -99,7 +104,30 @@ fun SenAppearanceContent(
         ) {
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 2),
+                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
+                    onClick = { onNumberRowEnabledUpdate(!numberRowEnabled) },
+                    supportingContent = { Text("Thêm hàng phím số 1-0 ở đầu bàn phím (Tiện lợi cho VNI)") },
+                    leadingContent = {
+                        SenIcon(
+                            icon = Icons.Outlined.Numbers,
+                            description = "Hàng phím số (Number Row)",
+                        )
+                    },
+                    trailingContent = {
+                        SenSwitch(
+                            checked = numberRowEnabled,
+                            onCheckedChange = null,
+                        )
+                    },
+                    modifier = Modifier.segmentedPadding(),
+                ) {
+                    Text("Hàng phím số (Number Row)")
+                }
+            }
+
+            item {
+                SenMenu(
+                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 3),
                     onClick = { onKeyBackgroundEnabledUpdate(!keyBackgroundEnabled) },
                     leadingContent = {
                         SenIcon(
@@ -121,7 +149,7 @@ fun SenAppearanceContent(
 
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 2),
+                    shapes = SenMenuDefaults.segmentedShapes(2 outOf 3),
                     onClick = { onKeyBackgroundShadowEnabledUpdate(!keyBackgroundShadowEnabled) },
                     supportingContent = { Text("Yêu cầu hiển thị nền phím") },
                     leadingContent = {
@@ -153,12 +181,16 @@ fun SenAppearanceScreenPreview() {
         SenAppearanceContent(
             keyBackgroundEnabled = preferences.keyBackgroundEnabled,
             keyBackgroundShadowEnabled = preferences.keyBackgroundShadowEnabled,
+            numberRowEnabled = preferences.numberRowEnabled,
             onKeyBackgroundEnabledUpdate = { keyBackgroundEnabled ->
                 preferences = preferences.copy(keyBackgroundEnabled = keyBackgroundEnabled)
             },
             onKeyBackgroundShadowEnabledUpdate = { keyBackgroundShadowEnabled ->
                 preferences =
                     preferences.copy(keyBackgroundShadowEnabled = keyBackgroundShadowEnabled)
+            },
+            onNumberRowEnabledUpdate = { numberRowEnabled ->
+                preferences = preferences.copy(numberRowEnabled = numberRowEnabled)
             },
         )
     }
