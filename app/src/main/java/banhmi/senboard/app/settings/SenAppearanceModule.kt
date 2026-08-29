@@ -61,14 +61,16 @@ fun SenAppearanceScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
 
     SenAppearanceContent(
         onNavigateBack = navigator::goBack,
         keyBackgroundEnabled = preferences.keyBackgroundEnabled,
         keyBackgroundShadowEnabled = preferences.keyBackgroundShadowEnabled,
+        numberRowEnabled = preferences.numberRowEnabled,
         onKeyBackgroundEnabledUpdate = preferencesViewModel::updateKeyBackgroundEnabled,
         onKeyBackgroundShadowEnabledUpdate = preferencesViewModel::updateKeyBackgroundShadowEnabled,
+        onNumberRowEnabledUpdate = preferencesViewModel::updateNumberRowEnabled,
     )
 }
 
@@ -77,8 +79,10 @@ fun SenAppearanceContent(
     onNavigateBack: () -> Unit = {},
     keyBackgroundEnabled: Boolean,
     keyBackgroundShadowEnabled: Boolean,
+    numberRowEnabled: Boolean,
     onKeyBackgroundEnabledUpdate: (Boolean) -> Unit,
     onKeyBackgroundShadowEnabledUpdate: (Boolean) -> Unit,
+    onNumberRowEnabledUpdate: (Boolean) -> Unit,
 ) {
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
@@ -100,24 +104,24 @@ fun SenAppearanceContent(
         ) {
             item {
                 SenMenu(
-                    enabled = false,
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
+                    onClick = { onNumberRowEnabledUpdate(!numberRowEnabled) },
+                    supportingContent = { Text("Thêm hàng phím số 1-0 ở đầu bàn phím (Tiện lợi cho VNI)") },
                     leadingContent = {
                         SenIcon(
                             icon = Icons.Outlined.Numbers,
-                            description = "Hàng phím số",
+                            description = "Hàng phím số (Number Row)",
                         )
                     },
                     trailingContent = {
                         SenSwitch(
-                            enabled = false,
-                            checked = false,
+                            checked = numberRowEnabled,
                             onCheckedChange = null,
                         )
                     },
                     modifier = Modifier.segmentedPadding(),
                 ) {
-                    Text("Hàng phím số")
+                    Text("Hàng phím số (Number Row)")
                 }
             }
 
@@ -177,11 +181,16 @@ fun SenAppearanceScreenPreview() {
         SenAppearanceContent(
             keyBackgroundEnabled = preferences.keyBackgroundEnabled,
             keyBackgroundShadowEnabled = preferences.keyBackgroundShadowEnabled,
+            numberRowEnabled = preferences.numberRowEnabled,
             onKeyBackgroundEnabledUpdate = { keyBackgroundEnabled ->
                 preferences = preferences.copy(keyBackgroundEnabled = keyBackgroundEnabled)
             },
             onKeyBackgroundShadowEnabledUpdate = { keyBackgroundShadowEnabled ->
-                preferences = preferences.copy(keyBackgroundShadowEnabled = keyBackgroundShadowEnabled)
+                preferences =
+                    preferences.copy(keyBackgroundShadowEnabled = keyBackgroundShadowEnabled)
+            },
+            onNumberRowEnabledUpdate = { numberRowEnabled ->
+                preferences = preferences.copy(numberRowEnabled = numberRowEnabled)
             },
         )
     }

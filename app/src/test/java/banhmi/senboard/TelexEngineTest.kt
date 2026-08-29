@@ -50,6 +50,16 @@ class TelexEngineTest {
         assertEquals("muốn", TelexEngine.convertWord("muoosn"))
         assertEquals("muón", TelexEngine.convertWord("muosn"))
         
+        // Repeated letter escapes (aaaa -> aaa, aaaaa -> aaaa, eeee -> eee, oooo -> ooo, dddd -> ddd, ddddddds -> dddddds)
+        assertEquals("aa", TelexEngine.convertWord("aaa"))
+        assertEquals("aaa", TelexEngine.convertWord("aaaa"))
+        assertEquals("aaaa", TelexEngine.convertWord("aaaaa"))
+        assertEquals("eee", TelexEngine.convertWord("eeee"))
+        assertEquals("ooo", TelexEngine.convertWord("oooo"))
+        assertEquals("ddd", TelexEngine.convertWord("dddd"))
+        assertEquals("dddddds", TelexEngine.convertWord("ddddddds"))
+        assertEquals("ddddddf", TelexEngine.convertWord("dddddddf"))
+
         // Tone escape / undoing tone marks (é + s -> es, ess -> es, essc -> esc, esscape -> escape)
         assertEquals("es", TelexEngine.convertWord("és"))
         assertEquals("es", TelexEngine.convertWord("ess"))

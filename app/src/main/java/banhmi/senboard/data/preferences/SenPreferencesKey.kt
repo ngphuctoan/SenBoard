@@ -17,6 +17,7 @@ Appearance
 ====================*/
 val keyBackgroundEnabled = booleanPreferencesKey("key_background_enabled")
 val keyBackgroundShadowEnabled = booleanPreferencesKey("key_background_shadow_enabled")
+val numberRowEnabled = booleanPreferencesKey("number_row_enabled")
 
 /*====================
 Haptics

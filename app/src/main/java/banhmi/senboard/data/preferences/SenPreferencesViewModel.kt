@@ -77,6 +77,10 @@ class SenPreferencesViewModel @Inject constructor(
     ) =
         updatePreferences(repository::updateKeyBackgroundShadowEnabled, newKeyBackgroundShadowEnabled)
 
+    fun updateNumberRowEnabled(
+        newNumberRowEnabled: Boolean,
+    ) = updatePreferences(repository::updateNumberRowEnabled, newNumberRowEnabled)
+
     fun updateHapticsEnabled(
         newHapticsIntensity: Boolean,
     ) = updatePreferences(repository::updateHapticsEnabled, newHapticsIntensity)

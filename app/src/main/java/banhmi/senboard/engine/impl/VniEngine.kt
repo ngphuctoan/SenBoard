@@ -11,16 +11,22 @@ object VniEngine : VietnameseEngine {
         val normalizedRaw = Normalizer.normalize(rawWord, Normalizer.Form.NFC)
         var word = normalizedRaw.lowercase()
 
-        // Handle double digit escape (e.g. a11 -> a1, a22 -> a2, a33 -> a3, a66 -> a6, a99 -> d9)
+        // Handle repeated digit escape (e.g. a11 -> a1, a111 -> a11, a1111 -> a111, a666 -> a66, d999 -> d99)
         val digits = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0')
         for (digit in digits) {
-            val doubleDigit = "$digit$digit"
-            if (word.endsWith(doubleDigit) && word.length >= 3) {
-                val stem = word.dropLast(2)
+            var maxRepeat = 0
+            var tempWord = word
+            while (tempWord.endsWith(digit.toString())) {
+                maxRepeat++
+                tempWord = tempWord.dropLast(1)
+            }
+            if (maxRepeat >= 2 && tempWord.isNotEmpty()) {
+                val stem = tempWord
                 val cleanStem = convertWord(stem)
                 val (pureStem, _) = stripTone(cleanStem)
                 val unaccentedStem = stripAccents(pureStem)
-                return restoreCapitalization(rawWord, unaccentedStem + digit)
+                val escapedDigits = digit.toString().repeat(maxRepeat - 1)
+                return restoreCapitalization(rawWord, unaccentedStem + escapedDigits)
             }
         }
 
