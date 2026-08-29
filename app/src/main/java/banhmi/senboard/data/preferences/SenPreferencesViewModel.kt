@@ -68,6 +68,10 @@ class SenPreferencesViewModel @Inject constructor(
         newWordSuggestionsEnabled: Boolean,
     ) = updatePreferences(repository::updateWordSuggestionsEnabled, newWordSuggestionsEnabled)
 
+    fun updateNumberRowEnabled(
+        newNumberRowEnabled: Boolean,
+    ) = updatePreferences(repository::updateNumberRowEnabled, newNumberRowEnabled)
+
     fun updateKeyBackgroundEnabled(
         newKeyBackgroundEnabled: Boolean,
     ) = updatePreferences(repository::updateKeyBackgroundEnabled, newKeyBackgroundEnabled)
@@ -76,10 +80,6 @@ class SenPreferencesViewModel @Inject constructor(
         newKeyBackgroundShadowEnabled: Boolean,
     ) =
         updatePreferences(repository::updateKeyBackgroundShadowEnabled, newKeyBackgroundShadowEnabled)
-
-    fun updateNumberRowEnabled(
-        newNumberRowEnabled: Boolean,
-    ) = updatePreferences(repository::updateNumberRowEnabled, newNumberRowEnabled)
 
     fun updateHapticsEnabled(
         newHapticsIntensity: Boolean,

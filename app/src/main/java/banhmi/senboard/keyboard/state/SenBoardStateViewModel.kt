@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import banhmi.senboard.keyboard.model.SenModeType
+import banhmi.senboard.model.BigramResult
 import banhmi.senboard.utils.EMPTY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,7 @@ class SenBoardStateViewModel(
     private val modeType: SenModeType,
     private val shiftMode: ShiftMode,
     private val composingText: String,
-    private val wordSuggestions: List<String>,
+    private val wordSuggestions: List<BigramResult>,
 ) : ViewModel() {
     // Factory to pass in the initial state values
     companion object {
@@ -24,7 +25,7 @@ class SenBoardStateViewModel(
 
         val COMPOSING_TEXT_KEY = CreationExtras.Key<String>()
 
-        val WORD_SUGGESTIONS_KEY = CreationExtras.Key<List<String>>()
+        val WORD_SUGGESTIONS_KEY = CreationExtras.Key<List<BigramResult>>()
 
         val Factory = viewModelFactory {
             initializer {
@@ -60,9 +61,7 @@ class SenBoardStateViewModel(
         uiState.copy(composingText = newComposingText)
     }
 
-    fun updateWordSuggestions(newWordSuggestions: List<String>) = _uiState.update { uiState ->
+    fun updateWordSuggestions(newWordSuggestions: List<BigramResult>) = _uiState.update { uiState ->
         uiState.copy(wordSuggestions = newWordSuggestions)
     }
-
-    fun setState(newState: SenBoardState) = _uiState.update { newState }
 }

@@ -118,11 +118,12 @@ fun SenHapticsContent(
 
             item {
                 SenMenu(
-                    enabled = hapticsEnabled,
+                    // Disabled for now, since HapticFeedback does not support haptic strength
+                    enabled = false,
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
                     supportingContent = {
                         Slider(
-                            enabled = hapticsEnabled,
+                            enabled = false,
                             steps = 2,
                             valueRange = 0f..100f,
                             value = hapticsIntensity.toFloat(),

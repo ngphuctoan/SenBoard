@@ -2,7 +2,6 @@ package banhmi.senboard.keyboard.impl.handler
 
 import banhmi.senboard.keyboard.model.SenKeyHandler
 import banhmi.senboard.keyboard.model.SenKeyHandlerContext
-import banhmi.senboard.keyboard.state.ShiftMode
 
 class SenTextKeyHandler(
     private val text: String,
@@ -11,16 +10,17 @@ class SenTextKeyHandler(
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {
+        val convertedComposingText = preferencesState.vietnameseEngine //
+            .convertWord(uiState.composingText)
+
         inputConnection.finishComposingText()
         inputConnection.commitText(text, 1)
 
-        onUpdateShiftMode(
-            when (uiState.shiftMode) {
-                ShiftMode.Shifted -> ShiftMode.Off
-                else -> uiState.shiftMode
-            },
-        )
+        updateShiftModeAutomatically()
         clearComposingText()
+        onUpdateWordSuggestions(
+            onGetClosestWords(convertedComposingText),
+        )
     }
 
     override fun handleDoubleTap(

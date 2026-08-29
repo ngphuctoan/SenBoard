@@ -1,9 +1,10 @@
 package banhmi.senboard.keyboard.model
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Alignment
 
-class SenLayoutRowScope(private val heightMultiplier: Float) {
+class SenLayoutRowScope(
+    private val heightMultiplier: Float,
+) {
     private val keys: MutableList<SenLayoutKey> = mutableListOf()
 
     fun senKey(
@@ -25,7 +26,7 @@ class SenLayoutRowScope(private val heightMultiplier: Float) {
     )
 }
 
-class SenLayoutScope(private val keySpacing: PaddingValues) {
+class SenLayoutScope {
     private val rows: MutableList<SenLayoutRow> = mutableListOf()
 
     fun senRow(
@@ -39,13 +40,11 @@ class SenLayoutScope(private val keySpacing: PaddingValues) {
 
     fun build() = SenLayout(
         rows = rows.toList(), // Copy list as read-only
-        keySpacing = keySpacing,
     )
 }
 
 fun senLayout(
-    keySpacing: PaddingValues = SenLayoutDefaults.KeySpacing,
     builder: SenLayoutScope.() -> Unit,
-) = SenLayoutScope(keySpacing)
+) = SenLayoutScope()
     .apply(builder)
     .build()

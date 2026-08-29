@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,21 +36,24 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import banhmi.senboard.app.annotations.SenPreviewCommon
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.keyboard.impl.handler.SenShiftKeyHandler
 import banhmi.senboard.keyboard.model.SenLayout
 import banhmi.senboard.keyboard.model.SenLayoutKey
+import banhmi.senboard.keyboard.model.SenModeType
+import banhmi.senboard.keyboard.model.provideLayout
+import banhmi.senboard.keyboard.model.provideMode
 import banhmi.senboard.keyboard.state.SenBoardState
 import banhmi.senboard.keyboard.state.ShiftMode
+import banhmi.senboard.model.BigramResult
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.utils.RectangleSDF
 import kotlinx.coroutines.CompletableDeferred
@@ -236,33 +240,40 @@ fun SenBoardScaffold(
 }
 
 object SenBoardDefaults {
+    val MaxWidth = 800.dp
+
     internal val ContentAlignment = Alignment.Center
+
+    @JvmStatic
+    internal val MaxHeightProportion = 0.66f
+
+    internal val MaxHeightFixed = 320.dp
+
+    fun height(screenHeight: Dp) = (screenHeight * MaxHeightProportion) //
+        .coerceAtMost(MaxHeightFixed)
 }
 
 @Composable
 fun SenBoard(
     layout: SenLayout,
-    popup: @Composable (Offset, Offset) -> Unit,
     onKeyTap: (Int) -> Unit,
     onKeyDoubleTap: (Int) -> Unit,
     onKeyLongTap: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    maxWidth: Dp = SenBoardDefaults.MaxWidth,
+    @Suppress("UNUSED") popup: @Composable (Offset) -> Unit = {},
     onKeyTapDown: (Int) -> Unit = {},
     onKeyTapUp: (Int) -> Unit = {},
     onKeyTapCancel: () -> Unit = {},
     content: @Composable (Int, SenLayoutKey, InteractionSource) -> Unit,
 ) {
-    val haptic = LocalHapticFeedback.current
-
     val interactionSource = remember { MutableInteractionSource() }
-    var tapPosition by remember { mutableStateOf(Offset.Zero) }
     val keyRectangles: MutableMap<Int, Rect> = remember { mutableMapOf() }
     var selectedIndex: SelectedIndexResult by remember {
         mutableStateOf(SelectedIndexResult.NotSelected)
     }
 
-    @Suppress("LocalVariableName")
-    Box(
+    @Suppress("LocalVariableName") Box(
         contentAlignment = SenBoardDefaults.ContentAlignment,
         modifier = modifier.senBoardCombinedClickable(
             onTap = {
@@ -284,10 +295,6 @@ fun SenBoard(
                 }
             },
             onTapDown = { position ->
-                haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
-
-                tapPosition = position
-
                 val bestKey = keyRectangles.entries.minBy { (_, rectangle) ->
                     RectangleSDF(rectangle).distanceToPoint(position)
                 }
@@ -296,9 +303,7 @@ fun SenBoard(
                 onKeyTapDown(bestKey.key)
                 SenKeyPressContext(bestKey.key)
             },
-            onTapUp = { position ->
-                tapPosition = position
-
+            onTapUp = {
                 if (selectedIndex is SelectedIndexResult.Selected) {
                     val _selectedIndex = selectedIndex as SelectedIndexResult.Selected
                     onKeyTapUp(_selectedIndex.index)
@@ -312,7 +317,7 @@ fun SenBoard(
             interactionSource = interactionSource,
         ),
     ) {
-        Column(modifier = Modifier.widthIn(max = 640.dp)) {
+        Column(modifier = Modifier.widthIn(max = maxWidth)) {
             layout.rows.fold(initial = 0) { currentKeyDataIndex, row ->
                 val numOfKeys = row.keys.size
 
@@ -330,6 +335,8 @@ fun SenBoard(
                                     val rowCoordinates = coordinates.parentLayoutCoordinates!!
                                     val columnCoordinates = rowCoordinates.parentLayoutCoordinates!!
                                     keyRectangles[keyDataIndex] = Rect(
+                                        /* Android Studio's Kotlin Code Style settings does not
+                                        have an option to wrap binary expressions for some reason */
                                         offset = coordinates.positionInParent() //
                                                 + rowCoordinates.positionInParent() //
                                                 + columnCoordinates.positionInParent(),
@@ -345,22 +352,23 @@ fun SenBoard(
                 currentKeyDataIndex + numOfKeys
             }
         }
-
-        if (selectedIndex is SelectedIndexResult.Selected) {
-            val _selectedIndex = selectedIndex as SelectedIndexResult.Selected
-            val topLeftOffset = keyRectangles[_selectedIndex.index]!!.topLeft
-            popup(topLeftOffset, tapPosition)
-        }
     }
 }
 
-@SenPreviewCommon
+@PreviewScreenSizes
 @Composable
 fun SenBoardPreview() {
-    var state by remember { mutableStateOf(SenBoardState()) }
+    var state by remember {
+        mutableStateOf(
+            SenBoardState(
+                modeType = SenModeType.Characters,
+            ),
+        )
+    }
     var preferences by remember {
         mutableStateOf(
             SenPreferences(
+                numberRowEnabled = false,
                 keyBackgroundEnabled = true,
                 keyBackgroundShadowEnabled = true,
             ),
@@ -368,11 +376,37 @@ fun SenBoardPreview() {
     }
 
     SenTheme {
-        Box(
+        BoxWithConstraints(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier.fillMaxSize(),
         ) {
             SenBoardScaffold(
+                topBar = {
+                    SenToolbar(
+                        modifier = Modifier
+                            .widthIn(max = SenBoardDefaults.MaxWidth)
+                            .fillMaxWidth(),
+                    ) {
+                        SenEngineSwitcher(
+                            engineType = preferences.vietnameseEngineType,
+                            onEngineSwitch = { engineType ->
+                                preferences = preferences.copy(vietnameseEngineType = engineType)
+                            },
+                        ) {
+                            SenEngineIcon(preferences.vietnameseEngineType)
+                        }
+
+                        SenSuggestions(
+                            suggestions = listOf(
+                                BigramResult("xin", isOriginal = true),
+                                BigramResult("chào"),
+                                BigramResult("bạn"),
+                            ),
+                            onSuggestionChoose = {},
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                },
                 bottomBar = {
                     Spacer(
                         modifier = Modifier
@@ -383,19 +417,25 @@ fun SenBoardPreview() {
                 shadowElevation = SenBoardScaffoldDefaults.shadowElevation(
                     preferences.keyBackgroundShadowEnabled,
                 ),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(SenBoardDefaults.height(maxHeight)),
             ) {
                 SenBoard(
-                    layout = state.mode.layout,
-                    popup = { _, _ -> },
+                    layout = provideMode(state.modeType) //
+                        .invoke(state, preferences) //
+                        .let { mode ->
+                            provideLayout(mode.layoutType) //
+                                .invoke(state, preferences)
+                        },
                     onKeyTap = {},
                     onKeyDoubleTap = {},
                     onKeyLongTap = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
+                    modifier = Modifier.fillMaxSize(),
                 ) { index, key, interactionSource ->
-                    val keyData = state.mode.keyDatas[index]
+                    val keyData = provideMode(state.modeType) //
+                        .invoke(state, preferences) //
+                        .keyDatas[index]
 
                     val shouldOverrideState = keyData.handler is SenShiftKeyHandler //
                             && state.shiftMode == ShiftMode.CapsLocked

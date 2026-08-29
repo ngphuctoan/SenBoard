@@ -1,30 +1,27 @@
+@file:Suppress("UNUSED")
+
 package banhmi.senboard.keyboard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import banhmi.senboard.keyboard.model.SenAlt
 import banhmi.senboard.keyboard.model.SenAltData
-import banhmi.senboard.utils.toIntOffset
 
 data class SenAltPopupColors(
     val containerColor: Color,
@@ -35,8 +32,6 @@ data class SenAltPopupColors(
 )
 
 object SenAltPopupDefaults {
-    internal val PopupAlignment = Alignment.TopStart
-
     @Composable
     fun colors() = SenAltPopupColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -57,40 +52,52 @@ object SenAltPopupDefaults {
     ) = with(LocalDensity.current) {
         if (keyBackgroundShadowEnabled) 2.dp.toPx() else defaultShadowElevation()
     }
+
+    val Shape = ShapeDefaults.Small
+
+    val ItemSizes = DpSize(
+        width = 48.dp,
+        height = 64.dp,
+    )
+
+    internal val ItemContentAlignment = Alignment.Center
 }
 
 @Composable
 fun SenAltPopup(
     popup: SenAlt.Popup,
-    offset: Offset,
     modifier: Modifier = Modifier,
+    shape: Shape = SenAltPopupDefaults.Shape,
+    itemSizes: DpSize = SenAltPopupDefaults.ItemSizes,
     colors: SenAltPopupColors = SenAltPopupDefaults.colors(),
     shadowElevation: Float = SenBoardScaffoldDefaults.defaultShadowElevation(),
     content: @Composable (SenAltData) -> Unit,
 ) {
-    var popupHeight by remember { mutableIntStateOf(0) }
-
-    Popup(
-        alignment = SenAltPopupDefaults.PopupAlignment,
-        offset = IntOffset(0, -popupHeight) + offset.toIntOffset(),
+    Column(
+        modifier = modifier
+            .graphicsLayer {
+                this.shape = shape
+                this.shadowElevation = shadowElevation
+            }
+            .background(
+                shape = shape,
+                color = colors.containerColor,
+            ),
     ) {
-        Column(
-            modifier = modifier
-                .graphicsLayer {
-                    this.shadowElevation = shadowElevation
-                }
-                .background(color = colors.containerColor)
-                .onGloballyPositioned { coordinates ->
-                    popupHeight = coordinates.size.height
-                },
-        ) {
-            popup.rows.forEach { row ->
-                Row {
-                    row.datas.forEach { data ->
-                        Box(modifier = Modifier.background(color = colors.color)) {
-                            CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
-                                content(data)
-                            }
+        popup.rows.forEach { row ->
+            Row {
+                row.datas.forEach { data ->
+                    Box(
+                        contentAlignment = SenAltPopupDefaults.ItemContentAlignment,
+                        modifier = Modifier
+                            .size(itemSizes)
+                            .background(
+                                shape = shape,
+                                color = colors.color,
+                            ),
+                    ) {
+                        CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
+                            content(data)
                         }
                     }
                 }

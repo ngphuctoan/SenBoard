@@ -18,6 +18,7 @@ import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.keyboard.SenImService
 import banhmi.senboard.keyboard.state.SenBoardState
 import banhmi.senboard.keyboard.state.ShiftMode
+import banhmi.senboard.model.BigramResult
 import banhmi.senboard.utils.EMPTY
 
 data class SenKeyColors(
@@ -81,7 +82,27 @@ val senNeutralKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, dark
     )
 }
 
-val senSecondaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
+@Suppress("UNUSED")
+val senPrimaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
+    SenKeyStyle(
+        shape = SenKeyStyleDefaults.Shape,
+        colors = SenKeyColors(
+            color = if (preferences.keyBackgroundEnabled) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                Color.Transparent
+            },
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
+        textStyle = SenKeyStyleDefaults.textStyle(),
+        shadowElevation = SenKeyStyleDefaults.shadowElevation(
+            preferences.keyBackgroundEnabled,
+            preferences.keyBackgroundShadowEnabled,
+        ),
+    )
+}
+
+val senSecondaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
@@ -115,7 +136,7 @@ val senPrimaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     )
 }
 
-val senTertiaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
+val senTertiaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
     SenKeyStyle(
         shape = SenKeyStyleDefaults.Shape,
         colors = SenKeyColors(
@@ -202,7 +223,10 @@ class SenKeyHandlerContext(
     val onUpdateModeType: (SenModeType) -> Unit,
     val onUpdateShiftMode: (ShiftMode) -> Unit,
     val onUpdateComposingText: (String) -> Unit,
-    val onUpdateWordSuggestions: (List<String>) -> Unit,
+    val onUpdateWordSuggestions: (List<BigramResult>) -> Unit,
+    // For getting data from the bigram engine,
+    val onGetClosestWords: (String) -> List<BigramResult>,
+    val onGetBestCandidates: (String) -> List<BigramResult>,
 ) {
     val inputConnection: InputConnection = imService.currentInputConnection
 
@@ -212,6 +236,14 @@ class SenKeyHandlerContext(
     // Not as common but still useful, and for consistency :b
     @Suppress("UNUSED")
     fun clearWordSuggestions() = onUpdateWordSuggestions(emptyList())
+
+    // Used in both char and text key
+    fun updateShiftModeAutomatically() = onUpdateShiftMode(
+        when (uiState.shiftMode) {
+            ShiftMode.Shifted -> ShiftMode.Off
+            else -> uiState.shiftMode
+        },
+    )
 }
 
 // By default, these handlers do nothing, so that implementations don't need to override all of them

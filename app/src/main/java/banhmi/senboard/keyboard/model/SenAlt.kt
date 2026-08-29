@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED")
+
 package banhmi.senboard.keyboard.model
 
 /* "Alternative" means a key that can be accessed by long tapping the primary key

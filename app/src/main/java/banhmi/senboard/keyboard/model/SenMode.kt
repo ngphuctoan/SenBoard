@@ -1,12 +1,14 @@
 package banhmi.senboard.keyboard.model
 
-import banhmi.senboard.keyboard.impl.mode.SenAaaaaMode
-import banhmi.senboard.keyboard.impl.mode.SenCharactersMode
-import banhmi.senboard.keyboard.impl.mode.SenExtraCharactersMode
-import banhmi.senboard.keyboard.impl.mode.SenNumbersMode
+import banhmi.senboard.data.preferences.SenPreferences
+import banhmi.senboard.keyboard.impl.mode.senAaaaaMode
+import banhmi.senboard.keyboard.impl.mode.senCharactersMode
+import banhmi.senboard.keyboard.impl.mode.senExtraCharactersMode
+import banhmi.senboard.keyboard.impl.mode.senNumbersMode
+import banhmi.senboard.keyboard.state.SenBoardState
 
 data class SenMode(
-    val layout: SenLayout,
+    val layoutType: SenLayoutType,
     val keyDatas: List<SenKeyData>,
 )
 
@@ -16,8 +18,10 @@ enum class SenModeType {
 }
 
 fun provideMode(modeType: SenModeType) = when (modeType) {
-    SenModeType.Characters -> SenCharactersMode
-    SenModeType.Numbers -> SenNumbersMode
-    SenModeType.ExtraCharacters -> SenExtraCharactersMode
-    SenModeType.Aaaaa -> SenAaaaaMode
+    SenModeType.Characters -> senCharactersMode
+    SenModeType.Numbers -> senNumbersMode
+    SenModeType.ExtraCharacters -> senExtraCharactersMode
+    SenModeType.Aaaaa -> senAaaaaMode
 }
+
+typealias SenModeProvider = (SenBoardState, SenPreferences) -> SenMode

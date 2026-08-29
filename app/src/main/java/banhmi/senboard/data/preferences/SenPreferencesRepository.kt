@@ -29,9 +29,9 @@ class SenPreferencesRepository @Inject constructor(
             autoCapitalizationEnabled = preferences[autoCapitalizationEnabled] ?: true,
             spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
             wordSuggestionsEnabled = preferences[wordSuggestionsEnabled] ?: true,
+            numberRowEnabled = preferences[numberRowEnabled] ?: false,
             keyBackgroundEnabled = preferences[keyBackgroundEnabled] ?: true,
             keyBackgroundShadowEnabled = preferences[keyBackgroundShadowEnabled] ?: true,
-            numberRowEnabled = preferences[numberRowEnabled] ?: true,
             hapticsEnabled = preferences[hapticsEnabled] ?: true,
             hapticsIntensity = preferences[hapticsIntensity] ?: 66,
             easterEggsEnabled = preferences[easterEggsEnabled] ?: false,
@@ -65,6 +65,10 @@ class SenPreferencesRepository @Inject constructor(
         newWordSuggestionsEnabled: Boolean,
     ) = updatePreferences(wordSuggestionsEnabled, newWordSuggestionsEnabled)
 
+    suspend fun updateNumberRowEnabled(
+        newNumberRowEnabled: Boolean,
+    ) = updatePreferences(numberRowEnabled, newNumberRowEnabled)
+
     suspend fun updateKeyBackgroundEnabled(
         newKeyBackgroundEnabled: Boolean,
     ) = updatePreferences(keyBackgroundEnabled, newKeyBackgroundEnabled)
@@ -72,10 +76,6 @@ class SenPreferencesRepository @Inject constructor(
     suspend fun updateKeyBackgroundShadowEnabled(
         newKeyBackgroundShadowEnabled: Boolean,
     ) = updatePreferences(keyBackgroundShadowEnabled, newKeyBackgroundShadowEnabled)
-
-    suspend fun updateNumberRowEnabled(
-        newNumberRowEnabled: Boolean,
-    ) = updatePreferences(numberRowEnabled, newNumberRowEnabled)
 
     suspend fun updateHapticsEnabled(
         newHapticsEnabled: Boolean,

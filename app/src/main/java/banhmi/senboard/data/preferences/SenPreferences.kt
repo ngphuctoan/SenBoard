@@ -16,9 +16,9 @@ data class SenPreferences(
     /*====================
     Appearance
     ====================*/
+    val numberRowEnabled: Boolean = false,
     val keyBackgroundEnabled: Boolean = true,
     val keyBackgroundShadowEnabled: Boolean = true,
-    val numberRowEnabled: Boolean = true,
 
     /*====================
     Haptics

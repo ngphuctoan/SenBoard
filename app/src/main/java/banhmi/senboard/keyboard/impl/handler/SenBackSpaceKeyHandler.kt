@@ -17,7 +17,8 @@ object SenBackSpaceKeyHandler : SenKeyHandler {
             inputConnection.commitText("", 1)
         }
 
-        context.clearComposingText()
+        clearComposingText()
+        clearWordSuggestions()
     }
 
     override fun handleDoubleTap(

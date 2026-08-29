@@ -11,7 +11,9 @@ import banhmi.senboard.keyboard.impl.handler.SenShiftKeyHandler
 import banhmi.senboard.keyboard.impl.handler.SenSpaceKeyHandler
 import banhmi.senboard.keyboard.impl.handler.SenTextKeyHandler
 
-class SenModeScope(private val layout: SenLayout) {
+class SenModeScope(
+    private val layoutType: SenLayoutType,
+) {
     private val keyDatas: MutableList<SenKeyData> = mutableListOf()
 
     fun senKey(
@@ -28,7 +30,7 @@ class SenModeScope(private val layout: SenLayout) {
         ),
     )
 
-    fun build() = SenMode(layout, keyDatas.toList())
+    fun build() = SenMode(layoutType, keyDatas.toList())
 }
 
 // These should be extension functions because, they are meant to be extensions :)
@@ -55,7 +57,7 @@ fun SenModeScope.senCharKey(
 )
 
 fun SenModeScope.senBackSpaceKey(
-    styleProvider: SenKeyStyleProvider = senSecondaryKeyStyle,
+    styleProvider: SenKeyStyleProvider = senSecondaryContainerKeyStyle,
 ) = senKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Icon(Icons.AutoMirrored.Outlined.Backspace),
@@ -64,7 +66,7 @@ fun SenModeScope.senBackSpaceKey(
 )
 
 fun SenModeScope.senShiftKey(
-    styleProvider: SenKeyStyleProvider = senSecondaryKeyStyle,
+    styleProvider: SenKeyStyleProvider = senSecondaryContainerKeyStyle,
 ) = senKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.ShiftIcon,
@@ -93,7 +95,7 @@ fun SenModeScope.senReturnKey(
 fun SenModeScope.senModeSwitcherKey(
     modeType: SenModeType,
     label: String,
-    styleProvider: SenKeyStyleProvider = senTertiaryKeyStyle,
+    styleProvider: SenKeyStyleProvider = senTertiaryContainerKeyStyle,
 ) = senKey(
     styleProvider = styleProvider,
     display = SenKeyDisplay.Text(label),
@@ -102,8 +104,8 @@ fun SenModeScope.senModeSwitcherKey(
 )
 
 fun senMode(
-    layout: SenLayout,
+    layoutType: SenLayoutType,
     builder: SenModeScope.() -> Unit,
-) = SenModeScope(layout)
+) = SenModeScope(layoutType)
     .apply(builder)
     .build()

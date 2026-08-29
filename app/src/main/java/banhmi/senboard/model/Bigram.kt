@@ -1,5 +1,8 @@
 package banhmi.senboard.model
 
+import banhmi.senboard.utils.cosineSimilarity
+import banhmi.senboard.utils.countOccurences
+import banhmi.senboard.utils.prepended
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -45,6 +48,12 @@ sealed interface BigramDatasetTakeLimit {
     data class Max(val value: Int) : BigramDatasetTakeLimit
 }
 
+data class BigramResult(
+    val text: String,
+    // Only used for the original text included in closest words
+    val isOriginal: Boolean = false,
+)
+
 // We want to allow for MutableList entries to be typed as well
 @Serializable(BigramDatasetSerializer::class)
 data class BigramDataset<T : List<BigramEntry>>(
@@ -55,10 +64,47 @@ data class BigramDataset<T : List<BigramEntry>>(
         entries = this.entries + other.entries,
     )
 
+    /* This should be used to find similar words given our specified word
+    (NOT based on semantics, but number of letter occurrences) */
+    fun getClosestWords(
+        text: String,
+        takeLimit: BigramDatasetTakeLimit,
+    ): List<BigramResult> {
+        val text = text.trim().lowercase()
+
+        if (text.isBlank()) return emptyList()
+
+        return entries
+            .flatMap { entry ->
+                entry.candidates
+                    .map { candidate -> BigramResult(candidate.text) }
+                    // Don't forget to include entry text!
+                    .plus(BigramResult(entry.text))
+            }
+            .distinct()
+            // Candidate text equal to text should be removed, as we will re-include it later
+            .filter { candidate -> candidate.text.startsWith(text) && candidate.text != text }
+            .sortedByDescending { candidate ->
+                cosineSimilarity(
+                    countOccurences(candidate.text).values.toList(),
+                    countOccurences(text).values.toList(),
+                )
+            }
+            // Also include original text, from my observation iOS shows it at the beginning with quotes
+            .prepended(BigramResult(text, isOriginal = true))
+            .let { candidates ->
+                when (takeLimit) {
+                    is BigramDatasetTakeLimit.Max -> candidates.take(takeLimit.value)
+                    BigramDatasetTakeLimit.Unlimited -> candidates
+                }
+            }
+    }
+
+    // This should be used for guessing the next word based on "semantics" (i.e. bigrams)
     fun getBestCandidates(
         entryText: String,
         takeLimit: BigramDatasetTakeLimit,
-    ): List<String> {
+    ): List<BigramResult> {
         val entryText = entryText.trim().lowercase()
 
         if (entryText.isBlank()) return emptyList()
@@ -67,7 +113,7 @@ data class BigramDataset<T : List<BigramEntry>>(
             .filter { entry -> entry.text.startsWith(entryText) }
             .flatMap { entry -> entry.candidates }
             .sortedByDescending { candidate -> candidate.frequency }
-            .map { candidate -> candidate.text }
+            .map { candidate -> BigramResult(candidate.text) }
             .let { candidates ->
                 when (takeLimit) {
                     is BigramDatasetTakeLimit.Max -> candidates.take(takeLimit.value)

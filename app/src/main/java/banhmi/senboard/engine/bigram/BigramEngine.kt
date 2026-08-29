@@ -4,6 +4,7 @@ import android.content.Context
 import banhmi.senboard.model.BigramDataset
 import banhmi.senboard.model.BigramDatasetTakeLimit
 import banhmi.senboard.model.BigramEntry
+import banhmi.senboard.model.BigramResult
 import banhmi.senboard.model.addAllFrom
 import kotlinx.serialization.json.Json
 
@@ -14,7 +15,9 @@ object BigramEngineDefaults {
     val TakeLimit = BigramDatasetTakeLimit.Max(3)
 }
 
-class BigramEngine(private val context: Context) {
+class BigramEngine(
+    private val context: Context,
+) {
     private val bigramDataset = BigramDataset(entries = mutableListOf())
 
     private val jsonWithUnknownKeys = Json { ignoreUnknownKeys = true }
@@ -38,12 +41,26 @@ class BigramEngine(private val context: Context) {
         return this
     }
 
-    fun <T : List<BigramEntry>> getBestCandidates(
-        entryText: String,
+    fun <T : List<BigramEntry>> getClosestWords(
+        text: String,
         takeLimit: BigramDatasetTakeLimit = BigramEngineDefaults.TakeLimit,
         // Merge the dataset with user provided one (e.g. from a DataStore)
         userProvidedBigramDataset: BigramDataset<T>? = null,
-    ): List<String> {
+    ): List<BigramResult> {
+        val mergedBigramDataset = if (userProvidedBigramDataset != null) {
+            bigramDataset + userProvidedBigramDataset
+        } else {
+            bigramDataset
+        }
+
+        return mergedBigramDataset.getClosestWords(text, takeLimit)
+    }
+
+    fun <T : List<BigramEntry>> getBestCandidates(
+        entryText: String,
+        takeLimit: BigramDatasetTakeLimit = BigramEngineDefaults.TakeLimit,
+        userProvidedBigramDataset: BigramDataset<T>? = null,
+    ): List<BigramResult> {
         val mergedBigramDataset = if (userProvidedBigramDataset != null) {
             bigramDataset + userProvidedBigramDataset
         } else {

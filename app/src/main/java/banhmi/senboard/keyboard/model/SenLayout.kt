@@ -1,8 +1,10 @@
 package banhmi.senboard.keyboard.model
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
+import banhmi.senboard.data.preferences.SenPreferences
+import banhmi.senboard.keyboard.impl.layout.senAaaaaLayout
+import banhmi.senboard.keyboard.impl.layout.senStandardLayout
+import banhmi.senboard.keyboard.state.SenBoardState
 
 object SenLayoutKeyDefaults {
     @JvmStatic
@@ -26,26 +28,20 @@ object SenLayoutRowDefaults {
 data class SenLayoutRow(
     val keys: List<SenLayoutKey>,
     val heightMultiplier: Float,
-) {
-    //val totalAreaWidthMultipliers
-    //    get() = keys.fold(initial = 0f) { widthMultipliers, key ->
-    //        widthMultipliers + key.areaWidthMultiplier
-    //    }
-}
-
-object SenLayoutDefaults {
-    val KeySpacing = PaddingValues(4.dp)
-}
+)
 
 data class SenLayout(
     val rows: List<SenLayoutRow>,
-    val keySpacing: PaddingValues,
-) {
-    //val maxTotalAreaWidthMultipliers
-    //    get() = rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
-    //
-    //val totalHeightMultipliers
-    //    get() = rows.fold(initial = 0f) { heightMultiplier, row ->
-    //        heightMultiplier + row.heightMultiplier
-    //    }
+)
+
+// Register the layouts as enums here first before implementing them!
+enum class SenLayoutType {
+    Standard, Aaaaa;
 }
+
+fun provideLayout(layoutType: SenLayoutType) = when (layoutType) {
+    SenLayoutType.Standard -> senStandardLayout
+    SenLayoutType.Aaaaa -> senAaaaaLayout
+}
+
+typealias SenLayoutProvider = (SenBoardState, SenPreferences) -> SenLayout

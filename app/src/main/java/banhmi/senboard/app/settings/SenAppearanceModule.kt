@@ -61,13 +61,13 @@ fun SenAppearanceScreen(
     navigator: SenNavigator,
     preferencesViewModel: SenPreferencesViewModel = hiltViewModel(),
 ) {
-    val preferences by preferencesViewModel.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenAppearanceContent(
         onNavigateBack = navigator::goBack,
+        numberRowEnabled = preferences.numberRowEnabled,
         keyBackgroundEnabled = preferences.keyBackgroundEnabled,
         keyBackgroundShadowEnabled = preferences.keyBackgroundShadowEnabled,
-        numberRowEnabled = preferences.numberRowEnabled,
         onKeyBackgroundEnabledUpdate = preferencesViewModel::updateKeyBackgroundEnabled,
         onKeyBackgroundShadowEnabledUpdate = preferencesViewModel::updateKeyBackgroundShadowEnabled,
         onNumberRowEnabledUpdate = preferencesViewModel::updateNumberRowEnabled,
@@ -77,9 +77,9 @@ fun SenAppearanceScreen(
 @Composable
 fun SenAppearanceContent(
     onNavigateBack: () -> Unit = {},
+    numberRowEnabled: Boolean,
     keyBackgroundEnabled: Boolean,
     keyBackgroundShadowEnabled: Boolean,
-    numberRowEnabled: Boolean,
     onKeyBackgroundEnabledUpdate: (Boolean) -> Unit,
     onKeyBackgroundShadowEnabledUpdate: (Boolean) -> Unit,
     onNumberRowEnabledUpdate: (Boolean) -> Unit,
@@ -106,11 +106,10 @@ fun SenAppearanceContent(
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
                     onClick = { onNumberRowEnabledUpdate(!numberRowEnabled) },
-                    supportingContent = { Text("Thêm hàng phím số 1-0 ở đầu bàn phím (Tiện lợi cho VNI)") },
                     leadingContent = {
                         SenIcon(
                             icon = Icons.Outlined.Numbers,
-                            description = "Hàng phím số (Number Row)",
+                            description = "Hàng phím số",
                         )
                     },
                     trailingContent = {
@@ -121,7 +120,7 @@ fun SenAppearanceContent(
                     },
                     modifier = Modifier.segmentedPadding(),
                 ) {
-                    Text("Hàng phím số (Number Row)")
+                    Text("Hàng phím số")
                 }
             }
 

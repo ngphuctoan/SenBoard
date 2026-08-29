@@ -105,7 +105,10 @@ object SenAppIconImageDefaults {
 }
 
 @Composable
-fun SenAppIconImage(modifier: Modifier = Modifier) {
+fun SenAppIconImage(
+    modifier: Modifier = Modifier,
+    onEasterEggsEnabledUpdate: () -> Unit,
+) {
     when (val appIcon = LocalSenAppIcon.current) {
         is SenAppIconResult.Success -> {
             // Can't use @Composable function in graphicsLayer, so define the shape here instead
@@ -118,10 +121,14 @@ fun SenAppIconImage(modifier: Modifier = Modifier) {
                 modifier = modifier
                     .size(SenAppIconImageDefaults.ImageSize)
                     .graphicsLayer {
-                        shape = appIconShape
                         clip = true
+                        shape = appIconShape
                         shadowElevation = elevation
-                    },
+                    }
+                    .combinedClickable(
+                        onClick = {}, // Tapping once does nothing, which can be used as a hint :>
+                        onLongClick = onEasterEggsEnabledUpdate,
+                    ),
             )
         }
 
@@ -170,13 +177,10 @@ fun SenAboutContent(
                         .padding(top = 8.dp, bottom = 24.dp, start = 16.dp, end = 16.dp),
                 ) {
                     SenAppIconImage(
-                        modifier = Modifier.combinedClickable(
-                            onClick = {},
-                            onLongClick = {
-                                if (!easterEggsEnabled) onEasterEggsEnabledUpdate(true)
-                                toaster.bake(context, "Easter egg đã được bật!")
-                            },
-                        ),
+                        onEasterEggsEnabledUpdate = {
+                            if (!easterEggsEnabled) onEasterEggsEnabledUpdate(true)
+                            toaster.bake(context, "Easter egg đã được bật!")
+                        },
                     )
                     Text(
                         text = "SenBoard",
@@ -197,7 +201,7 @@ fun SenAboutContent(
                             toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
                         } else if (developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsRevealCount) {
                             developerOptionsCounter++
-                            val developerOptionsRemainingCounter = SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter
+                            val developerOptionsRemainingCounter = SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter + 1
                             toaster.bake(context, "Cần $developerOptionsRemainingCounter lần chạm nữa để chế độ nhà phát triển")
                         } else {
                             developerOptionsCounter++

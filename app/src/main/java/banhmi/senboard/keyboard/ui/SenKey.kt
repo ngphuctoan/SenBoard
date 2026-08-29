@@ -9,21 +9,32 @@ import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.node.DelegatableNode
 import androidx.compose.ui.node.DrawModifierNode
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import banhmi.senboard.keyboard.model.SenKeyStyle
 import banhmi.senboard.keyboard.model.SenLayoutKey
 import kotlinx.coroutines.flow.collectLatest
@@ -94,8 +105,29 @@ private class SenKeyIndicationNode(
     }
 }
 
+@Suppress("UNUSED")
+@Composable
+fun Modifier.minimumAspectRatioPadding(aspectRatio: Float): Modifier {
+    var size by remember { mutableStateOf(Size.Zero) }
+
+    val padding = with(LocalDensity.current) {
+        PaddingValues(
+            vertical = ((size.height - size.width / aspectRatio) / 2) //
+                .coerceAtLeast(0f).toDp(),
+        )
+    }
+
+    return this
+        .onGloballyPositioned { coordinates ->
+            size = coordinates.size.toSize()
+        }
+        .padding(padding)
+}
+
 object SenKeyDefaults {
     internal val ContentAlignment = Alignment.Center
+
+    val Padding = PaddingValues(3.dp)
 }
 
 @Composable
@@ -105,17 +137,20 @@ fun SenKey(
     indication: Indication?,
     interactionSource: InteractionSource?,
     modifier: Modifier = Modifier,
+    padding: PaddingValues = SenKeyDefaults.Padding,
     content: @Composable () -> Unit,
 ) {
     Box(
         contentAlignment = SenKeyDefaults.ContentAlignment,
         modifier = modifier
+            .fillMaxWidth(key.shapeWidthProportion / key.areaWidthMultiplier)
+            .fillMaxHeight()
+            //.minimumAspectRatioPadding(0.75f * key.shapeWidthProportion)
+            .padding(padding)
             .graphicsLayer {
                 shape = style.shape
                 shadowElevation = style.shadowElevation
             }
-            .fillMaxWidth(key.shapeWidthProportion / key.areaWidthMultiplier)
-            .fillMaxHeight()
             .background(
                 color = style.colors.color,
                 shape = style.shape,
@@ -137,83 +172,3 @@ fun SenKey(
         }
     }
 }
-
-//object SenKeyDefaults {
-//    val AreaHeight: Dp = 64.dp
-//
-//    val ShapeMaxWidth: Dp = 80.dp
-//
-//    @Composable
-//    internal fun elevation(): Float = with(LocalDensity.current) { 1.dp.toPx() }
-//
-//    fun maxBoardWidth(layout: SenLayout): Dp =
-//        ShapeMaxWidth * layout.rows.minBy { row -> row.totalAreaWidthMultipliers }.totalAreaWidthMultipliers
-//}
-//
-//@Composable
-//fun RowScope.SenKey(
-//    style: SenKeyStyle,
-//    areaWidthMultiplier: Float,
-//    shapeWidthProportion: Float,
-//    shapeAlignment: Alignment.Horizontal,
-//    modifier: Modifier = Modifier,
-//    interactionSource: InteractionSource?,
-//    indication: Indication?,
-//    content: @Composable () -> Unit,
-//) {
-//    Box(
-//        contentAlignment = shapeAlignment + Alignment.CenterVertically,
-//        modifier = modifier.weight(areaWidthMultiplier),
-//    ) {
-//        val elevation = SenKeyDefaults.elevation()
-//
-//        Box(
-//            contentAlignment = Alignment.CenterHorizontally + Alignment.CenterVertically,
-//            modifier = Modifier
-//                .graphicsLayer {
-//                    shape = style.shape
-//                    if (style.addShadow) shadowElevation = elevation
-//                }
-//                .fillMaxWidth(shapeWidthProportion / areaWidthMultiplier)
-//                .fillMaxHeight()
-//                .background(color = style.colors.color, shape = style.shape)
-//                .clip(shape = style.shape)
-//                .then(
-//                    if (interactionSource != null) {
-//                        Modifier.indication(
-//                            indication = indication,
-//                            interactionSource = interactionSource,
-//                        )
-//                    } else {
-//                        Modifier
-//                    },
-//                ),
-//        ) {
-//            CompositionLocalProvider(LocalContentColor provides style.colors.contentColor) {
-//                content()
-//            }
-//        }
-//    }
-//}
-//
-//@Suppress("UNUSED")
-//@Composable
-//fun RowScope.SenKey(
-//    style: SenKeyStyle,
-//    areaWidthMultiplier: Float,
-//    shapeWidthProportion: Float,
-//    shapeAlignment: Alignment.Horizontal,
-//    modifier: Modifier = Modifier,
-//    content: @Composable () -> Unit,
-//) {
-//    SenKey(
-//        style = style,
-//        areaWidthMultiplier = areaWidthMultiplier,
-//        shapeWidthProportion = shapeWidthProportion,
-//        shapeAlignment = shapeAlignment,
-//        modifier = modifier,
-//        interactionSource = null,
-//        indication = null,
-//        content = content,
-//    )
-//}

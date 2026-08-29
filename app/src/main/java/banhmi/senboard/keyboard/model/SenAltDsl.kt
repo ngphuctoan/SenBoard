@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED")
+
 package banhmi.senboard.keyboard.model
 
 import banhmi.senboard.keyboard.impl.handler.SenCharKeyHandler
@@ -27,6 +29,7 @@ fun SenAltRowScope.senAltCharKey(
     handler = SenCharKeyHandler(char),
 )
 
+@Suppress("UNUSED")
 fun SenAltRowScope.senAltTextKey(
     text: String,
 ) = senAlt(
