@@ -3,6 +3,7 @@ package banhmi.senboard.keyboard.model
 import androidx.compose.ui.Alignment
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.keyboard.impl.layout.senAaaaaLayout
+import banhmi.senboard.keyboard.impl.layout.senNumericLayout
 import banhmi.senboard.keyboard.impl.layout.senStandardLayout
 import banhmi.senboard.keyboard.state.SenBoardState
 
@@ -36,11 +37,12 @@ data class SenLayout(
 
 // Register the layouts as enums here first before implementing them!
 enum class SenLayoutType {
-    Standard, Aaaaa;
+    Standard, Numeric, Aaaaa;
 }
 
 fun provideLayout(layoutType: SenLayoutType) = when (layoutType) {
     SenLayoutType.Standard -> senStandardLayout
+    SenLayoutType.Numeric -> senNumericLayout
     SenLayoutType.Aaaaa -> senAaaaaLayout
 }
 

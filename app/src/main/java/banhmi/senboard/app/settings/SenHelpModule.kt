@@ -35,7 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import banhmi.senboard.app.annotations.SenPreviewCommon
+import banhmi.senboard.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn

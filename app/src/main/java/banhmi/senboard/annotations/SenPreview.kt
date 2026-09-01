@@ -1,4 +1,4 @@
-package banhmi.senboard.app.annotations
+package banhmi.senboard.annotations
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Configuration.UI_MODE_TYPE_NORMAL

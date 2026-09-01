@@ -103,6 +103,18 @@ fun SenModeScope.senModeSwitcherKey(
     altProvider = { senAltNone() },
 )
 
+fun SenModeScope.senNumberKey(
+    number: Int,
+    t9Chars: String,
+    styleProvider: SenKeyStyleProvider = senNeutralKeyStyle,
+    altProvider: SenAltProvider = { senAltNone() },
+) = senKey(
+    styleProvider = styleProvider,
+    display = SenKeyDisplay.Number(number, t9Chars),
+    handler = SenTextKeyHandler(number.toString()),
+    altProvider = altProvider,
+)
+
 fun senMode(
     layoutType: SenLayoutType,
     builder: SenModeScope.() -> Unit,

@@ -30,7 +30,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import banhmi.senboard.BuildConfig
 import banhmi.senboard.R
-import banhmi.senboard.app.annotations.SenPreviewCommon
+import banhmi.senboard.annotations.SenPreviewCommon
 import banhmi.senboard.app.icon.LocalSenAppIcon
 import banhmi.senboard.app.icon.SenAppIconResult
 import banhmi.senboard.app.icon.senAppIconShape

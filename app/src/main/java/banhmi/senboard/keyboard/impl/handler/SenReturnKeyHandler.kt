@@ -8,16 +8,17 @@ object SenReturnKeyHandler : SenKeyHandler {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {
-        val convertedComposingText = preferencesState.vietnameseEngine //
-            .convertWord(uiState.composingText)
+        if (uiState.inputTypeComposingAllowed) {
+            val convertedComposingText = preferencesState.vietnameseEngine //
+                .convertWord(uiState.composingText)
+
+            onUpdateWordSuggestions(onGetClosestWords(convertedComposingText))
+        }
 
         inputConnection.finishComposingText()
         inputConnection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER))
 
         clearComposingText()
-        onUpdateWordSuggestions(
-            onGetBestCandidates(convertedComposingText),
-        )
     }
 
     override fun handleDoubleTap(

@@ -44,7 +44,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import banhmi.senboard.BuildConfig
-import banhmi.senboard.app.annotations.SenPreviewCommon
+import banhmi.senboard.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn

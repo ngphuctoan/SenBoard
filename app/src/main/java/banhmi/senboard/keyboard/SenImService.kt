@@ -1,5 +1,6 @@
 package banhmi.senboard.keyboard
 
+import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -149,6 +150,16 @@ class SenImService : SenLifecycleImService() {
         stateViewModel.updateComposingText(String.EMPTY)
         // We don't have a bigram for empty string yet so we clear the suggestion
         stateViewModel.updateWordSuggestions(emptyList())
+
+        if (editorInfo != null) {
+            stateViewModel.updateInputType(editorInfo.inputType)
+            stateViewModel.updateModeType(
+                when (editorInfo.inputType and InputType.TYPE_MASK_CLASS) {
+                    InputType.TYPE_CLASS_NUMBER, InputType.TYPE_CLASS_PHONE -> SenModeType.Numeric
+                    else -> SenModeType.Characters
+                },
+            )
+        }
     }
 
     override fun onCreateInputView(): View {
@@ -187,64 +198,64 @@ class SenImService : SenLifecycleImService() {
                                         .widthIn(max = SenBoardDefaults.MaxWidth)
                                         .fillMaxWidth(),
                                 ) {
-                                    SenEngineSwitcher(
-                                        engineType = preferencesState.vietnameseEngineType,
-                                        onEngineSwitch = preferencesViewModel::updateVietnameseEngineType,
-                                    ) {
-                                        SenEngineIcon(preferencesState.vietnameseEngineType)
-                                    }
-
-                                    // Too lazy to not also update state when this option is disabled :b
-                                    if (preferencesState.wordSuggestionsEnabled) {
-                                        SenSuggestions(
-                                            suggestions = uiState.wordSuggestions,
-                                            onSuggestionChoose = { suggestion ->
-                                                /* This will also replace composing text, which is intended
-                                                when the suggestions are closest words and not bigram candidates
-                                                ====================
-                                                Additionally, include a whitespace so users don't have to press space
-                                                afterward, in other words, basically how any keyboard app works :D */
-                                                currentInputConnection.commitText("$suggestion ", 1)
-
-                                                stateViewModel.updateShiftMode(
-                                                    when (uiState.shiftMode) {
-                                                        ShiftMode.Shifted -> ShiftMode.Off
-                                                        else -> uiState.shiftMode
-                                                    },
-                                                )
-                                                stateViewModel.updateComposingText(String.EMPTY)
-                                                stateViewModel.updateWordSuggestions(
-                                                    bigramEngine.getBestCandidates<Nothing>(suggestion),
-                                                )
-                                            },
-                                            modifier = Modifier.weight(1f),
-                                        )
-                                    } else {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                    }
-
-                                    if ( //
-                                        preferencesState.easterEggsEnabled //
-                                        && preferencesState.aaaaaModeEnabled
-                                    ) {
-                                        IconToggleButton(
-                                            checked = uiState.modeType == SenModeType.Aaaaa,
-                                            onCheckedChange = {
-                                                stateViewModel.updateModeType(
-                                                    when (uiState.modeType) {
-                                                        SenModeType.Aaaaa -> SenModeType.Characters
-                                                        else -> SenModeType.Aaaaa
-                                                    },
-                                                )
-                                            },
+                                    if (uiState.inputTypeComposingAllowed) {
+                                        SenEngineSwitcher(
+                                            engineType = preferencesState.vietnameseEngineType,
+                                            onEngineSwitch = preferencesViewModel::updateVietnameseEngineType,
                                         ) {
-                                            Icon(
-                                                imageVector = when (uiState.modeType) {
-                                                    SenModeType.Aaaaa -> Icons.Filled.AutoAwesome
-                                                    else -> Icons.Outlined.AutoAwesome
+                                            SenEngineIcon(preferencesState.vietnameseEngineType)
+                                        }
+
+                                        // Too lazy to not also update state when this option is disabled :b
+                                        if (preferencesState.wordSuggestionsEnabled) {
+                                            SenSuggestions(
+                                                suggestions = uiState.wordSuggestions,
+                                                onSuggestionChoose = { suggestion ->
+                                                    /* This will also replace composing text, which is intended
+                                                    when the suggestions are closest words and not bigram candidates
+                                                    ====================
+                                                    Additionally, include a whitespace so users don't have to press space
+                                                    afterward, in other words, basically how any keyboard app works :D */
+                                                    currentInputConnection.commitText("$suggestion ", 1)
+
+                                                    stateViewModel.updateShiftMode(
+                                                        when (uiState.shiftMode) {
+                                                            ShiftMode.Shifted -> ShiftMode.Off
+                                                            else -> uiState.shiftMode
+                                                        },
+                                                    )
+                                                    stateViewModel.updateComposingText(String.EMPTY)
+                                                    stateViewModel.updateWordSuggestions(bigramEngine.getBestCandidates<Nothing>(suggestion))
                                                 },
-                                                contentDescription = "Bật/tắt chế độ aaaaa",
+                                                modifier = Modifier.weight(1f),
                                             )
+                                        } else {
+                                            Spacer(modifier = Modifier.weight(1f))
+                                        }
+
+                                        if ( //
+                                            preferencesState.easterEggsEnabled //
+                                            && preferencesState.aaaaaModeEnabled
+                                        ) {
+                                            IconToggleButton(
+                                                checked = uiState.modeType == SenModeType.Aaaaa,
+                                                onCheckedChange = {
+                                                    stateViewModel.updateModeType(
+                                                        when (uiState.modeType) {
+                                                            SenModeType.Aaaaa -> SenModeType.Characters
+                                                            else -> SenModeType.Aaaaa
+                                                        },
+                                                    )
+                                                },
+                                            ) {
+                                                Icon(
+                                                    imageVector = when (uiState.modeType) {
+                                                        SenModeType.Aaaaa -> Icons.Filled.AutoAwesome
+                                                        else -> Icons.Outlined.AutoAwesome
+                                                    },
+                                                    contentDescription = "Bật/tắt chế độ aaaaa",
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -261,7 +272,6 @@ class SenImService : SenLifecycleImService() {
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(SenBoardDefaults.height(maxHeight))
                                 .onGloballyPositioned { coordinates ->
                                     dimensions = IntRect(
                                         offset = coordinates.positionInWindow().toIntOffset(),
@@ -339,7 +349,9 @@ class SenImService : SenLifecycleImService() {
                                         haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                     }
                                 },
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(SenBoardDefaults.height(maxHeight, preferencesState.numberRowEnabled)),
                             ) { index, key, interactionSource ->
                                 val keyData = provideMode(uiState.modeType) //
                                     .invoke(uiState, preferencesState) //

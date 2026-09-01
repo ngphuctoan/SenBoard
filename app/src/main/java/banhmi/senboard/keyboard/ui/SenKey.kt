@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,7 +108,9 @@ private class SenKeyIndicationNode(
 
 @Suppress("UNUSED")
 @Composable
-fun Modifier.minimumAspectRatioPadding(aspectRatio: Float): Modifier {
+fun Modifier.minimumAspectRatioPadding(
+    aspectRatio: Float,
+): Modifier {
     var size by remember { mutableStateOf(Size.Zero) }
 
     val padding = with(LocalDensity.current) {
@@ -124,10 +127,14 @@ fun Modifier.minimumAspectRatioPadding(aspectRatio: Float): Modifier {
         .padding(padding)
 }
 
+val LocalSupportingContentColor = compositionLocalOf {
+    Color.Unspecified
+}
+
 object SenKeyDefaults {
     internal val ContentAlignment = Alignment.Center
 
-    val Padding = PaddingValues(3.dp)
+    val DefaultPadding = PaddingValues(3.dp)
 }
 
 @Composable
@@ -137,7 +144,7 @@ fun SenKey(
     indication: Indication?,
     interactionSource: InteractionSource?,
     modifier: Modifier = Modifier,
-    padding: PaddingValues = SenKeyDefaults.Padding,
+    padding: PaddingValues = SenKeyDefaults.DefaultPadding,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -167,7 +174,10 @@ fun SenKey(
                 },
             ),
     ) {
-        CompositionLocalProvider(LocalContentColor provides style.colors.contentColor) {
+        CompositionLocalProvider(
+            LocalContentColor provides style.colors.contentColor,
+            LocalSupportingContentColor provides style.colors.supportingContentColor,
+        ) {
             content()
         }
     }

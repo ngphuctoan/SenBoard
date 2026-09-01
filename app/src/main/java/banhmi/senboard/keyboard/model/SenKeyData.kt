@@ -24,6 +24,7 @@ import banhmi.senboard.utils.EMPTY
 data class SenKeyColors(
     val color: Color,
     val contentColor: Color,
+    val supportingContentColor: Color,
 )
 
 object SenKeyStyleDefaults {
@@ -73,6 +74,7 @@ val senNeutralKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, dark
                 Color.Transparent
             },
             contentColor = MaterialTheme.colorScheme.onSurface,
+            supportingContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
         shadowElevation = SenKeyStyleDefaults.shadowElevation(
@@ -93,6 +95,7 @@ val senPrimaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, preferen
                 Color.Transparent
             },
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
         shadowElevation = SenKeyStyleDefaults.shadowElevation(
@@ -112,6 +115,7 @@ val senSecondaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, prefer
                 Color.Transparent
             },
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            supportingContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
         shadowElevation = SenKeyStyleDefaults.shadowElevation(
@@ -127,6 +131,7 @@ val senPrimaryKeyStyle: SenKeyStyleProvider = @Composable { _, preferences, _ ->
         colors = SenKeyColors(
             color = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
+            supportingContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
         shadowElevation = SenKeyStyleDefaults.shadowElevation(
@@ -146,6 +151,7 @@ val senTertiaryContainerKeyStyle: SenKeyStyleProvider = @Composable { _, prefere
                 Color.Transparent
             },
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            supportingContentColor = MaterialTheme.colorScheme.onTertiaryContainer,
         ),
         textStyle = SenKeyStyleDefaults.textStyle(),
         shadowElevation = SenKeyStyleDefaults.shadowElevation(
@@ -177,6 +183,11 @@ sealed interface SenKeyDisplay {
     // For actual character key, please use Char as it also handles uppercasing
     data class Text(
         val text: String,
+    ) : SenKeyDisplay
+
+    data class Number(
+        val number: Int,
+        val t9Chars: String,
     ) : SenKeyDisplay
 
     data class Icon(
@@ -226,7 +237,7 @@ class SenKeyHandlerContext(
     val onUpdateWordSuggestions: (List<BigramResult>) -> Unit,
     // For getting data from the bigram engine,
     val onGetClosestWords: (String) -> List<BigramResult>,
-    val onGetBestCandidates: (String) -> List<BigramResult>,
+    @Suppress("UNUSED") val onGetBestCandidates: (String) -> List<BigramResult>,
 ) {
     val inputConnection: InputConnection = imService.currentInputConnection
 

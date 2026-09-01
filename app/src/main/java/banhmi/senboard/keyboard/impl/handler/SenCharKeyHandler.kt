@@ -10,17 +10,22 @@ class SenCharKeyHandler(
         context: SenKeyHandlerContext,
     ) = context.run {
         val newChar = char.run { if (uiState.isShifted) uppercase() else lowercase() }
-        val newComposingText = uiState.composingText + newChar
-        val convertedComposingText = preferencesState.vietnameseEngine //
-            .convertWord(newComposingText)
 
-        inputConnection.setComposingText(convertedComposingText, 1)
+        if (uiState.inputTypeComposingAllowed) {
+            val newComposingText = uiState.composingText + newChar
+            val convertedComposingText = preferencesState.vietnameseEngine //
+                .convertWord(newComposingText)
+
+            inputConnection.setComposingText(convertedComposingText, 1)
+
+            onUpdateComposingText(newComposingText)
+            onUpdateWordSuggestions(onGetClosestWords(convertedComposingText))
+        } else {
+            // Will act similarly to text key handler
+            inputConnection.commitText(newChar, 1)
+        }
 
         updateShiftModeAutomatically()
-        onUpdateComposingText(newComposingText)
-        onUpdateWordSuggestions(
-            onGetClosestWords(convertedComposingText),
-        )
     }
 
     override fun handleDoubleTap(

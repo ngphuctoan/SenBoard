@@ -16,6 +16,7 @@ class SenBoardStateViewModel(
     private val shiftMode: ShiftMode,
     private val composingText: String,
     private val wordSuggestions: List<BigramResult>,
+    private val inputType: Int,
 ) : ViewModel() {
     // Factory to pass in the initial state values
     companion object {
@@ -27,13 +28,16 @@ class SenBoardStateViewModel(
 
         val WORD_SUGGESTIONS_KEY = CreationExtras.Key<List<BigramResult>>()
 
+        val INPUT_TYPE_KEY = CreationExtras.Key<Int>()
+
         val Factory = viewModelFactory {
             initializer {
                 val modeType = this[MODE_TYPE_KEY] ?: SenBoardStateDefaults.DefaultModeType
                 val shiftMode = this[SHIFT_MODE_KEY] ?: SenBoardStateDefaults.FallbackShiftMode
                 val composingText = this[COMPOSING_TEXT_KEY] ?: String.EMPTY
                 val wordSuggestions = this[WORD_SUGGESTIONS_KEY] ?: emptyList()
-                SenBoardStateViewModel(modeType, shiftMode, composingText, wordSuggestions)
+                val inputType = this[INPUT_TYPE_KEY] ?: SenBoardStateDefaults.DefaultInputType
+                SenBoardStateViewModel(modeType, shiftMode, composingText, wordSuggestions, inputType)
             }
         }
     }
@@ -44,6 +48,7 @@ class SenBoardStateViewModel(
             shiftMode = shiftMode,
             composingText = composingText,
             wordSuggestions = wordSuggestions,
+            inputType = inputType,
         ),
     )
 
@@ -63,5 +68,9 @@ class SenBoardStateViewModel(
 
     fun updateWordSuggestions(newWordSuggestions: List<BigramResult>) = _uiState.update { uiState ->
         uiState.copy(wordSuggestions = newWordSuggestions)
+    }
+
+    fun updateInputType(newInputType: Int) = _uiState.update { uiState ->
+        uiState.copy(inputType = newInputType)
     }
 }

@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -18,9 +20,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -40,11 +60,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import banhmi.senboard.data.preferences.SenPreferences
+import banhmi.senboard.engine.VietnameseEngineType
 import banhmi.senboard.keyboard.impl.handler.SenShiftKeyHandler
 import banhmi.senboard.keyboard.model.SenLayout
 import banhmi.senboard.keyboard.model.SenLayoutKey
@@ -245,12 +267,23 @@ object SenBoardDefaults {
     internal val ContentAlignment = Alignment.Center
 
     @JvmStatic
-    internal val MaxHeightProportion = 0.66f
+    internal val MaxHeightProportion = 0.48f
 
-    internal val MaxHeightFixed = 320.dp
+    internal val MaxHeightFixed = 224.dp
 
-    fun height(screenHeight: Dp) = (screenHeight * MaxHeightProportion) //
-        .coerceAtMost(MaxHeightFixed)
+    internal val MaxHeightFixedWithNumberRow = 288.dp
+
+    fun height(
+        screenHeight: Dp,
+        numberRowEnabled: Boolean,
+    ) = (screenHeight * MaxHeightProportion) //
+        .coerceAtMost(
+            if (numberRowEnabled) {
+                MaxHeightFixedWithNumberRow
+            } else {
+                MaxHeightFixed
+            },
+        )
 }
 
 @Composable
@@ -355,7 +388,11 @@ fun SenBoard(
     }
 }
 
-@PreviewScreenSizes
+@Preview(
+    device = Devices.PHONE,
+    apiLevel = 36,
+    showSystemUi = true,
+)
 @Composable
 fun SenBoardPreview() {
     var state by remember {
@@ -368,96 +405,255 @@ fun SenBoardPreview() {
     var preferences by remember {
         mutableStateOf(
             SenPreferences(
-                numberRowEnabled = false,
-                keyBackgroundEnabled = true,
+                numberRowEnabled = true,
+                keyBackgroundEnabled = false,
                 keyBackgroundShadowEnabled = true,
+                vietnameseEngineType = VietnameseEngineType.Vni,
             ),
         )
     }
 
-    SenTheme {
-        BoxWithConstraints(
-            contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            SenBoardScaffold(
-                topBar = {
-                    SenToolbar(
-                        modifier = Modifier
-                            .widthIn(max = SenBoardDefaults.MaxWidth)
-                            .fillMaxWidth(),
-                    ) {
-                        SenEngineSwitcher(
-                            engineType = preferences.vietnameseEngineType,
-                            onEngineSwitch = { engineType ->
-                                preferences = preferences.copy(vietnameseEngineType = engineType)
-                            },
-                        ) {
-                            SenEngineIcon(preferences.vietnameseEngineType)
+    SenTheme(dynamicColor = false) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                contentDescription = null,
+                            )
                         }
-
-                        SenSuggestions(
-                            suggestions = listOf(
-                                BigramResult("xin", isOriginal = true),
-                                BigramResult("chào"),
-                                BigramResult("bạn"),
-                            ),
-                            onSuggestionChoose = {},
-                            modifier = Modifier.fillMaxWidth(),
+                    },
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Outlined.Share,
+                                contentDescription = null,
+                            )
+                        }
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Outlined.MoreVert,
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+        ) { innerPadding ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(24.dp, 0.dp)
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = "Ghi chú của tôi",
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                Text(
+                    text = "Được lưu lại lúc: Bây giờ",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
+                Text(text = "SenBoard thật tuyệt vời!")
+            }
+            /*Column(
+                verticalArrangement = Arrangement.spacedBy(32.dp),
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(24.dp, 32.dp)
+                    .fillMaxWidth(),
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        shape = CircleShape,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.AddAPhoto,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .size(28.dp),
                         )
                     }
-                },
-                bottomBar = {
-                    Spacer(
+                    Text(text = "Thêm ảnh")
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    OutlinedTextField(
+                        value = "Bánh mì chả cá",
+                        onValueChange = {},
+                        label = { Text(text = "Tên sản phẩm") },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    OutlinedTextField(
+                        value = "Bánh mì đặc trưng và signature của shop, bao gồm bộ đôi chả cá, chả mực, đồ chua, patê, và tương ớt tuỳ chọn.",
+                        onValueChange = {},
+                        label = { Text(text = "Mô tả") },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    OutlinedTextField(
+                        value = "25,000",
+                        onValueChange = {},
+                        label = { Text(text = "Giá") },
+                        suffix = { Text(text = "\u20ab") },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }*/
+            /*Column(
+                verticalArrangement = Arrangement.spacedBy(32.dp),
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(24.dp, 32.dp)
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = "Tìm kiếm trên điện thoại",
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+
+                BoxWithConstraints {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        mapOf(
+                            "Điện thoại" to Icons.Filled.Phone,
+                            "Máy ảnh" to Icons.Filled.CameraAlt,
+                            "Sách" to Icons.Filled.Book,
+                            "Âm nhạc" to Icons.Filled.MusicNote,
+                            "Cài đặt" to Icons.Filled.Settings,
+                        ).forEach { (text, icon) ->
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.widthIn(max = this@BoxWithConstraints.maxWidth / 5),
+                            ) {
+                                Surface(
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shadowElevation = 2.dp,
+                                    shape = CircleShape,
+                                ) {
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(8.dp).size(32.dp),
+                                    )
+                                }
+                                Text(
+                                    text = text,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    maxLines = 1,
+                                    textAlign = TextAlign.Center,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    }
+                }
+            }*/
+
+            BoxWithConstraints(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                SenBoardScaffold(
+                    topBar = {
+                        SenToolbar(
+                            modifier = Modifier
+                                .widthIn(max = SenBoardDefaults.MaxWidth)
+                                .fillMaxWidth(),
+                        ) {
+                            SenEngineSwitcher(
+                                engineType = preferences.vietnameseEngineType,
+                                onEngineSwitch = { engineType ->
+                                    preferences = preferences.copy(vietnameseEngineType = engineType)
+                                },
+                            ) {
+                                SenEngineIcon(preferences.vietnameseEngineType)
+                            }
+
+                            SenSuggestions(
+                                suggestions = listOf(
+                                    BigramResult("xin", isOriginal = true),
+                                    BigramResult("chào"),
+                                    BigramResult("bạn"),
+                                ),
+                                onSuggestionChoose = {},
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
+                    },
+                    bottomBar = {
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .navigationBarsPadding(),
+                        )
+                    },
+                    shadowElevation = SenBoardScaffoldDefaults.shadowElevation(
+                        preferences.keyBackgroundShadowEnabled,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    SenBoard(
+                        layout = provideMode(state.modeType) //
+                            .invoke(state, preferences) //
+                            .let { mode ->
+                                provideLayout(mode.layoutType) //
+                                    .invoke(state, preferences)
+                            },
+                        onKeyTap = {},
+                        onKeyDoubleTap = {},
+                        onKeyLongTap = {},
                         modifier = Modifier
                             .fillMaxWidth()
-                            .navigationBarsPadding(),
-                    )
-                },
-                shadowElevation = SenBoardScaffoldDefaults.shadowElevation(
-                    preferences.keyBackgroundShadowEnabled,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(SenBoardDefaults.height(maxHeight)),
-            ) {
-                SenBoard(
-                    layout = provideMode(state.modeType) //
-                        .invoke(state, preferences) //
-                        .let { mode ->
-                            provideLayout(mode.layoutType) //
-                                .invoke(state, preferences)
-                        },
-                    onKeyTap = {},
-                    onKeyDoubleTap = {},
-                    onKeyLongTap = {},
-                    modifier = Modifier.fillMaxSize(),
-                ) { index, key, interactionSource ->
-                    val keyData = provideMode(state.modeType) //
-                        .invoke(state, preferences) //
-                        .keyDatas[index]
+                            .height(SenBoardDefaults.height(maxHeight, preferences.numberRowEnabled)),
+                    ) { index, key, interactionSource ->
+                        val keyData = provideMode(state.modeType) //
+                            .invoke(state, preferences) //
+                            .keyDatas[index]
 
-                    val shouldOverrideState = keyData.handler is SenShiftKeyHandler //
-                            && state.shiftMode == ShiftMode.CapsLocked
+                        val shouldOverrideState = keyData.handler is SenShiftKeyHandler //
+                                && state.shiftMode == ShiftMode.CapsLocked
 
-                    SenKey(
-                        key = key,
-                        style = keyData.styleProvider(
-                            state,
-                            preferences,
-                            isSystemInDarkTheme(),
-                        ),
-                        indication = SenKeyIndication(
-                            index = index,
-                            shape = RectangleShape,
-                            color = SenKeyIndicationDefaults.color(),
-                            overrideState = if (shouldOverrideState) true else null,
-                        ),
-                        interactionSource = interactionSource,
-                    ) {
-                        SenDisplay(
-                            display = keyData.display(state),
-                        )
+                        SenKey(
+                            key = key,
+                            style = keyData.styleProvider(
+                                state,
+                                preferences,
+                                isSystemInDarkTheme(),
+                            ),
+                            indication = SenKeyIndication(
+                                index = index,
+                                shape = RectangleShape,
+                                color = SenKeyIndicationDefaults.color(),
+                                overrideState = if (shouldOverrideState) true else null,
+                            ),
+                            interactionSource = interactionSource,
+                        ) {
+                            SenDisplay(
+                                display = keyData.display(state),
+                            )
+                        }
                     }
                 }
             }
