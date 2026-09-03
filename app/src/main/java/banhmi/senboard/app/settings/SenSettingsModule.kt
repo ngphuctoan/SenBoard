@@ -1,6 +1,9 @@
 package banhmi.senboard.app.settings
 
+import android.content.Intent
+import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -36,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -47,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import banhmi.senboard.BuildConfig
 import banhmi.senboard.annotations.SenPreviewCommon
@@ -186,6 +189,65 @@ fun SenKeyboardSwitcher(
     }
 }
 
+object SenFinishSettingUpDefaults {
+    @Composable
+    internal fun shape() = SenMenuDefaults.segmentedShapes(0 outOf 1)
+
+    internal val SupportingTextPadding = PaddingValues(vertical = 16.dp)
+
+    @Composable
+    internal fun headlineTextStyle() = MaterialTheme.typography.headlineSmall
+
+    @Composable
+    internal fun buttonColors() = ButtonDefaults.buttonColors().copy(
+        containerColor = if (isSystemInDarkTheme()) {
+            m3RefPaletteYellow80
+        } else {
+            m3RefPaletteYellow60
+        },
+        contentColor = MaterialTheme.colorScheme.surface,
+    )
+}
+
+@Composable
+fun SenFinishSettingUp(
+    onOpenSettingsInputMethodPage: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    SenMenu(
+        shapes = SenFinishSettingUpDefaults.shape(),
+        supportingContent = {
+            Column {
+                Text(
+                    text = "Vui lòng kích hoạt ứng dụng tại trang Cài đặt › Hệ thống › Ngôn ngữ & nhập liệu › Bàn phím on-screen",
+                    modifier = Modifier.padding(SenFinishSettingUpDefaults.SupportingTextPadding),
+                )
+
+                Button(
+                    onClick = onOpenSettingsInputMethodPage,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SenFinishSettingUpDefaults.buttonColors(),
+                ) {
+                    Text("Đi đến trang Cài đặt")
+                }
+            }
+        },
+        modifier = modifier,
+    ) {
+        Text(
+            text = "Hoàn tất thiết lập",
+            style = SenFinishSettingUpDefaults.headlineTextStyle(),
+        )
+    }
+}
+
+private fun isInputMethodEnabled(
+    imService: InputMethodManager,
+    packageName: String,
+) = imService.enabledInputMethodList.any { info ->
+    info.packageName == packageName
+}
+
 data class SenSettingsMenu(
     val indexCount: IndexCount,
     val destination: Any,
@@ -323,6 +385,21 @@ fun SenSettingsContent(
 
     val menus = SenSettingsDefaults.menus(easterEggsEnabled, developerOptionsEnabled)
 
+    var isInputMethodEnabled by remember {
+        mutableStateOf(
+            imService?.let { imService ->
+                isInputMethodEnabled(imService, context.packageName)
+            } == true,
+        )
+    }
+
+    LifecycleResumeEffect(Unit) {
+        isInputMethodEnabled = imService?.let { imService ->
+            isInputMethodEnabled(imService, context.packageName)
+        } == true
+        onPauseOrDispose {}
+    }
+
     SenScaffold(
         topBar = {
             SenInputTester(
@@ -346,37 +423,13 @@ fun SenSettingsContent(
                 .consumeWindowInsets(innerPadding),
         ) {
             item {
-                SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
-                    supportingContent = {
-                        Column {
-                            Text(
-                                text = "Vui lòng kích hoạt ứng dụng tại trang Cài đặt › Hệ thống › Ngôn ngữ & nhập liệu › Bàn phím on-screen",
-                                modifier = Modifier.padding(vertical = 16.dp),
-                            )
-
-                            Button(
-                                onClick = {},
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = ButtonDefaults.buttonColors().copy(
-                                    containerColor = if (isSystemInDarkTheme()) {
-                                        m3RefPaletteYellow80
-                                    } else {
-                                        m3RefPaletteYellow60
-                                    },
-                                    contentColor = MaterialTheme.colorScheme.surface,
-                                ),
-                            ) {
-                                Text("Đi đến trang Cài đặt")
-                            }
-                        }
-                    },
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier.lastSegmentedPadding(),
-                ) {
-                    Text(
-                        text = "Hoàn tất thiết lập",
-                        style = MaterialTheme.typography.headlineSmall,
+                AnimatedVisibility(visible = !isInputMethodEnabled) {
+                    SenFinishSettingUp(
+                        onOpenSettingsInputMethodPage = {
+                            val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier.lastSegmentedPadding(),
                     )
                 }
             }

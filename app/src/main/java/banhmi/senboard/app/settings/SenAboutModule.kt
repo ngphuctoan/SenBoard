@@ -88,6 +88,7 @@ fun SenAboutScreen(
     val preferences by preferencesViewModel.preferencesState.collectAsStateWithLifecycle()
 
     SenAboutContent(
+        onNavigate = navigator::goTo,
         onNavigateBack = navigator::goBack,
         easterEggsEnabled = preferences.easterEggsEnabled,
         developerOptionsEnabled = preferences.developerOptionsEnabled,
@@ -138,6 +139,7 @@ fun SenAppIconImage(
 
 @Composable
 fun SenAboutContent(
+    onNavigate: (Any) -> Unit = {},
     onNavigateBack: () -> Unit = {},
     easterEggsEnabled: Boolean,
     developerOptionsEnabled: Boolean,
@@ -149,7 +151,7 @@ fun SenAboutContent(
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
 
-    val toaster = rememberToaster()
+    val toaster = rememberToaster(context)
 
     var developerOptionsCounter by remember { mutableIntStateOf(0) }
 
@@ -179,7 +181,7 @@ fun SenAboutContent(
                     SenAppIconImage(
                         onEasterEggsEnabledUpdate = {
                             if (!easterEggsEnabled) onEasterEggsEnabledUpdate(true)
-                            toaster.bake(context, "Easter egg đã được bật!")
+                            toaster.bake("Easter egg đã được bật!")
                         },
                     )
                     Text(
@@ -195,14 +197,14 @@ fun SenAboutContent(
                     supportingContent = { Text(BuildConfig.VERSION_NAME) },
                     onClick = {
                         if (developerOptionsEnabled) {
-                            toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
+                            toaster.bake("Chế độ nhà phát triển đã được bật!")
                         } else if (developerOptionsCounter == SenAboutDefaults.DeveloperOptionsMaxCount) {
                             onDeveloperOptionsEnabledUpdate(true)
-                            toaster.bake(context, "Chế độ nhà phát triển đã được bật!")
+                            toaster.bake("Chế độ nhà phát triển đã được bật!")
                         } else if (developerOptionsCounter >= SenAboutDefaults.DeveloperOptionsRevealCount) {
                             developerOptionsCounter++
                             val developerOptionsRemainingCounter = SenAboutDefaults.DeveloperOptionsMaxCount - developerOptionsCounter + 1
-                            toaster.bake(context, "Cần $developerOptionsRemainingCounter lần chạm nữa để chế độ nhà phát triển")
+                            toaster.bake("Cần $developerOptionsRemainingCounter lần chạm nữa để chế độ nhà phát triển")
                         } else {
                             developerOptionsCounter++
                         }
@@ -217,6 +219,7 @@ fun SenAboutContent(
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(1 outOf 2),
                     supportingContent = { Text("Apache-2.0") },
+                    onClick = { onNavigate(SenLicense) },
                 ) {
                     Text("Giấy phép")
                 }

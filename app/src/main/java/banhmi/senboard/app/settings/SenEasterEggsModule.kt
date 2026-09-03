@@ -1,5 +1,7 @@
 package banhmi.senboard.app.settings
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,10 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.LinkInteractionListener
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import banhmi.senboard.annotations.SenPreviewCommon
@@ -38,6 +42,7 @@ import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.utils.outOf
+import banhmi.senboard.utils.rememberToaster
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,6 +63,10 @@ object SenEasterEggsModule {
             SenEasterEggsScreen(navigator)
         }
     }
+}
+
+object SenEasterEggsDefaults {
+    internal val AaaaaaFdroidUrl = "https://f-droid.org/en/packages/io.github.dkter.aaaaa".toUri()
 }
 
 @Composable
@@ -88,6 +97,10 @@ fun SenEasterEggsContent(
 ) {
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
+    val context = LocalContext.current
+
+    val toaster = rememberToaster(context)
 
     SenScaffold(
         topBar = {
@@ -137,8 +150,19 @@ fun SenEasterEggsContent(
                             )
                         }
                     },
-                    // TODO: Add F-Droid link for the aaaaa app
-                    onClick = {},
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, SenEasterEggsDefaults.AaaaaaFdroidUrl)
+                        runCatching {
+                            context.startActivity(intent)
+                        }.onFailure { exception ->
+                            toaster.bake(
+                                when (exception) {
+                                    is ActivityNotFoundException -> "Không tìm thấy trình duyệt hoặc ứng dụng phù hợp"
+                                    else -> exception.localizedMessage
+                                },
+                            )
+                        }
+                    },
                     modifier = Modifier.lastSegmentedPadding(),
                 ) {
                     Text("Chế độ aaaaa")

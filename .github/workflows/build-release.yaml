@@ -1,0 +1,47 @@
+name: Build Release
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "*" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: "11"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build release APK
+        run: ./gradlew assembleRelease
+
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release-unsigned.apk \
+            senboard-release-${{ github.ref_name }}.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: senboard-release-${{ github.ref_name }}
+          path: app/build/outputs/apk/debug/app-debug.apk
+          compression-level: 9
+          retention-days: 30
+          overwrite: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == "tag"
+        with:
+          name: Release ${{ github.ref_name }}
+          files: senboard-release-${{ github.ref_name }}.apk

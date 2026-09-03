@@ -10,12 +10,13 @@ import androidx.compose.runtime.setValue
 
 /* A state holder for toasts, where every bake() call will override the previous toast,
 so newer toast don't have to wait for the previous one to finish displaying */
-class Toaster {
+class Toaster(
+    private val context: Context,
+) {
     private var currentToast: Toast? by mutableStateOf(null)
 
     // Bake me a toast 🍞
     fun bake(
-        context: Context,
         message: String,
         // Short length is commonly used, so might as well make it the default length
         length: Int = Toast.LENGTH_SHORT,
@@ -26,6 +27,8 @@ class Toaster {
 }
 
 @Composable
-fun rememberToaster() = remember {
-    Toaster()
+fun rememberToaster(
+    context: Context,
+) = remember {
+    Toaster(context)
 }

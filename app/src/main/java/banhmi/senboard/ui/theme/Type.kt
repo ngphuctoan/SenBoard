@@ -17,12 +17,16 @@ private val googleFontProvider = GoogleFont.Provider(
 
 private val GoogleSansFont = GoogleFont(name = "Google Sans")
 
+private val GoogleSansCodeFont = GoogleFont(name = "Google Sans Code")
+
 val GoogleSansFontFamily = FontFamily(
     Font(
         googleFont = GoogleSansFont,
         fontProvider = googleFontProvider,
     ),
-    Font(resId = R.font.googlesans_regular),
+    Font(
+        resId = R.font.googlesans_regular,
+    ),
     Font(
         googleFont = GoogleSansFont,
         fontProvider = googleFontProvider,
@@ -55,7 +59,9 @@ val GoogleSansFontFamily = FontFamily(
         fontProvider = googleFontProvider,
         style = FontStyle.Italic,
     ),
-    Font(resId = R.font.googlesans_italic),
+    Font(
+        resId = R.font.googlesans_italic,
+    ),
     Font(
         googleFont = GoogleSansFont,
         fontProvider = googleFontProvider,
@@ -85,6 +91,121 @@ val GoogleSansFontFamily = FontFamily(
     Font(
         resId = R.font.googlesans_bolditalic,
         weight = FontWeight.Bold,
+    ),
+)
+
+val GoogleSansCodeFontFamily = FontFamily(
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Light,
+    ),
+    Font(
+        resId = R.font.googlesanscode_light,
+        weight = FontWeight.Light,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+    ),
+    Font(
+        resId = R.font.googlesanscode_regular,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Medium,
+    ),
+    Font(
+        resId = R.font.googlesanscode_medium,
+        weight = FontWeight.Medium,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.SemiBold,
+    ),
+    Font(
+        resId = R.font.googlesanscode_semibold,
+        weight = FontWeight.SemiBold,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Bold,
+    ),
+    Font(
+        resId = R.font.googlesanscode_bold,
+        weight = FontWeight.Bold,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.ExtraBold,
+    ),
+    Font(
+        resId = R.font.googlesanscode_extrabold,
+        weight = FontWeight.ExtraBold,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Light,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_lightitalic,
+        weight = FontWeight.Light,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_italic,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Medium,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_mediumitalic,
+        weight = FontWeight.Medium,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.SemiBold,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_semibolditalic,
+        weight = FontWeight.SemiBold,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.Bold,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_bolditalic,
+        weight = FontWeight.Bold,
+    ),
+    Font(
+        googleFont = GoogleSansCodeFont,
+        fontProvider = googleFontProvider,
+        weight = FontWeight.ExtraBold,
+        style = FontStyle.Italic,
+    ),
+    Font(
+        resId = R.font.googlesanscode_extrabolditalic,
+        weight = FontWeight.ExtraBold,
+        style = FontStyle.Italic,
     ),
 )
 
