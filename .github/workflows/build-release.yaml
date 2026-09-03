@@ -2,7 +2,6 @@ name: Build Release
 
 on:
   push:
-    branches: [ "main" ]
     tags: [ "*" ]
 
 jobs:
@@ -34,14 +33,14 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: senboard-release-${{ github.ref_name }}
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: senboard-release-${{ github.ref_name }}.apk
           compression-level: 9
-          retention-days: 30
+          retention-days: 7
           overwrite: true
 
       - name: Release
         uses: softprops/action-gh-release@v3
-        if: github.ref_type == "tag"
+        if: github.ref_type == 'tag'
         with:
           name: Release ${{ github.ref_name }}
           files: senboard-release-${{ github.ref_name }}.apk

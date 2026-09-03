@@ -16,13 +16,13 @@ jobs:
 
       - name: Get short SHA
         id: shortSha
-        run: echo "shortSha=$(git rev-parse --short HEAD) >> $GITHUB_OUTPUT"
+        run: echo "shortSha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Get app version
         id: appVersion
         run: |
           SENBOARD_VERSION=$(cat app/build.gradle.kts | awk '/versionName/ { print $3 }' | sed 's/"//g')
-          echo "senboardVersion=$SENBOARD_VERSION >> $GITHUB_OUTPUT"
+          echo "senboardVersion=$SENBOARD_VERSION" >> $GITHUB_OUTPUT
           echo "Found version: $SENBOARD_VERSION"
 
       - name: set up JDK 11
