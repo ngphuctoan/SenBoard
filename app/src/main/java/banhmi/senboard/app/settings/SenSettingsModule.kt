@@ -2,6 +2,8 @@ package banhmi.senboard.app.settings
 
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,13 +15,15 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PermDeviceInformation
 import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -32,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -61,10 +66,14 @@ import banhmi.senboard.ui.theme.M3RefPalette
 import banhmi.senboard.ui.theme.SenTheme
 import banhmi.senboard.ui.theme.m3RefPaletteCyan
 import banhmi.senboard.ui.theme.m3RefPaletteGreen
+import banhmi.senboard.ui.theme.m3RefPaletteGrey
 import banhmi.senboard.ui.theme.m3RefPalettePink
 import banhmi.senboard.ui.theme.m3RefPaletteYellow
+import banhmi.senboard.ui.theme.m3RefPaletteYellow60
+import banhmi.senboard.ui.theme.m3RefPaletteYellow80
 import banhmi.senboard.utils.IndexCount
 import banhmi.senboard.utils.outOf
+import banhmi.senboard.utils.plus
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -226,7 +235,7 @@ object SenSettingsDefaults {
         developerOptionsEnabled: Boolean,
     ) = senSettingsMenus {
         senSettingsMenu(
-            indexCount = 0 outOf if (developerOptionsEnabled) 3 else 2,
+            indexCount = 0 outOf 2,
             destination = SenHelp,
             label = "Hướng dẫn sử dụng",
             supportingLabel = "Chữ Việt song song",
@@ -234,25 +243,15 @@ object SenSettingsDefaults {
             iconPalette = m3RefPaletteCyan,
         )
         senSettingsMenu(
-            indexCount = 1 outOf if (developerOptionsEnabled) 3 else 2,
+            indexCount = 1 outOf 2,
             destination = SenAbout,
             label = "Giới thiệu ứng dụng",
             supportingLabel = BuildConfig.VERSION_NAME,
             icon = Icons.Filled.PermDeviceInformation,
             iconPalette = m3RefPaletteCyan,
         )
-        if (developerOptionsEnabled) {
-            senSettingsMenu(
-                indexCount = 2 outOf 3,
-                destination = SenDeveloperOptions,
-                label = "Chế độ nhà phát triển",
-                supportingLabel = "Hiển thị chạm, viền phím",
-                icon = Icons.Filled.Code,
-                iconPalette = m3RefPaletteCyan,
-            )
-        }
         senSettingsMenu(
-            indexCount = 0 outOf if (easterEggsEnabled) 4 else 3,
+            indexCount = 0 outOf 3 + easterEggsEnabled + developerOptionsEnabled,
             destination = SenInputMethod,
             label = "Phương thức nhập",
             supportingLabel = "Tự động viết hoa, phím tắt, gợi ý",
@@ -260,7 +259,7 @@ object SenSettingsDefaults {
             iconPalette = m3RefPalettePink,
         )
         senSettingsMenu(
-            indexCount = 1 outOf if (easterEggsEnabled) 4 else 3,
+            indexCount = 1 outOf 3 + easterEggsEnabled + developerOptionsEnabled,
             destination = SenAppearance,
             label = "Giao diện",
             supportingLabel = "Nền phím, đổ bóng nền",
@@ -268,7 +267,7 @@ object SenSettingsDefaults {
             iconPalette = m3RefPalettePink,
         )
         senSettingsMenu(
-            indexCount = 2 outOf if (easterEggsEnabled) 4 else 3,
+            indexCount = 2 outOf 3 + easterEggsEnabled + developerOptionsEnabled,
             destination = SenHaptics,
             label = "Haptic",
             supportingLabel = "Độ mạnh của haptic",
@@ -277,12 +276,22 @@ object SenSettingsDefaults {
         )
         if (easterEggsEnabled) {
             senSettingsMenu(
-                indexCount = 3 outOf 4,
+                indexCount = 3 outOf 4 + developerOptionsEnabled,
                 destination = SenEasterEggs,
                 label = "Easter egg",
                 supportingLabel = "Chế độ aaaaa",
                 icon = Icons.Filled.Redeem,
                 iconPalette = m3RefPaletteGreen,
+            )
+        }
+        if (developerOptionsEnabled) {
+            senSettingsMenu(
+                indexCount = 4 outOf 5,
+                destination = SenDeveloperOptions,
+                label = "Chế độ nhà phát triển",
+                supportingLabel = "Hiển thị chạm, viền phím",
+                icon = Icons.Filled.Settings,
+                iconPalette = m3RefPaletteGrey,
             )
         }
     }
@@ -336,6 +345,42 @@ fun SenSettingsContent(
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding),
         ) {
+            item {
+                SenMenu(
+                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
+                    supportingContent = {
+                        Column {
+                            Text(
+                                text = "Vui lòng kích hoạt ứng dụng tại trang Cài đặt › Hệ thống › Ngôn ngữ & nhập liệu › Bàn phím on-screen",
+                                modifier = Modifier.padding(vertical = 16.dp),
+                            )
+
+                            Button(
+                                onClick = {},
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors().copy(
+                                    containerColor = if (isSystemInDarkTheme()) {
+                                        m3RefPaletteYellow80
+                                    } else {
+                                        m3RefPaletteYellow60
+                                    },
+                                    contentColor = MaterialTheme.colorScheme.surface,
+                                ),
+                            ) {
+                                Text("Đi đến trang Cài đặt")
+                            }
+                        }
+                    },
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.lastSegmentedPadding(),
+                ) {
+                    Text(
+                        text = "Hoàn tất thiết lập",
+                        style = MaterialTheme.typography.headlineSmall,
+                    )
+                }
+            }
+
             itemsIndexed(menus) { index, menu ->
                 SenMenu(
                     shapes = SenMenuDefaults.segmentedShapes(menu.indexCount),

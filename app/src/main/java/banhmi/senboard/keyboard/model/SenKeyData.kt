@@ -1,6 +1,5 @@
 package banhmi.senboard.keyboard.model
 
-import android.view.inputmethod.InputConnection
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Forward
 import androidx.compose.material.icons.filled.Upload
@@ -15,11 +14,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import banhmi.senboard.data.preferences.SenPreferences
-import banhmi.senboard.keyboard.SenImService
 import banhmi.senboard.keyboard.state.SenBoardState
 import banhmi.senboard.keyboard.state.ShiftMode
-import banhmi.senboard.model.BigramResult
-import banhmi.senboard.utils.EMPTY
 
 data class SenKeyColors(
     val color: Color,
@@ -221,58 +217,6 @@ sealed interface SenKeyDisplay {
 
             ShiftMode.CapsLocked -> Icon(Icons.Filled.Upload)
         }
-    }
-}
-
-// The context will only provide important services, states, and methods to the handler
-class SenKeyHandlerContext(
-    // Handler should access inputConnection below instead
-    imService: SenImService,
-    val uiState: SenBoardState,
-    val preferencesState: SenPreferences,
-    // Kinda ugly to have to define all the state's view model's setters here
-    val onUpdateModeType: (SenModeType) -> Unit,
-    val onUpdateShiftMode: (ShiftMode) -> Unit,
-    val onUpdateComposingText: (String) -> Unit,
-    val onUpdateWordSuggestions: (List<BigramResult>) -> Unit,
-    // For getting data from the bigram engine,
-    val onGetClosestWords: (String) -> List<BigramResult>,
-    @Suppress("UNUSED") val onGetBestCandidates: (String) -> List<BigramResult>,
-) {
-    val inputConnection: InputConnection = imService.currentInputConnection
-
-    // Clearing composing text is a common action
-    fun clearComposingText() = onUpdateComposingText(String.EMPTY)
-
-    // Not as common but still useful, and for consistency :b
-    @Suppress("UNUSED")
-    fun clearWordSuggestions() = onUpdateWordSuggestions(emptyList())
-
-    // Used in both char and text key
-    fun updateShiftModeAutomatically() = onUpdateShiftMode(
-        when (uiState.shiftMode) {
-            ShiftMode.Shifted -> ShiftMode.Off
-            else -> uiState.shiftMode
-        },
-    )
-}
-
-// By default, these handlers do nothing, so that implementations don't need to override all of them
-interface SenKeyHandler {
-    fun handleTap(
-        context: SenKeyHandlerContext,
-    ) {
-    }
-
-    fun handleDoubleTap(
-        context: SenKeyHandlerContext,
-    ) {
-    }
-
-    // This only works if the key's alternative is not defined, as it will override this!
-    fun handleLongTap(
-        context: SenKeyHandlerContext,
-    ) {
     }
 }
 

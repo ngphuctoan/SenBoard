@@ -3,6 +3,8 @@ package banhmi.senboard.keyboard.impl.mode
 import banhmi.senboard.keyboard.model.SenLayoutType
 import banhmi.senboard.keyboard.model.SenModeProvider
 import banhmi.senboard.keyboard.model.SenModeType
+import banhmi.senboard.keyboard.model.senAltCharKey
+import banhmi.senboard.keyboard.model.senAltPopup
 import banhmi.senboard.keyboard.model.senBackSpaceKey
 import banhmi.senboard.keyboard.model.senCharKey
 import banhmi.senboard.keyboard.model.senMode
@@ -23,7 +25,41 @@ val senCharactersMode: SenModeProvider = { _, preferences ->
         }
 
         // Second row
-        listOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p').forEach { char ->
+        senCharKey('q') {
+            senAltPopup {
+                senAltRow {
+                    senAltCharKey('1')
+                }
+            }
+        }
+        senCharKey('w') {
+            senAltPopup {
+                senAltRow {
+                    senAltCharKey('2')
+                }
+            }
+        }
+        senCharKey('e') {
+            senAltPopup {
+                senAltRow {
+                    senAltCharKey('ê')
+                    senAltCharKey('ế')
+                    senAltCharKey('ề')
+                    senAltCharKey('ể')
+                    senAltCharKey('ễ')
+                    senAltCharKey('ệ')
+                }
+                senAltRow {
+                    senAltCharKey('3')
+                    senAltCharKey('é')
+                    senAltCharKey('è')
+                    senAltCharKey('ẻ')
+                    senAltCharKey('ẽ')
+                    senAltCharKey('ẹ')
+                }
+            }
+        }
+        listOf('r', 't', 'y', 'u', 'i', 'o', 'p').forEach { char ->
             senCharKey(char)
         }
 

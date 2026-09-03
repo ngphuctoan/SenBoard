@@ -12,12 +12,13 @@ object SenReturnKeyHandler : SenKeyHandler {
             val convertedComposingText = preferencesState.vietnameseEngine //
                 .convertWord(uiState.composingText)
 
-            onUpdateWordSuggestions(onGetClosestWords(convertedComposingText))
+            onUpdateWordSuggestions(onGetBestCandidates(convertedComposingText))
         }
 
         inputConnection.finishComposingText()
         inputConnection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER))
 
+        updateShiftModeAutomatically()
         clearComposingText()
     }
 

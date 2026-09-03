@@ -11,12 +11,26 @@ object SenSpaceKeyHandler : SenKeyHandler {
             val convertedComposingText = preferencesState.vietnameseEngine //
                 .convertWord(uiState.composingText)
 
-            onUpdateWordSuggestions(onGetClosestWords(convertedComposingText))
+            onUpdateWordSuggestions(onGetBestCandidates(convertedComposingText))
         }
 
         inputConnection.finishComposingText()
-        inputConnection.commitText(" ", 1)
 
+        val lastTwoChars = inputConnection.getTextBeforeCursor(2, 0)
+
+        if (
+            preferencesState.spaceBarShortcutEnabled //
+            && lastTwoChars?.length == 2 //
+            && lastTwoChars.last() == ' ' //
+            && lastTwoChars.first().isLetterOrDigit()
+        ) {
+            inputConnection.deleteSurroundingText(1, 0)
+            inputConnection.commitText(". ", 1)
+        } else {
+            inputConnection.commitText(" ", 1)
+        }
+
+        updateShiftModeAutomatically()
         clearComposingText()
     }
 

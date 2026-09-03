@@ -43,7 +43,6 @@ import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 import banhmi.senboard.keyboard.model.SenModeType
 import banhmi.senboard.keyboard.model.provideLayout
 import banhmi.senboard.keyboard.model.provideMode
-import banhmi.senboard.keyboard.state.SenBoardStateDefaults
 import banhmi.senboard.keyboard.state.SenBoardStateViewModel
 import banhmi.senboard.keyboard.state.ShiftMode
 import banhmi.senboard.keyboard.ui.SenBoard
@@ -59,7 +58,6 @@ import banhmi.senboard.keyboard.ui.SenKeyIndicationDefaults
 import banhmi.senboard.keyboard.ui.SenSuggestions
 import banhmi.senboard.keyboard.ui.SenToolbar
 import banhmi.senboard.ui.theme.SenTheme
-import banhmi.senboard.utils.EMPTY
 import banhmi.senboard.utils.toIntOffset
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -109,6 +107,12 @@ class SenImService : SenLifecycleImService() {
         )[UserBigramViewModel::class.java]
     }
 
+    // This tells us if the selection is updated through a key handler for example (see onUpdateSelection for its usage)
+    private var wasSelectionUpdatedAutomatically = false
+
+    // The keyboard's dimensions for setting touchable region (see onComputeInsets for its usage)
+    private var dimensions = IntRect.Zero
+
     override fun onCreate() {
         super.onCreate()
 
@@ -116,8 +120,37 @@ class SenImService : SenLifecycleImService() {
         bigramEngine.clearDataset().loadDataset()
     }
 
-    // The keyboard's dimensions for setting touchable region (see onComputeInsets)
-    private var dimensions = IntRect.Zero
+    override fun onUpdateSelection(
+        oldSelStart: Int,
+        oldSelEnd: Int,
+        newSelStart: Int,
+        newSelEnd: Int,
+        candidatesStart: Int,
+        candidatesEnd: Int,
+    ) {
+        super.onUpdateSelection(
+            oldSelStart,
+            oldSelEnd,
+            newSelStart,
+            newSelEnd,
+            candidatesStart,
+            candidatesEnd,
+        )
+
+        /* When user moves the cursor or selects texts, we should finish the composing text, because
+        we aren't accounting for cursor position when appending chars to composing text state */
+        if (!wasSelectionUpdatedAutomatically) SenKeyHandlerContext(
+            imService = this,
+            bigramEngine = bigramEngine,
+            stateViewModel = stateViewModel,
+            preferencesViewModel = preferencesViewModel,
+        ).run {
+            inputConnection.finishComposingText()
+
+            clearComposingText()
+            updateShiftModeAutomatically(preserveLastShiftMode = true)
+        }
+    }
 
     override fun onComputeInsets(
         outInsets: Insets?,
@@ -138,18 +171,19 @@ class SenImService : SenLifecycleImService() {
     ) {
         super.onStartInputView(editorInfo, restarting)
 
-        val preferencesState = preferencesViewModel.preferencesState.value
+        SenKeyHandlerContext(
+            imService = this,
+            bigramEngine = bigramEngine,
+            stateViewModel = stateViewModel,
+            preferencesViewModel = preferencesViewModel,
+        ).run {
+            inputConnection.finishComposingText()
 
-        currentInputConnection.finishComposingText()
-
-        stateViewModel.updateShiftMode(
-            SenBoardStateDefaults.shiftMode(
-                preferencesState.autoCapitalizationEnabled,
-            ),
-        )
-        stateViewModel.updateComposingText(String.EMPTY)
-        // We don't have a bigram for empty string yet so we clear the suggestion
-        stateViewModel.updateWordSuggestions(emptyList())
+            clearComposingText()
+            updateShiftModeAutomatically()
+            // We don't have a bigram for empty string yet so we clear the suggestion
+            clearWordSuggestions()
+        }
 
         if (editorInfo != null) {
             stateViewModel.updateInputType(editorInfo.inputType)
@@ -211,21 +245,27 @@ class SenImService : SenLifecycleImService() {
                                             SenSuggestions(
                                                 suggestions = uiState.wordSuggestions,
                                                 onSuggestionChoose = { suggestion ->
-                                                    /* This will also replace composing text, which is intended
-                                                    when the suggestions are closest words and not bigram candidates
-                                                    ====================
-                                                    Additionally, include a whitespace so users don't have to press space
-                                                    afterward, in other words, basically how any keyboard app works :D */
-                                                    currentInputConnection.commitText("$suggestion ", 1)
+                                                    SenKeyHandlerContext(
+                                                        imService = this@SenImService,
+                                                        bigramEngine = bigramEngine,
+                                                        stateViewModel = stateViewModel,
+                                                        preferencesViewModel = preferencesViewModel,
+                                                    ).run {
+                                                        wasSelectionUpdatedAutomatically = true
 
-                                                    stateViewModel.updateShiftMode(
-                                                        when (uiState.shiftMode) {
-                                                            ShiftMode.Shifted -> ShiftMode.Off
-                                                            else -> uiState.shiftMode
-                                                        },
-                                                    )
-                                                    stateViewModel.updateComposingText(String.EMPTY)
-                                                    stateViewModel.updateWordSuggestions(bigramEngine.getBestCandidates<Nothing>(suggestion))
+                                                        /* This will also replace composing text, which is intended
+                                                        when the suggestions are closest words and not bigram candidates
+                                                        ====================
+                                                        Additionally, include a whitespace so users don't have to press space
+                                                        afterward, in other words, basically how any keyboard app works :D */
+                                                        inputConnection.commitText("$suggestion ", 1)
+
+                                                        clearComposingText()
+                                                        updateShiftModeAutomatically()
+                                                        onUpdateWordSuggestions(onGetBestCandidates(suggestion))
+
+                                                        wasSelectionUpdatedAutomatically = false
+                                                    }
                                                 },
                                                 modifier = Modifier.weight(1f),
                                             )
@@ -233,8 +273,7 @@ class SenImService : SenLifecycleImService() {
                                             Spacer(modifier = Modifier.weight(1f))
                                         }
 
-                                        if ( //
-                                            preferencesState.easterEggsEnabled //
+                                        if (preferencesState.easterEggsEnabled //
                                             && preferencesState.aaaaaModeEnabled
                                         ) {
                                             IconToggleButton(
@@ -292,66 +331,77 @@ class SenImService : SenLifecycleImService() {
                                         provideLayout(mode.layoutType) //
                                             .invoke(uiState, preferencesState)
                                     },
-                                popup = {},
                                 /* If I extract the context outside, there is a bug in which the long tap
                                 for char key handler will just keep repeating itself */
                                 onKeyTap = { index ->
                                     val keyData = provideMode(uiState.modeType) //
                                         .invoke(uiState, preferencesState) //
                                         .keyDatas[index]
+
                                     val context = SenKeyHandlerContext(
                                         imService = this@SenImService,
-                                        uiState = uiState,
-                                        preferencesState = preferencesState,
-                                        onUpdateModeType = stateViewModel::updateModeType,
-                                        onUpdateShiftMode = stateViewModel::updateShiftMode,
-                                        onUpdateComposingText = stateViewModel::updateComposingText,
-                                        onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
-                                        onGetClosestWords = { text -> bigramEngine.getClosestWords<Nothing>(text) },
-                                        onGetBestCandidates = { entryText -> bigramEngine.getBestCandidates<Nothing>(entryText) },
+                                        bigramEngine = bigramEngine,
+                                        stateViewModel = stateViewModel,
+                                        preferencesViewModel = preferencesViewModel,
                                     )
+
                                     keyData.handler.handleTap(context)
                                 },
                                 onKeyDoubleTap = { index ->
-                                    val keyData = provideMode(uiState.modeType).invoke(uiState, preferencesState).keyDatas[index]
+                                    val keyData = provideMode(uiState.modeType) //
+                                        .invoke(uiState, preferencesState) //
+                                        .keyDatas[index]
+
                                     val context = SenKeyHandlerContext(
                                         imService = this@SenImService,
-                                        uiState = uiState,
-                                        preferencesState = preferencesState,
-                                        onUpdateModeType = stateViewModel::updateModeType,
-                                        onUpdateShiftMode = stateViewModel::updateShiftMode,
-                                        onUpdateComposingText = stateViewModel::updateComposingText,
-                                        onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
-                                        onGetClosestWords = { text -> bigramEngine.getClosestWords<Nothing>(text) },
-                                        onGetBestCandidates = { entryText -> bigramEngine.getBestCandidates<Nothing>(entryText) },
+                                        bigramEngine = bigramEngine,
+                                        stateViewModel = stateViewModel,
+                                        preferencesViewModel = preferencesViewModel,
                                     )
+
                                     keyData.handler.handleDoubleTap(context)
                                 },
                                 onKeyLongTap = { index ->
                                     val keyData = provideMode(uiState.modeType) //
                                         .invoke(uiState, preferencesState) //
                                         .keyDatas[index]
+
                                     val context = SenKeyHandlerContext(
                                         imService = this@SenImService,
-                                        uiState = uiState,
-                                        preferencesState = preferencesState,
-                                        onUpdateModeType = stateViewModel::updateModeType,
-                                        onUpdateShiftMode = stateViewModel::updateShiftMode,
-                                        onUpdateComposingText = stateViewModel::updateComposingText,
-                                        onUpdateWordSuggestions = stateViewModel::updateWordSuggestions,
-                                        onGetClosestWords = { text -> bigramEngine.getClosestWords<Nothing>(text) },
-                                        onGetBestCandidates = { entryText -> bigramEngine.getBestCandidates<Nothing>(entryText) },
+                                        bigramEngine = bigramEngine,
+                                        stateViewModel = stateViewModel,
+                                        preferencesViewModel = preferencesViewModel,
                                     )
+
                                     keyData.handler.handleLongTap(context)
                                 },
                                 onKeyTapDown = {
                                     if (preferencesState.hapticsEnabled) {
                                         haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                     }
+
+                                    if (!wasSelectionUpdatedAutomatically) {
+                                        wasSelectionUpdatedAutomatically = true
+                                    }
+                                },
+                                onKeyTapUp = {
+                                    if (wasSelectionUpdatedAutomatically) {
+                                        wasSelectionUpdatedAutomatically = false
+                                    }
+                                },
+                                onKeyTapCancel = {
+                                    if (wasSelectionUpdatedAutomatically) {
+                                        wasSelectionUpdatedAutomatically = false
+                                    }
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(SenBoardDefaults.height(maxHeight, preferencesState.numberRowEnabled)),
+                                    .height(
+                                        SenBoardDefaults.height(
+                                            maxHeight,
+                                            preferencesState.numberRowEnabled,
+                                        ),
+                                    ),
                             ) { index, key, interactionSource ->
                                 val keyData = provideMode(uiState.modeType) //
                                     .invoke(uiState, preferencesState) //
@@ -375,9 +425,7 @@ class SenImService : SenLifecycleImService() {
                                     ),
                                     interactionSource = interactionSource,
                                 ) {
-                                    SenDisplay(
-                                        display = keyData.display(uiState),
-                                    )
+                                    SenDisplay(display = keyData.display(uiState))
                                 }
                             }
                         }

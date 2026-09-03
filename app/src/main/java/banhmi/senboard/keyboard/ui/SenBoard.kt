@@ -4,12 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -21,26 +19,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -294,17 +283,17 @@ fun SenBoard(
     onKeyLongTap: (Int) -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = SenBoardDefaults.MaxWidth,
-    @Suppress("UNUSED") popup: @Composable (Offset) -> Unit = {},
     onKeyTapDown: (Int) -> Unit = {},
     onKeyTapUp: (Int) -> Unit = {},
     onKeyTapCancel: () -> Unit = {},
     content: @Composable (Int, SenLayoutKey, InteractionSource) -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+
     val keyRectangles: MutableMap<Int, Rect> = remember { mutableMapOf() }
-    var selectedIndex: SelectedIndexResult by remember {
-        mutableStateOf(SelectedIndexResult.NotSelected)
-    }
+
+    var tapPosition by remember { mutableStateOf(Offset.Zero) }
+    var selectedIndex: SelectedIndexResult by remember { mutableStateOf(SelectedIndexResult.NotSelected) }
 
     @Suppress("LocalVariableName") Box(
         contentAlignment = SenBoardDefaults.ContentAlignment,
@@ -328,6 +317,8 @@ fun SenBoard(
                 }
             },
             onTapDown = { position ->
+                tapPosition = position
+
                 val bestKey = keyRectangles.entries.minBy { (_, rectangle) ->
                     RectangleSDF(rectangle).distanceToPoint(position)
                 }
@@ -444,7 +435,9 @@ fun SenBoardPreview() {
             },
             containerColor = MaterialTheme.colorScheme.surface,
         ) { innerPadding ->
-            Column(
+            Box(modifier = Modifier.padding(innerPadding))
+
+            /* Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .padding(innerPadding)
@@ -464,7 +457,8 @@ fun SenBoardPreview() {
                 )
                 Text(text = "SenBoard thật tuyệt vời!")
             }
-            /*Column(
+
+            Column(
                 verticalArrangement = Arrangement.spacedBy(32.dp),
                 modifier = Modifier
                     .padding(innerPadding)
@@ -515,8 +509,9 @@ fun SenBoardPreview() {
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
-            }*/
-            /*Column(
+            }
+
+            Column(
                 verticalArrangement = Arrangement.spacedBy(32.dp),
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
@@ -569,7 +564,7 @@ fun SenBoardPreview() {
                         }
                     }
                 }
-            }*/
+            } */
 
             BoxWithConstraints(
                 contentAlignment = Alignment.BottomCenter,
