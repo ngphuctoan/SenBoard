@@ -60,6 +60,15 @@ class TelexEngineTest {
         assertEquals("dddddds", TelexEngine.convertWord("ddddddds"))
         assertEquals("ddddddf", TelexEngine.convertWord("dddddddf"))
 
+        // 'w' Escape rules (ww -> w, www -> ww, aww -> aw, uww -> uw, oww -> ow, uoww -> uow, huongww -> huongw)
+        assertEquals("w", TelexEngine.convertWord("ww"))
+        assertEquals("ww", TelexEngine.convertWord("www"))
+        assertEquals("aw", TelexEngine.convertWord("aww"))
+        assertEquals("uw", TelexEngine.convertWord("uww"))
+        assertEquals("ow", TelexEngine.convertWord("oww"))
+        assertEquals("uow", TelexEngine.convertWord("uoww"))
+        assertEquals("huongw", TelexEngine.convertWord("huongww"))
+
         // Tone escape / undoing tone marks (é + s -> es, ess -> es, essc -> esc, esscape -> escape)
         assertEquals("es", TelexEngine.convertWord("és"))
         assertEquals("es", TelexEngine.convertWord("ess"))
