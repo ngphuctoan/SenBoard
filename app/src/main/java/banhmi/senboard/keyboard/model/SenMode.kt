@@ -4,6 +4,7 @@ import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.keyboard.impl.mode.senAaaaaMode
 import banhmi.senboard.keyboard.impl.mode.senCharactersMode
 import banhmi.senboard.keyboard.impl.mode.senExtraCharactersMode
+import banhmi.senboard.keyboard.impl.mode.senExtraNumericMode
 import banhmi.senboard.keyboard.impl.mode.senNumbersMode
 import banhmi.senboard.keyboard.impl.mode.senNumericMode
 import banhmi.senboard.keyboard.state.SenBoardState
@@ -15,7 +16,7 @@ data class SenMode(
 
 // Register the modes as enums here first before implementing them!
 enum class SenModeType {
-    Characters, Numbers, ExtraCharacters, Numeric, Aaaaa;
+    Characters, Numbers, ExtraCharacters, Numeric, ExtraNumeric, Aaaaa;
 }
 
 fun provideMode(modeType: SenModeType) = when (modeType) {
@@ -23,6 +24,7 @@ fun provideMode(modeType: SenModeType) = when (modeType) {
     SenModeType.Numbers -> senNumbersMode
     SenModeType.ExtraCharacters -> senExtraCharactersMode
     SenModeType.Numeric -> senNumericMode
+    SenModeType.ExtraNumeric -> senExtraNumericMode
     SenModeType.Aaaaa -> senAaaaaMode
 }
 

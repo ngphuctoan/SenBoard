@@ -5,8 +5,11 @@ on:
     tags: [ "*" ]
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -44,3 +47,4 @@ jobs:
         with:
           name: Release ${{ github.ref_name }}
           files: senboard-release-${{ github.ref_name }}.apk
+          generate_release_notes: true

@@ -67,13 +67,13 @@ object SenHelpModule {
 }
 
 private enum class HelpCategory(val label: String) {
-    All("Tất cả"),
+    All("Tất cả (109)"),
 
     CVN("Quy tắc (34)"),
 
     ToneMarks("Ký hiệu dấu (18)"),
 
-    PWord("Chữ đệm"),
+    PWord("Chữ đệm (1)"),
 
     @Suppress("EnumEntryName", "NonAsciiCharacters")
     Vần56("Vần dài (56)"),
