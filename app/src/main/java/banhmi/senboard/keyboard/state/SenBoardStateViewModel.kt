@@ -17,6 +17,7 @@ class SenBoardStateViewModel(
     private val composingText: String,
     private val wordSuggestions: List<BigramResult>,
     private val inputType: Int,
+    private val selectionAutoUpdated: Boolean,
 ) : ViewModel() {
     // Factory to pass in the initial state values
     companion object {
@@ -30,6 +31,8 @@ class SenBoardStateViewModel(
 
         val INPUT_TYPE_KEY = CreationExtras.Key<Int>()
 
+        val SELECTION_AUTO_UPDATED_KEY = CreationExtras.Key<Boolean>()
+
         val Factory = viewModelFactory {
             initializer {
                 val modeType = this[MODE_TYPE_KEY] ?: SenBoardStateDefaults.DefaultModeType
@@ -37,7 +40,8 @@ class SenBoardStateViewModel(
                 val composingText = this[COMPOSING_TEXT_KEY] ?: String.EMPTY
                 val wordSuggestions = this[WORD_SUGGESTIONS_KEY] ?: emptyList()
                 val inputType = this[INPUT_TYPE_KEY] ?: SenBoardStateDefaults.DefaultInputType
-                SenBoardStateViewModel(modeType, shiftMode, composingText, wordSuggestions, inputType)
+                val selectionAutoUpdated = this[SELECTION_AUTO_UPDATED_KEY] ?: false
+                SenBoardStateViewModel(modeType, shiftMode, composingText, wordSuggestions, inputType, selectionAutoUpdated)
             }
         }
     }
@@ -49,6 +53,7 @@ class SenBoardStateViewModel(
             composingText = composingText,
             wordSuggestions = wordSuggestions,
             inputType = inputType,
+            selectionAutoUpdated = selectionAutoUpdated,
         ),
     )
 
@@ -72,5 +77,9 @@ class SenBoardStateViewModel(
 
     fun updateInputType(newInputType: Int) = _uiState.update { uiState ->
         uiState.copy(inputType = newInputType)
+    }
+
+    fun updateSelectionAutoUpdated(newSelectionAutoUpdated: Boolean) = _uiState.update { uiState ->
+        uiState.copy(selectionAutoUpdated = newSelectionAutoUpdated)
     }
 }

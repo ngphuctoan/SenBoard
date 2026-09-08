@@ -107,9 +107,6 @@ class SenImService : SenLifecycleImService() {
         )[UserBigramViewModel::class.java]
     }
 
-    // This tells us if the selection is updated through a key handler for example (see onUpdateSelection for its usage)
-    private var wasSelectionUpdatedAutomatically = false
-
     // The keyboard's dimensions for setting touchable region (see onComputeInsets for its usage)
     private var dimensions = IntRect.Zero
 
@@ -137,9 +134,11 @@ class SenImService : SenLifecycleImService() {
             candidatesEnd,
         )
 
+        val uiState = stateViewModel.uiState.value
+
         /* When user moves the cursor or selects texts, we should finish the composing text, because
         we aren't accounting for cursor position when appending chars to composing text state */
-        if (!wasSelectionUpdatedAutomatically) SenKeyHandlerContext(
+        if (!uiState.selectionAutoUpdated) SenKeyHandlerContext(
             imService = this,
             bigramEngine = bigramEngine,
             stateViewModel = stateViewModel,
@@ -149,6 +148,8 @@ class SenImService : SenLifecycleImService() {
 
             clearComposingText()
             updateShiftModeAutomatically(preserveLastShiftMode = true)
+
+            stateViewModel.updateSelectionAutoUpdated(false)
         }
     }
 
@@ -251,7 +252,7 @@ class SenImService : SenLifecycleImService() {
                                                         stateViewModel = stateViewModel,
                                                         preferencesViewModel = preferencesViewModel,
                                                     ).run {
-                                                        wasSelectionUpdatedAutomatically = true
+                                                        stateViewModel.updateSelectionAutoUpdated(true)
 
                                                         /* This will also replace composing text, which is intended
                                                         when the suggestions are closest words and not bigram candidates
@@ -263,8 +264,6 @@ class SenImService : SenLifecycleImService() {
                                                         clearComposingText()
                                                         updateShiftModeAutomatically()
                                                         onUpdateWordSuggestions(onGetBestCandidates(suggestion))
-
-                                                        wasSelectionUpdatedAutomatically = false
                                                     }
                                                 },
                                                 modifier = Modifier.weight(1f),
@@ -380,19 +379,7 @@ class SenImService : SenLifecycleImService() {
                                         haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                     }
 
-                                    if (!wasSelectionUpdatedAutomatically) {
-                                        wasSelectionUpdatedAutomatically = true
-                                    }
-                                },
-                                onKeyTapUp = {
-                                    if (wasSelectionUpdatedAutomatically) {
-                                        wasSelectionUpdatedAutomatically = false
-                                    }
-                                },
-                                onKeyTapCancel = {
-                                    if (wasSelectionUpdatedAutomatically) {
-                                        wasSelectionUpdatedAutomatically = false
-                                    }
+                                    stateViewModel.updateSelectionAutoUpdated(true)
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()

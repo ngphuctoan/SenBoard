@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED")
+
 package banhmi.senboard.ui.theme
 
 import android.os.Build
@@ -242,11 +244,14 @@ private val highContrastDarkColorScheme = darkColorScheme(
 
 @Immutable
 data class ColorFamily(
-    val color: Color, val onColor: Color, val colorContainer: Color, val onColorContainer: Color
+    val color: Color,
+    val onColor: Color,
+    val colorContainer: Color,
+    val onColorContainer: Color,
 )
 
 val unspecified_scheme = ColorFamily(
-    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
+    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified,
 )
 
 @Immutable
@@ -446,7 +451,8 @@ val m3RefPalettePink = M3RefPalette(
 fun SenTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true, content: @Composable() () -> Unit
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
     val isSnowCone = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val isOneUi = Build.BRAND.lowercase() == "samsung"
@@ -464,6 +470,6 @@ fun SenTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme, typography = SenTypography, content = content
+        colorScheme = colorScheme, typography = SenTypography, content = content,
     )
 }

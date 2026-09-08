@@ -15,9 +15,6 @@ object SenBoardStateDefaults {
 
     val FallbackShiftMode: ShiftMode = ShiftMode.Off
 
-    fun shiftMode(autoCapitalizationEnabled: Boolean): ShiftMode =
-        if (autoCapitalizationEnabled) ShiftMode.Shifted else FallbackShiftMode
-
     @JvmStatic
     val DefaultInputType = InputType.TYPE_CLASS_TEXT
 }
@@ -28,6 +25,9 @@ data class SenBoardState(
     val composingText: String = String.EMPTY,
     val wordSuggestions: List<BigramResult> = emptyList(),
     val inputType: Int = SenBoardStateDefaults.DefaultInputType,
+    /* This tells us if the selection is updated through a key handler for example
+    (see SenImService's onUpdateSelection for its usage) */
+    val selectionAutoUpdated: Boolean = false,
 ) {
     val isShifted
         get() = shiftMode == ShiftMode.Shifted || shiftMode == ShiftMode.CapsLocked

@@ -42,6 +42,7 @@ class UserBigramViewModel @Inject constructor(
         initialValue = BigramDataset(entries = emptyList()),
     )
 
+    @Suppress("UNUSED")
     fun saveBigram(
         entryText: String,
         candidateText: String,

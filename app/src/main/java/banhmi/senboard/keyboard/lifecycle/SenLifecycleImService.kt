@@ -32,6 +32,7 @@ open class SenLifecycleImService : InputMethodService(), LifecycleOwner, SavedSt
 
     private val _viewModelStore: ViewModelStore = ViewModelStore()
 
+    @Suppress("ConvertToExplicitBackingFields")
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
 

@@ -8,6 +8,7 @@ data class IndexCount(
     val index: Int,
     val count: Int,
 ) {
+    @Suppress("UNUSED")
     fun isFirst() = index == 0
 
     fun isLast() = index == count - 1
