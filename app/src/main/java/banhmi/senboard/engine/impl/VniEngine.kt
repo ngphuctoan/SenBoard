@@ -11,24 +11,28 @@ object VniEngine : VietnameseEngine {
         val normalizedRaw = Normalizer.normalize(rawWord, Normalizer.Form.NFC)
         var word = normalizedRaw.lowercase()
 
-        // Handle repeated digit escape (e.g. a11 -> a1, a111 -> a11, a1111 -> a111, a666 -> a66, d999 -> d99)
-        val digits = listOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0')
-        for (digit in digits) {
-            var maxRepeat = 0
-            var tempWord = word
-            while (tempWord.endsWith(digit.toString())) {
-                maxRepeat++
-                tempWord = tempWord.dropLast(1)
+        // Handle repeated digit escape anywhere in word (e.g. a11 -> a1, a112 -> a12, a1112 -> a112, a662 -> a62, d991 -> d91)
+        val repeatDigitMatch = Regex("(\\d)\\1+").find(word)
+        if (repeatDigitMatch != null) {
+            val digit = repeatDigitMatch.groupValues[1][0]
+            val startIdx = repeatDigitMatch.range.first
+            val matchLen = repeatDigitMatch.value.length
+
+            val stem = word.substring(0, startIdx)
+            val rest = word.substring(startIdx + matchLen)
+
+            val cleanStem = if (stem.isNotEmpty()) convertWord(stem) else ""
+            val (pureStem, _) = stripTone(cleanStem)
+            val unaccentedStem = stripAccents(pureStem)
+            val escapedDigits = digit.toString().repeat(matchLen - 1)
+
+            val cleanRest = rest.replace(Regex("(\\d)\\1+")) { match ->
+                match.groupValues[1].repeat(match.value.length - 1)
             }
-            if (maxRepeat >= 2 && tempWord.isNotEmpty()) {
-                val stem = tempWord
-                val cleanStem = convertWord(stem)
-                val (pureStem, _) = stripTone(cleanStem)
-                val unaccentedStem = stripAccents(pureStem)
-                val escapedDigits = digit.toString().repeat(maxRepeat - 1)
-                return restoreCapitalization(rawWord, unaccentedStem + escapedDigits)
-            }
+
+            return restoreCapitalization(rawWord, unaccentedStem + escapedDigits + cleanRest)
         }
+
 
         // Handle single digit escape on already accented word (e.g. á1 -> a1, à2 -> a2, â6 -> a6, đ9 -> d9)
         if (word.length >= 2 && word.last().isDigit()) {
