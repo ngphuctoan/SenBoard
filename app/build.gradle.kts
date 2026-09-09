@@ -1,5 +1,8 @@
 @file:Suppress("AvoidDuplicateDependencies")
 
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -7,6 +10,20 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.protobuf)
+}
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+val keystoreProperties = Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+runCatching {
+    FileInputStream(keystorePropertiesFile)
+}.onSuccess { keystorePropertiesFileStream ->
+    keystoreProperties.load(keystorePropertiesFileStream)
 }
 
 android {
@@ -23,13 +40,23 @@ android {
         //noinspection OldTargetApi
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.0-alpha1"
+        versionName = "1.0.0-alpha2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("config") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = (keystoreProperties["storeFile"] as String?) //
+                ?.let { storeFileProperty -> file(storeFileProperty) }
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("config")
             optimization {
                 enable = false
             }
