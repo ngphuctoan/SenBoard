@@ -59,5 +59,14 @@ class VniEngineTest {
         assertEquals("a4", VniEngine.convertWord("ã4"))
         assertEquals("a5", VniEngine.convertWord("ạ5"))
         assertEquals("a6", VniEngine.convertWord("â6"))
+
+        // Repeated digit escape followed by trailing digits (a112 -> a12, a113 -> a13, a1112 -> a112, a662 -> a62, d991 -> d91)
+        assertEquals("a12", VniEngine.convertWord("a112"))
+        assertEquals("a13", VniEngine.convertWord("a113"))
+        assertEquals("a112", VniEngine.convertWord("a1112"))
+        assertEquals("a21", VniEngine.convertWord("a221"))
+        assertEquals("a62", VniEngine.convertWord("a662"))
+        assertEquals("d91", VniEngine.convertWord("d991"))
+        assertEquals("A12", VniEngine.convertWord("A112"))
     }
 }

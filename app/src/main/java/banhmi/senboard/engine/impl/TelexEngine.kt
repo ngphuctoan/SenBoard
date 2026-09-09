@@ -54,13 +54,27 @@ object TelexEngine : VietnameseEngine {
             }
         }
 
-        // 3. Handle trailing repeated letter escapes (e.g. baaaa -> baaa, teee -> tee)
+        // 3. Handle trailing repeated letter escapes (e.g. baaaa -> baaa, teee -> tee, owooo -> ooo, owoo -> oo, aawaa -> aa, aawaaa -> aaa)
         for (ch in escapeRepeats) {
             var trailingCount = 0
             var tempWord = word
             while (tempWord.endsWith(ch.toString())) {
                 trailingCount++
                 tempWord = tempWord.dropLast(1)
+            }
+            if (trailingCount >= 2 && ch == 'o' && (tempWord.endsWith("ow") || tempWord.endsWith("oow"))) {
+                val dropLen = if (tempWord.endsWith("oow")) 3 else 2
+                val prefix = tempWord.dropLast(dropLen)
+                val convertedPrefix = if (prefix.isNotEmpty()) convertWord(prefix) else ""
+                val escapedChars = ch.toString().repeat(trailingCount)
+                return restoreCapitalization(rawWord, convertedPrefix + escapedChars)
+            }
+            if (trailingCount >= 2 && ch == 'a' && (tempWord.endsWith("aw") || tempWord.endsWith("aaw"))) {
+                val dropLen = if (tempWord.endsWith("aaw")) 3 else 2
+                val prefix = tempWord.dropLast(dropLen)
+                val convertedPrefix = if (prefix.isNotEmpty()) convertWord(prefix) else ""
+                val escapedChars = ch.toString().repeat(trailingCount)
+                return restoreCapitalization(rawWord, convertedPrefix + escapedChars)
             }
             if (trailingCount >= 3) {
                 val stem = tempWord
@@ -92,7 +106,7 @@ object TelexEngine : VietnameseEngine {
         }
 
         if (isEnglishWord(word)) {
-            // Check if word contains a tone key whose removal leaves a valid Vietnamese stem (e.g. chuyeern -> chuyeen, soosng -> soong)
+            // Check if word contains tone keys whose removal (single or all non-doubled) leaves a valid Vietnamese stem (e.g. chuyeern -> chuyeen, soosng -> soong, aawfr -> ă)
             var isVietnameseWithTone = false
             var initialLen = 0
             val lower = word.lowercase()
@@ -117,6 +131,16 @@ object TelexEngine : VietnameseEngine {
                         isVietnameseWithTone = true
                         break
                     }
+                }
+            }
+
+            if (!isVietnameseWithTone) {
+                val stemWithoutAllTones = word.filterIndexed { idx, c ->
+                    idx < initialLen || !toneKeys.contains(c) ||
+                    (idx > 0 && word[idx - 1] == c) || (idx < word.length - 1 && word[idx + 1] == c)
+                }
+                if (isValidSingleVietnameseSyllableStem(stemWithoutAllTones) || isValidFlexibleSyllableStem(stemWithoutAllTones)) {
+                    isVietnameseWithTone = true
                 }
             }
 
@@ -167,6 +191,29 @@ object TelexEngine : VietnameseEngine {
 
         // Scan from the end for tone keys
         val toneKeys = setOf('s', 'f', 'r', 'x', 'j', 'z')
+
+        // Handle sequential tone key overwriting (e.g. aawf -> ằ, aawfr -> ẳ, aawfrj -> ặ, aawfrjs -> ắ)
+        val toneIndices = mutableListOf<Int>()
+        for (i in initialLen until word.length) {
+            if (toneKeys.contains(word[i])) {
+                if ((i > 0 && word[i - 1] == word[i]) || (i < word.length - 1 && word[i + 1] == word[i])) {
+                    continue
+                }
+                toneIndices.add(i)
+            }
+        }
+
+        if (toneIndices.size >= 2) {
+            val lastToneIdx = toneIndices.last()
+            val earlierToneIndices = toneIndices.dropLast(1).toSet()
+            val candidateWord = word.filterIndexed { idx, _ -> idx !in earlierToneIndices }
+            val lastCharIdxInCandidate = candidateWord.lastIndexOf(word[lastToneIdx])
+            val candidateStem = if (lastCharIdxInCandidate != -1) candidateWord.removeRange(lastCharIdxInCandidate, lastCharIdxInCandidate + 1) else candidateWord
+            if (isValidSingleVietnameseSyllableStem(candidateStem) || isValidFlexibleSyllableStem(candidateStem)) {
+                word = candidateWord
+            }
+        }
+
         for (i in word.length - 1 downTo initialLen) {
             if (toneKeys.contains(word[i])) {
                 // Skip adjacent doubled tone keys (e.g. 'ff' in confflict, 'rr' in merrge, 'ss' in cvnss)
@@ -226,6 +273,26 @@ object TelexEngine : VietnameseEngine {
 
     private fun applyFlexibleVowelModifications(rawWord: String): String {
         var word = rawWord
+
+        // Handle vowel modifier cycling for 'a' (aa -> â, aaw -> ă, aawa/awa -> â, aawaw/awaw -> ă)
+        // and 'o' (oo -> ô, oow -> ơ, oowo/owo -> ô, oowow/owow -> ơ)
+        if (word.contains("aawaw")) word = word.replace("aawaw", "ă")
+        if (word.contains("awaw")) word = word.replace("awaw", "ă")
+        if (word.contains("aawa")) word = word.replace("aawa", "â")
+        if (word.contains("âwa")) word = word.replace("âwa", "â")
+        if (word.contains("ăa")) word = word.replace("ăa", "â")
+        if (word.contains("awa")) word = word.replace("awa", "â")
+        if (word.contains("aaw")) word = word.replace("aaw", "ă")
+        if (word.contains("âw")) word = word.replace("âw", "ă")
+
+        if (word.contains("oowow")) word = word.replace("oowow", "ơ")
+        if (word.contains("owow")) word = word.replace("owow", "ơ")
+        if (word.contains("oowo")) word = word.replace("oowo", "ô")
+        if (word.contains("ôwo")) word = word.replace("ôwo", "ô")
+        if (word.contains("ơo")) word = word.replace("ơo", "ô")
+        if (word.contains("owo")) word = word.replace("owo", "ô")
+        if (word.contains("oow")) word = word.replace("oow", "ơ")
+        if (word.contains("ôw")) word = word.replace("ôw", "ơ")
 
         // 1. Handle u, o, w combinations for ươ (e.g. uow, uwow, u...o...w, u...w...o, o...w...u)
         if (word.contains("w") && (word.contains("uo") || (word.contains("u") && word.contains("o")))) {
@@ -461,6 +528,7 @@ object TelexEngine : VietnameseEngine {
             return true
         }
 
+        val toneKeys = setOf('s', 'f', 'r', 'x', 'j', 'z')
         val englishClusters = listOf(
             "sc", "sk", "sp", "st", "sm", "sn",
             "fl", "fr", "gl", "gr", "pl", "pr", "cl", "cr", "dr", "br", "bl",
@@ -468,7 +536,14 @@ object TelexEngine : VietnameseEngine {
             "rk", "rd", "rm", "rn", "rt", "rg", "rb", "rv", "rs", "rc", "rf", "rp",
             "ld", "lk", "lm", "lp"
         )
-        return englishClusters.any { lower.contains(it) }
+        return englishClusters.any { cluster ->
+            if (lower.contains(cluster)) {
+                // If both characters in cluster are tone keys, it's sequential Telex tone keys, not an English cluster!
+                !(toneKeys.contains(cluster[0]) && toneKeys.contains(cluster[1]))
+            } else {
+                false
+            }
+        }
     }
 
     private fun isEnglishPrefix(word: String): Boolean {
