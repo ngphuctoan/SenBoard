@@ -29,6 +29,7 @@ class SenPreferencesRepository @Inject constructor(
             autoCapitalizationEnabled = preferences[autoCapitalizationEnabled] ?: true,
             spaceBarShortcutEnabled = preferences[spaceBarShortcutEnabled] ?: true,
             wordSuggestionsEnabled = preferences[wordSuggestionsEnabled] ?: true,
+            predictiveKeyAreaEnabled = preferences[predictiveKeyAreaEnabled] ?: false,
             numberRowEnabled = preferences[numberRowEnabled] ?: false,
             keyBackgroundEnabled = preferences[keyBackgroundEnabled] ?: true,
             keyBackgroundShadowEnabled = preferences[keyBackgroundShadowEnabled] ?: true,
@@ -37,6 +38,7 @@ class SenPreferencesRepository @Inject constructor(
             easterEggsEnabled = preferences[easterEggsEnabled] ?: false,
             aaaaaModeEnabled = preferences[aaaaaModeEnabled] ?: false,
             developerOptionsEnabled = preferences[developerOptionsEnabled] ?: false,
+            statisticsEnabled = preferences[statisticsEnabled] ?: false,
         )
     }
 
@@ -64,6 +66,10 @@ class SenPreferencesRepository @Inject constructor(
     suspend fun updateWordSuggestionsEnabled(
         newWordSuggestionsEnabled: Boolean,
     ) = updatePreferences(wordSuggestionsEnabled, newWordSuggestionsEnabled)
+
+    suspend fun updatePredictiveKeyAreaEnabled(
+        newPredictiveKeyAreaEnabled: Boolean,
+    ) = updatePreferences(predictiveKeyAreaEnabled, newPredictiveKeyAreaEnabled)
 
     suspend fun updateNumberRowEnabled(
         newNumberRowEnabled: Boolean,
@@ -96,4 +102,8 @@ class SenPreferencesRepository @Inject constructor(
     suspend fun updateDeveloperOptionsEnabled(
         newDeveloperOptionsEnabled: Boolean,
     ) = updatePreferences(developerOptionsEnabled, newDeveloperOptionsEnabled)
+
+    suspend fun updateStatisticsEnabled(
+        newStatisticsEnabled: Boolean,
+    ) = updatePreferences(statisticsEnabled, newStatisticsEnabled)
 }

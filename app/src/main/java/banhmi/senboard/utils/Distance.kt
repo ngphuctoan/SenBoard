@@ -5,6 +5,10 @@ import androidx.compose.ui.geometry.Rect
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
+
+fun Offset.distanceTo(other: Offset) = sqrt((this.x - other.x).pow(2) + (this.y - other.y).pow(2))
 
 // Useful for calculating the distance between a point and a specific shape
 interface SignedDistance {

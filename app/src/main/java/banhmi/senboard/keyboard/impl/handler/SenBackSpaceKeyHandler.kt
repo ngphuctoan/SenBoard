@@ -3,7 +3,7 @@ package banhmi.senboard.keyboard.impl.handler
 import banhmi.senboard.keyboard.model.SenKeyHandler
 import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 
-object SenBackSpaceKeyHandler : SenKeyHandler {
+object SenBackSpaceKeyHandler : SenKeyHandler() {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {

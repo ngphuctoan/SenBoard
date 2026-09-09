@@ -3,9 +3,6 @@ package banhmi.senboard.app.settings
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -20,7 +17,6 @@ import banhmi.senboard.annotations.SenPreviewCommon
 import banhmi.senboard.app.navigation.SenEntryProviderInstaller
 import banhmi.senboard.app.navigation.SenNavigator
 import banhmi.senboard.app.ui.SenColumn
-import banhmi.senboard.app.ui.SenDescription
 import banhmi.senboard.app.ui.SenMenu
 import banhmi.senboard.app.ui.SenMenuDefaults
 import banhmi.senboard.app.ui.SenScaffold
@@ -32,6 +28,7 @@ import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.data.preferences.SenPreferences
 import banhmi.senboard.data.preferences.SenPreferencesViewModel
 import banhmi.senboard.ui.theme.SenTheme
+import banhmi.senboard.utils.outOf
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,7 +61,9 @@ fun SenDeveloperOptionsScreen(
     SenDeveloperOptionsContent(
         onNavigateBack = navigator::goBack,
         developerOptionsEnabled = preferences.developerOptionsEnabled,
+        statisticsEnabled = preferences.statisticsEnabled,
         onDeveloperOptionsEnabledUpdate = preferencesViewModel::updateDeveloperOptionsEnabled,
+        onStatisticsEnabledUpdate = preferencesViewModel::updateStatisticsEnabled,
     )
 }
 
@@ -72,7 +71,9 @@ fun SenDeveloperOptionsScreen(
 fun SenDeveloperOptionsContent(
     onNavigateBack: () -> Unit = {},
     developerOptionsEnabled: Boolean,
+    statisticsEnabled: Boolean,
     onDeveloperOptionsEnabledUpdate: (Boolean) -> Unit,
+    onStatisticsEnabledUpdate: (Boolean) -> Unit,
 ) {
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
@@ -114,12 +115,19 @@ fun SenDeveloperOptionsContent(
             }
 
             item {
-                SenDescription {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = "Thông tin về chế độ nhà phát triển",
-                    )
-                    Text("Hiện tại vẫn đang phát triển, vui lòng quay lại sau!")
+                SenMenu(
+                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 1),
+                    supportingContent = { Text("Thời gian, quãng đường gõ phím") },
+                    trailingContent = {
+                        SenSwitch(
+                            checked = statisticsEnabled,
+                            onCheckedChange = null,
+                        )
+                    },
+                    onClick = { onStatisticsEnabledUpdate(!statisticsEnabled) },
+                    modifier = Modifier.lastSegmentedPadding(),
+                ) {
+                    Text("Hiển thị thống kê")
                 }
             }
         }
@@ -134,8 +142,12 @@ fun SenDeveloperOptionsScreenPreview() {
     SenTheme {
         SenDeveloperOptionsContent(
             developerOptionsEnabled = preferences.developerOptionsEnabled,
+            statisticsEnabled = preferences.statisticsEnabled,
             onDeveloperOptionsEnabledUpdate = { developerOptionsEnabled ->
                 preferences = preferences.copy(developerOptionsEnabled = developerOptionsEnabled)
+            },
+            onStatisticsEnabledUpdate = { statisticsEnabled ->
+                preferences = preferences.copy(statisticsEnabled = statisticsEnabled)
             },
         )
     }

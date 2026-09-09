@@ -13,7 +13,7 @@ enum class ShiftMode {
 object SenBoardStateDefaults {
     val DefaultModeType = SenModeType.Characters
 
-    val FallbackShiftMode: ShiftMode = ShiftMode.Off
+    val FallbackShiftMode = ShiftMode.Off
 
     @JvmStatic
     val DefaultInputType = InputType.TYPE_CLASS_TEXT

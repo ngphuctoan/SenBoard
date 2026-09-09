@@ -12,6 +12,7 @@ data class SenPreferences(
     val autoCapitalizationEnabled: Boolean = true,
     val spaceBarShortcutEnabled: Boolean = true,
     val wordSuggestionsEnabled: Boolean = true,
+    val predictiveKeyAreaEnabled: Boolean = false,
 
     /*====================
     Appearance
@@ -36,6 +37,7 @@ data class SenPreferences(
     Developer Options
     ====================*/
     val developerOptionsEnabled: Boolean = false,
+    val statisticsEnabled: Boolean = false,
 ) {
     val vietnameseEngine
         get() = provideVietnameseEngine(vietnameseEngineType)

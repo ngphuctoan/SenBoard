@@ -199,12 +199,10 @@ object SenFinishSettingUpDefaults {
     internal fun headlineTextStyle() = MaterialTheme.typography.headlineSmall
 
     @Composable
-    internal fun buttonColors() = ButtonDefaults.buttonColors().copy(
-        containerColor = if (isSystemInDarkTheme()) {
-            m3RefPaletteYellow80
-        } else {
-            m3RefPaletteYellow60
-        },
+    internal fun buttonColors(
+        darkTheme: Boolean = isSystemInDarkTheme(),
+    ) = ButtonDefaults.buttonColors().copy(
+        containerColor = if (darkTheme) m3RefPaletteYellow80 else m3RefPaletteYellow60,
         contentColor = MaterialTheme.colorScheme.surface,
     )
 }

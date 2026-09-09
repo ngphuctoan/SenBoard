@@ -4,7 +4,7 @@ import banhmi.senboard.keyboard.model.SenKeyHandler
 import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 import banhmi.senboard.keyboard.state.ShiftMode
 
-object SenShiftKeyHandler : SenKeyHandler {
+object SenShiftKeyHandler : SenKeyHandler() {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {

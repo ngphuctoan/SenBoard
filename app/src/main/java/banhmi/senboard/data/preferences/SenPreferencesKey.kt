@@ -11,6 +11,7 @@ val vietnameseEngineType = intPreferencesKey("vietnamese_engine_type")
 val autoCapitalizationEnabled = booleanPreferencesKey("auto_capitalization_enabled")
 val spaceBarShortcutEnabled = booleanPreferencesKey("space_bar_shortcut_enabled")
 val wordSuggestionsEnabled = booleanPreferencesKey("word_suggestions_enabled")
+val predictiveKeyAreaEnabled = booleanPreferencesKey("predictive_key_area_enabled")
 
 /*====================
 Appearance
@@ -35,3 +36,4 @@ val aaaaaModeEnabled = booleanPreferencesKey("aaaaa_mode_enabled")
 Developer Options
 ====================*/
 val developerOptionsEnabled = booleanPreferencesKey("developer_options_enabled")
+val statisticsEnabled = booleanPreferencesKey("statistics_enabled")

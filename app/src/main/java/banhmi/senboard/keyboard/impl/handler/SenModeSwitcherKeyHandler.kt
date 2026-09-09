@@ -6,7 +6,7 @@ import banhmi.senboard.keyboard.model.SenModeType
 
 class SenModeSwitcherKeyHandler(
     private val modeType: SenModeType,
-) : SenKeyHandler {
+) : SenKeyHandler() {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {

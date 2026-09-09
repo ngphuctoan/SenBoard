@@ -5,7 +5,7 @@ import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 
 class SenTextKeyHandler(
     private val text: String,
-) : SenKeyHandler {
+) : SenKeyHandler(isWritingKey = true) {
     // Character key handler should be handling Vietnamese engine conversion instead
     override fun handleTap(
         context: SenKeyHandlerContext,

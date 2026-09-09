@@ -5,7 +5,7 @@ import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 
 class SenCharKeyHandler(
     private val char: Char,
-) : SenKeyHandler {
+) : SenKeyHandler(isWritingKey = true) {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {

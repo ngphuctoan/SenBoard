@@ -76,7 +76,7 @@ class SenKeyHandlerContext(
     )
 
     private fun isStartOfSentence(): Boolean {
-        val extractedText = inputConnection.getExtractedText(ExtractedTextRequest(), 0)
+        val extractedText = inputConnection.getExtractedText(ExtractedTextRequest(), 0) ?: return true
 
         val textBeforeCursor = extractedText.text.substring(0, extractedText.selectionStart)
         if (textBeforeCursor.isBlank()) return true
@@ -94,19 +94,22 @@ class SenKeyHandlerContext(
 }
 
 // By default, these handlers do nothing, so that implementations don't need to override all of them
-interface SenKeyHandler {
-    fun handleTap(
+open class SenKeyHandler(
+    // Useful for statistics to know which key should be contributed to debug state's delta durations
+    val isWritingKey: Boolean = false,
+) {
+    open fun handleTap(
         context: SenKeyHandlerContext,
     ) {
     }
 
-    fun handleDoubleTap(
+    open fun handleDoubleTap(
         context: SenKeyHandlerContext,
     ) {
     }
 
     // This only works if the key's alternative is not defined, as it will override this!
-    fun handleLongTap(
+    open fun handleLongTap(
         context: SenKeyHandlerContext,
     ) {
     }

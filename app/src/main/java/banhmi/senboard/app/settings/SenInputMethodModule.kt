@@ -1,5 +1,7 @@
 package banhmi.senboard.app.settings
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,8 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import banhmi.senboard.annotations.SenPreviewCommon
@@ -28,6 +32,7 @@ import banhmi.senboard.app.ui.SenScaffold
 import banhmi.senboard.app.ui.SenSwitch
 import banhmi.senboard.app.ui.SenTopBar
 import banhmi.senboard.app.ui.SenTopBarBackButton
+import banhmi.senboard.app.ui.SenWafer
 import banhmi.senboard.app.ui.lastSegmentedPadding
 import banhmi.senboard.app.ui.rememberSenTopBarState
 import banhmi.senboard.app.ui.segmentedPadding
@@ -71,10 +76,12 @@ fun SenInputMethodScreen(
         autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
         spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
         wordSuggestionsEnabled = preferences.wordSuggestionsEnabled,
+        predictiveKeyAreaEnabled = preferences.predictiveKeyAreaEnabled,
         onVietnameseEngineTypeUpdate = preferencesViewModel::updateVietnameseEngineType,
         onAutoCapitalizationEnabledUpdate = preferencesViewModel::updateAutoCapitalizationEnabled,
         onSpaceBarShortcutEnabledUpdate = preferencesViewModel::updateSpaceBarShortcutEnabled,
         onWordSuggestionsEnabledUpdate = preferencesViewModel::updateWordSuggestionsEnabled,
+        onPredictiveKeyAreaEnabledUpdate = preferencesViewModel::updatePredictiveKeyAreaEnabled,
     )
 }
 
@@ -85,10 +92,12 @@ fun SenInputMethodContent(
     autoCapitalizationEnabled: Boolean,
     spaceBarShortcutEnabled: Boolean,
     wordSuggestionsEnabled: Boolean,
+    predictiveKeyAreaEnabled: Boolean,
     onVietnameseEngineTypeUpdate: (VietnameseEngineType) -> Unit,
     onAutoCapitalizationEnabledUpdate: (Boolean) -> Unit,
     onSpaceBarShortcutEnabledUpdate: (Boolean) -> Unit,
     onWordSuggestionsEnabledUpdate: (Boolean) -> Unit,
+    onPredictiveKeyAreaEnabledUpdate: (Boolean) -> Unit,
 ) {
     val topAppBarState = rememberSenTopBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
@@ -148,7 +157,7 @@ fun SenInputMethodContent(
 
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 3),
+                    shapes = SenMenuDefaults.segmentedShapes(0 outOf 4),
                     trailingContent = {
                         SenSwitch(
                             checked = autoCapitalizationEnabled,
@@ -164,7 +173,7 @@ fun SenInputMethodContent(
 
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 3),
+                    shapes = SenMenuDefaults.segmentedShapes(1 outOf 4),
                     supportingContent = { Text("Ấn dấu cách hai lần sẽ thêm một dấu chấm") },
                     trailingContent = {
                         SenSwitch(
@@ -181,7 +190,7 @@ fun SenInputMethodContent(
 
             item {
                 SenMenu(
-                    shapes = SenMenuDefaults.segmentedShapes(2 outOf 3),
+                    shapes = SenMenuDefaults.segmentedShapes(2 outOf 4),
                     trailingContent = {
                         SenSwitch(
                             checked = wordSuggestionsEnabled,
@@ -189,9 +198,35 @@ fun SenInputMethodContent(
                         )
                     },
                     onClick = { onWordSuggestionsEnabledUpdate(!wordSuggestionsEnabled) },
-                    modifier = Modifier.lastSegmentedPadding(),
+                    modifier = Modifier.segmentedPadding(),
                 ) {
                     Text("Gợi ý từ kế tiếp")
+                }
+            }
+
+            item {
+                SenMenu(
+                    shapes = SenMenuDefaults.segmentedShapes(3 outOf 4),
+                    supportingContent = { Text("Phù hợp cho điện thoại và màn hình nhỏ") },
+                    trailingContent = {
+                        SenSwitch(
+                            checked = predictiveKeyAreaEnabled,
+                            onCheckedChange = null,
+                        )
+                    },
+                    onClick = { onPredictiveKeyAreaEnabledUpdate(!predictiveKeyAreaEnabled) },
+                    modifier = Modifier.lastSegmentedPadding(),
+                ) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        itemVerticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        SenWafer {
+                            Text("BETA")
+                        }
+                        Text("Gõ thông minh")
+                    }
                 }
             }
         }
@@ -211,6 +246,7 @@ fun SenInputMethodScreenPreview() {
             autoCapitalizationEnabled = preferences.autoCapitalizationEnabled,
             spaceBarShortcutEnabled = preferences.spaceBarShortcutEnabled,
             wordSuggestionsEnabled = preferences.wordSuggestionsEnabled,
+            predictiveKeyAreaEnabled = preferences.predictiveKeyAreaEnabled,
             onVietnameseEngineTypeUpdate = { vietnameseEngine ->
                 preferences = preferences.copy(vietnameseEngineType = vietnameseEngine)
             },
@@ -222,6 +258,9 @@ fun SenInputMethodScreenPreview() {
             },
             onWordSuggestionsEnabledUpdate = { wordSuggestionsEnabled ->
                 preferences = preferences.copy(wordSuggestionsEnabled = wordSuggestionsEnabled)
+            },
+            onPredictiveKeyAreaEnabledUpdate = { predictiveKeyAreaEnabled ->
+                preferences = preferences.copy(predictiveKeyAreaEnabled = predictiveKeyAreaEnabled)
             },
         )
     }

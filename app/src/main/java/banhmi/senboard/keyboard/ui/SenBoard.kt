@@ -283,7 +283,7 @@ fun SenBoard(
     onKeyLongTap: (Int) -> Unit,
     modifier: Modifier = Modifier,
     maxWidth: Dp = SenBoardDefaults.MaxWidth,
-    onKeyTapDown: (Int) -> Unit = {},
+    onKeyTapDown: (Offset, Int) -> Unit = { _, _ -> },
     onKeyTapUp: (Int) -> Unit = {},
     onKeyTapCancel: () -> Unit = {},
     content: @Composable (Int, SenLayoutKey, InteractionSource) -> Unit,
@@ -324,7 +324,7 @@ fun SenBoard(
                 }
 
                 selectedIndex = SelectedIndexResult.Selected(bestKey.key)
-                onKeyTapDown(bestKey.key)
+                onKeyTapDown(position, bestKey.key)
                 SenKeyPressContext(bestKey.key)
             },
             onTapUp = {

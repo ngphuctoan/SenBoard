@@ -4,7 +4,7 @@ import android.view.KeyEvent
 import banhmi.senboard.keyboard.model.SenKeyHandler
 import banhmi.senboard.keyboard.model.SenKeyHandlerContext
 
-object SenReturnKeyHandler : SenKeyHandler {
+object SenReturnKeyHandler : SenKeyHandler() {
     override fun handleTap(
         context: SenKeyHandlerContext,
     ) = context.run {
