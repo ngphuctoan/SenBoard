@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -206,10 +207,12 @@ fun SenInputMethodContent(
 
             item {
                 SenMenu(
+                    enabled = false,
                     shapes = SenMenuDefaults.segmentedShapes(3 outOf 4),
                     supportingContent = { Text("Phù hợp cho điện thoại và màn hình nhỏ") },
                     trailingContent = {
                         SenSwitch(
+                            enabled = false,
                             checked = predictiveKeyAreaEnabled,
                             onCheckedChange = null,
                         )
@@ -222,7 +225,7 @@ fun SenInputMethodContent(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         itemVerticalAlignment = Alignment.CenterVertically,
                     ) {
-                        SenWafer {
+                        SenWafer(modifier = Modifier.alpha(0.5f)) {
                             Text("BETA")
                         }
                         Text("Gõ thông minh")

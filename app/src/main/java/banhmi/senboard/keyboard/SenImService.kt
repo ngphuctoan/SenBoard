@@ -254,7 +254,10 @@ class SenImService : SenLifecycleImService() {
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Column {
-                            if (preferencesState.developerOptionsEnabled) {
+                            if ( //
+                                preferencesState.developerOptionsEnabled //
+                                && preferencesState.statisticsEnabled
+                            ) {
                                 val deltaSeconds = debugState.deltaDurations
                                     .map { duration -> duration.toDouble(DurationUnit.SECONDS) }
                                     .ifEmpty { listOf(0.0) }

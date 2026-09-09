@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -78,10 +77,9 @@ object SenDebugTextDefaults {
         ),
     )
 
-    @Composable
-    fun colors() = SenDebugMenuTextColors(
+    val Colors = SenDebugMenuTextColors(
         color = Color.Black.copy(alpha = 0.4f),
-        contentColor = MaterialTheme.colorScheme.onSurface,
+        contentColor = Color.White,
     )
 }
 
@@ -92,7 +90,7 @@ fun SenDebugText(
     padding: PaddingValues = SenDebugTextDefaults.Padding,
     shape: Shape = SenDebugTextDefaults.Shape,
     textStyle: TextStyle = SenDebugTextDefaults.textStyle(),
-    colors: SenDebugMenuTextColors = SenDebugTextDefaults.colors(),
+    colors: SenDebugMenuTextColors = SenDebugTextDefaults.Colors,
 ) {
     Text(
         text = text,
